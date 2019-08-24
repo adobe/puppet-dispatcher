@@ -1,0 +1,60 @@
+{
+  "name": "adobe-dispatcher",
+  "version": "0.1.0",
+  "author": "adobe",
+  "summary": "Manages AEM Dispatcher configurations and farms.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/adobe/puppet-dispatcher",
+  "project_page": "http://opensource.adobe.com/puppet-dispatcher/",
+  "issues_url": "https://github.com/adobe/puppet-dispatcher/issues",
+  "dependencies": [
+
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "18.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.10.0 < 7.0.0"
+    }
+  ],
+  "pdk-version": "1.12.0",
+  "template-url": "pdk-default#1.12.0",
+  "template-ref": "1.12.0-0-g55d9ae2"
+}
