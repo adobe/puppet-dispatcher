@@ -1,1 +1,6 @@
 ---
+dispatcher::decline_root: true
+dispatcher::log_file: "%{::apache::logroot}/dispatcher.log"
+dispatcher::log_level: 'warn'
+dispatcher::pass_error: false
+dispatcher::use_processed_url: true

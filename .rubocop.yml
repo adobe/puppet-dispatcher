@@ -96,8 +96,8 @@ RSpec/DescribeClass:
 #  Enabled: false
 #Metrics/AbcSize:
 #  Enabled: false
-#Metrics/BlockLength:
-#  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
 #Metrics/ClassLength:
 #  Enabled: false
 #Metrics/CyclomaticComplexity:
@@ -110,14 +110,14 @@ RSpec/DescribeClass:
 #  Enabled: false
 #Metrics/PerceivedComplexity:
 #  Enabled: false
-#RSpec/ExampleLength:
-#  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
 #RSpec/MessageExpectation:
 #  Enabled: false
 #RSpec/MultipleExpectations:
 #  Enabled: false
-#RSpec/NestedGroups:
-#  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
 #Style/AsciiComments:
 #  Enabled: false
 #Style/IfUnlessModifier:

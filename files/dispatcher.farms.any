@@ -1,0 +1,7 @@
+# ************************************
+# Managed by Puppet AEM Module
+# ************************************
+
+/farms {
+  $include "dispatcher.*-*.inc.any"
+}

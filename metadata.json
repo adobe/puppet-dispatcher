@@ -8,7 +8,8 @@
   "project_page": "http://opensource.adobe.com/puppet-dispatcher/",
   "issues_url": "https://github.com/adobe/puppet-dispatcher/issues",
   "dependencies": [
-
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 5.0.0 < 7.0.0" },
+    { "name": "puppetlabs/apache", "version_requirement": ">= 4.0.0 < 6.0.0" }
   ],
   "operatingsystem_support": [
     {
