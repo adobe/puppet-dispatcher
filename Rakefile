@@ -75,3 +75,19 @@ EOM
   end
 end
 
+task :headers do
+  require 'copyright_header' if Bunder.rubygems.find_name('copyright_header')
+
+  args = {
+    :license => 'APL2',
+    :copyright_software => 'Copyright Header',
+    :copyright_software_description => "A utility to manipulate copyright headers on source code files",
+    :copyright_holders => ['Adobe Inc'],
+    :copyright_years => ['2019'],
+    :add_path => 'files:manifests:spec:templates',
+    :output_dir => '.'
+  }
+
+  command_line = CopyrightHeader::CommandLine.new( args )
+  command_line.execute
+end
