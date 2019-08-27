@@ -16,10 +16,10 @@
 # limitations under the License.
 #
 
-# ************************************
-# Managed by Puppet AEM Module
-# ************************************
-
-/farms {
-  $include "dispatcher.*-*.inc.any"
-}
+---
+deb:
+  provisioner: docker
+  images: ['debian:9', 'ubuntu:16.04', 'ubuntu:18.04']
+el:
+  provisioner: docker
+  images: ['centos:7', 'oraclelinux:7', 'scientificlinux/sl:7']

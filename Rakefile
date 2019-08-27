@@ -76,16 +76,18 @@ EOM
 end
 
 task :headers do
-  require 'copyright_header' if Bunder.rubygems.find_name('copyright_header')
+  require 'copyright_header' if Bundler.rubygems.find_name('copyright-header')
 
   args = {
-    :license => 'APL2',
-    :copyright_software => 'Copyright Header',
-    :copyright_software_description => "A utility to manipulate copyright headers on source code files",
+    :license => 'ASL2',
+    :copyright_software => 'Puppet Dispatcher Module',
+    :copyright_software_description => "A module to manage AEM Dispatcher installations and configuration files.",
     :copyright_holders => ['Adobe Inc'],
     :copyright_years => ['2019'],
-    :add_path => 'files:manifests:spec:templates',
-    :output_dir => '.'
+    :add_path => 'manifests:files:templates:spec',
+    :output_dir => '.',
+    :syntax => 'config/syntax.yml',
+    :word_wrap => 200
   }
 
   command_line = CopyrightHeader::CommandLine.new( args )

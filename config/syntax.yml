@@ -16,10 +16,32 @@
 # limitations under the License.
 #
 
-# ************************************
-# Managed by Puppet AEM Module
-# ************************************
+puppet:
+  ext: ['.pp']
+  comment:
+    open: '#\n'
+    close: '#\n\n'
+    prefix: '# '
 
-/farms {
-  $include "dispatcher.*-*.inc.any"
-}
+ruby:
+  ext: ['.rb', '.rake']
+  after: ['^#!', '^#.*encoding:', '^#.*frozen_string_literal:']
+  comment:
+    open:   '\n#\n'
+    close:  '#\n\n'
+    prefix: '# '
+
+yaml:
+  ext:  ['.yml', '.yaml']
+  comment:
+    open:   '#\n'
+    close:  '#\n\n'
+    prefix: '# '
+
+# Conf files i.e. apache config, splunk.conf files
+conf:
+  ext:  ['.conf', '.erb', '.any']
+  comment:
+    open:   '#\n'
+    close:  '#\n\n'
+    prefix: '# '
