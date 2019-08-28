@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 #
 # Puppet Dispatcher Module - A module to manage AEM Dispatcher installations and configuration files.
