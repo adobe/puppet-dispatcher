@@ -16,12 +16,48 @@
 # limitations under the License.
 #
 
-# @summary A short summary of the purpose of this class
+# @summary
+#   Installs and sets up the AEM Dispatcher module on your system.
 #
-# A description of what this class does
+# When this class is declared with the default options, Puppet:
+# - Installs the specified dispatcher module into Apache modules directory
+# - Defines a Puppet apache module resource for the dispatcher.
+# - Defines a default set of Dispatcher configurations
+# - Loads all defined dispatcher farms
+# - Reloads the Apache service
 #
 # @example
-#   include dispatcher
+#   ```puppet
+#   class { 'dispatcher' :
+#     module_file => '/path/to/module/file.so'
+#   }
+#   contain dispatcher
+#   ```
+#
+# @param module_file
+#   Specifes the source location of the dispatcher module. This is the file that will be copied into the Apache module library path.
+#
+# @param decline_root
+#   Sets the value for `DispatcherDeclineRoot`. Defaults to `true`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
+# @param log_file
+#   Sets the value for `DispatcherLog`. Defaults to `<Apache logroot>/dispatcher.log`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
+# @param log_level
+#   Sets the value for `DispatcherLogLevel`. Defaults to `warn`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
+# @param pass_error
+#   Sets the value for `DispatcherPassError`. Defaults to `false`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
+# @param use_processed_url
+#   Sets the value for `DispatcherUseProcessedURL`. Defaults to `true`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
+# @param keep_alive_timeout
+#   If specified, sets the value for `DispatcherKeepAliveTimeout`. Default For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
+# @param no_cannon_url
+#   If specified, sets the value for `DispatcherNoCanonURL`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
+#
 class dispatcher(
   Stdlib::Filesource $module_file,
   Boolean $decline_root,
