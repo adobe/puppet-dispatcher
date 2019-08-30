@@ -58,6 +58,8 @@
 # @param no_cannon_url
 #   If specified, sets the value for `DispatcherNoCanonURL`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 #
+# @param vhosts
+#   An optional list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name.
 class dispatcher(
   Stdlib::Filesource $module_file,
   Boolean $decline_root,
@@ -65,8 +67,9 @@ class dispatcher(
   Enum['error', 'warn', 'info', 'debug', 'trace'] $log_level,
   Variant[Boolean, Pattern[/^[\d\-,]+$/]] $pass_error,
   Boolean $use_processed_url,
+  Array[String] $farms                                        = [],
   Optional[Integer[0]] $keep_alive_timeout                    = undef,
-  Optional[Boolean] $no_cannon_url                            = undef
+  Optional[Boolean] $no_cannon_url                            = undef,
 ) {
 
   # Check for Apache because it is used by parameter defaults
@@ -123,4 +126,9 @@ class dispatcher(
     source => 'puppet:///modules/dispatcher/dispatcher.farms.any',
     notify => Class['Apache::Service'],
   }
+
+  $farms.each |$farm| {
+    ensure_resource('dispatcher::farm', $farm, { 'ensure' => 'present' })
+  }
+
 }

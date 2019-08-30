@@ -58,7 +58,7 @@ describe 'dispatcher', type: :class do
       end
 
       context 'with default parameters' do
-        it { is_expected.to compile }
+        it { is_expected.to compile.with_all_deps.with_all_deps }
         it do
           apache = catalogue.resource('Class[apache]')
           is_expected.to contain_class('dispatcher').only_with(
@@ -67,6 +67,7 @@ describe 'dispatcher', type: :class do
             decline_root:       true,
             log_file:           "#{apache.parameters[:logroot]}/dispatcher.log",
             log_level:          'warn',
+            farms:              [],
             pass_error:         false,
             use_processed_url:  true,
           )
@@ -142,7 +143,7 @@ describe 'dispatcher', type: :class do
           }
         end
 
-        it { is_expected.to compile }
+        it { is_expected.to compile.with_all_deps.with_all_deps }
         it do
           is_expected.to contain_class('dispatcher').only_with(
             name:               'Dispatcher',
@@ -152,6 +153,7 @@ describe 'dispatcher', type: :class do
             log_level:          'debug',
             pass_error:         '400-411,413-417,500',
             use_processed_url:  false,
+            farms:              [],
             keep_alive_timeout: 0,
             no_cannon_url:      true,
           )
@@ -212,6 +214,16 @@ describe 'dispatcher', type: :class do
           ).that_notifies('Class[Apache::Service]')
         end
       end
+
+      context 'farm list' do
+        let(:params) { default_params.merge(farms: %w{vhost1 vhost2 vhost3} )}
+
+        it do
+          is_expected.to contain_dispatcher__farm('vhost1')
+          is_expected.to contain_dispatcher__farm('vhost2')
+          is_expected.to contain_dispatcher__farm('vhost3')
+        end
+      end
     end
   end
 
@@ -227,13 +239,13 @@ describe 'dispatcher', type: :class do
 
       context 'module_file' do
         context 'fully qualified file' do
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
 
         context 'URL path' do
           let(:params) { { module_file: 'https://full/path/to/file-with-version.so' } }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
           it do
             is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
               ensure: 'file',
@@ -247,7 +259,7 @@ describe 'dispatcher', type: :class do
         context 'File reference' do
           let(:params) { { module_file: 'file:///full/path/to/file-with-version.so' } }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
           it do
             is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
               ensure: 'file',
@@ -261,7 +273,7 @@ describe 'dispatcher', type: :class do
         context 'puppet file reference' do
           let(:params) { { module_file: 'puppet:///full/path/to/file-with-version.so' } }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
           it do
             is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
               ensure: 'file',
@@ -278,12 +290,12 @@ describe 'dispatcher', type: :class do
         context 'true' do
           let(:params) { default_params.merge(decline_root: true) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'false' do
           let(:params) { default_params.merge(decline_root: false) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
 
         context 'invalid' do
@@ -297,7 +309,7 @@ describe 'dispatcher', type: :class do
         context 'positive number' do
           let(:params) { default_params.merge(keep_alive_timeout: 120) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'invalid number' do
           let(:params) { default_params.merge(keep_alive_timeout: -60) }
@@ -316,27 +328,27 @@ describe 'dispatcher', type: :class do
         context 'error' do
           let(:params) { default_params.merge(log_level: 'error') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'warn' do
           let(:params) { default_params.merge(log_level: 'warn') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'info' do
           let(:params) { default_params.merge(log_level: 'info') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'debug' do
           let(:params) { default_params.merge(log_level: 'debug') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'trace' do
           let(:params) { default_params.merge(log_level: 'trace') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps.with_all_deps }
         end
         context 'invalid' do
           let(:params) { default_params.merge(log_level: 'invalid') }
@@ -349,7 +361,7 @@ describe 'dispatcher', type: :class do
         context 'fully qualified path' do
           let(:params) { default_params.merge(log_file: '/full/path/to/file.log') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'invalid: relative path' do
           let(:params) { default_params.merge(log_file: '../path/to/file.log') }
@@ -368,32 +380,32 @@ describe 'dispatcher', type: :class do
         context 'false' do
           let(:params) { default_params.merge(pass_error: true) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'true' do
           let(:params) { default_params.merge(pass_error: false) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'single response code' do
           let(:params) { default_params.merge(pass_error: '500') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'multiple response codes' do
           let(:params) { default_params.merge(pass_error: '404,500') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'response codes ranges' do
           let(:params) { default_params.merge(pass_error: '400-411,413-417') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'response codes ranges with single code' do
           let(:params) { default_params.merge(pass_error: '400-411,413-417,500') }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
 
         context 'invalid' do
@@ -407,12 +419,12 @@ describe 'dispatcher', type: :class do
         context 'true' do
           let(:params) { default_params.merge(use_processed_url: true) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'false' do
           let(:params) { default_params.merge(use_processed_url: false) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
 
         context 'invalid' do
@@ -426,7 +438,7 @@ describe 'dispatcher', type: :class do
         context 'positive number' do
           let(:params) { default_params.merge(keep_alive_timeout: 120) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'invalid number' do
           let(:params) { default_params.merge(keep_alive_timeout: -60) }
@@ -445,12 +457,12 @@ describe 'dispatcher', type: :class do
         context 'true' do
           let(:params) { default_params.merge(no_cannon_url: true) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
         context 'false' do
           let(:params) { default_params.merge(no_cannon_url: false) }
 
-          it { is_expected.to compile }
+          it { is_expected.to compile.with_all_deps }
         end
 
         context 'invalid' do
