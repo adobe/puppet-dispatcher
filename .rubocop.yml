@@ -80,8 +80,8 @@ Style/Documentation:
   Exclude:
   - lib/puppet/parser/functions/**/*
   - spec/**/*
-Style/WordArray:
-  EnforcedStyle: brackets
+#Style/WordArray:
+#  EnforcedStyle: brackets
 RSpec/DescribeClass:
   Enabled: false
 #Style/CollectionMethods:

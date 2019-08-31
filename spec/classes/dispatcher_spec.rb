@@ -92,7 +92,7 @@ describe 'dispatcher', type: :class do
             owner:  'root',
             group:  'root',
             target: "#{lib_path}/file-with-version.so",
-          ).that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -116,7 +116,7 @@ describe 'dispatcher', type: :class do
             %r{.*DispatcherKeepAliveTimeout.*},
           ).without_content(
             %r{.*DispatcherNoCanonURL.*},
-          ).that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -125,7 +125,7 @@ describe 'dispatcher', type: :class do
             owner:  'root',
             group:  'root',
             source: 'puppet:///modules/dispatcher/dispatcher.farms.any',
-          ).that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
       end
 
@@ -165,7 +165,7 @@ describe 'dispatcher', type: :class do
             owner: 'root',
             group: 'root',
             source: '/path/to/module/file.so',
-          )
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -178,7 +178,7 @@ describe 'dispatcher', type: :class do
             owner:  'root',
             group:  'root',
             target: "#{lib_path}/file.so",
-          ).that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -202,7 +202,7 @@ describe 'dispatcher', type: :class do
             %r{.*DispatcherKeepAliveTimeout\s+0$},
           ).with_content(
             %r{.*DispatcherNoCanonURL\s+On$},
-          ).that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -211,18 +211,25 @@ describe 'dispatcher', type: :class do
             owner:  'root',
             group:  'root',
             source: 'puppet:///modules/dispatcher/dispatcher.farms.any',
-          ).that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
       end
 
       context 'farm list' do
-        let(:params) { default_params.merge(farms: %w{vhost1 vhost2 vhost3} )}
+        let(:params) { default_params.merge(farms: %w[vhost1 vhost2 vhost3]) }
 
-        it do
-          is_expected.to contain_dispatcher__farm('vhost1')
-          is_expected.to contain_dispatcher__farm('vhost2')
-          is_expected.to contain_dispatcher__farm('vhost3')
-        end
+        it { is_expected.to contain_dispatcher__farm('vhost1') }
+        it { is_expected.to contain_concat('dispatcher.00-vhost1.inc.any') }
+        it { is_expected.to contain_concat_fragment('vhost1-farm-header') }
+        # it { is_expected.to contain_concat_fragment('vhost1-farm-clientheaders') }
+        it { is_expected.to contain_dispatcher__farm('vhost2') }
+        it { is_expected.to contain_concat('dispatcher.00-vhost2.inc.any') }
+        it { is_expected.to contain_concat_fragment('vhost2-farm-header') }
+        # it { is_expected.to contain_concat_fragment('vhost2-farm-clientheaders') }
+        it { is_expected.to contain_dispatcher__farm('vhost3') }
+        it { is_expected.to contain_concat('dispatcher.00-vhost3.inc.any') }
+        it { is_expected.to contain_concat_fragment('vhost3-farm-header') }
+        # it { is_expected.to contain_concat_fragment('vhost3-farm-clientheaders') }
       end
     end
   end
@@ -277,8 +284,8 @@ describe 'dispatcher', type: :class do
           it do
             is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
               ensure: 'file',
-              owner: 'root',
-              group: 'root',
+              owner:  'root',
+              group:  'root',
               source: 'puppet:///full/path/to/file-with-version.so',
             )
           end

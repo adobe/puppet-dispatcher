@@ -52,28 +52,30 @@
 # @param use_processed_url
 #   Sets the value for `DispatcherUseProcessedURL`. Defaults to `true`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 #
+# @param farms
+#   A list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name. Use hiera data to specify
+#   the remaining parameters.
+#
 # @param keep_alive_timeout
 #   If specified, sets the value for `DispatcherKeepAliveTimeout`. Default For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 #
 # @param no_cannon_url
 #   If specified, sets the value for `DispatcherNoCanonURL`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 #
-# @param vhosts
-#   An optional list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name.
-class dispatcher(
+class dispatcher (
   Stdlib::Filesource $module_file,
   Boolean $decline_root,
   Stdlib::Absolutepath $log_file,
   Enum['error', 'warn', 'info', 'debug', 'trace'] $log_level,
   Variant[Boolean, Pattern[/^[\d\-,]+$/]] $pass_error,
   Boolean $use_processed_url,
-  Array[String] $farms                                        = [],
-  Optional[Integer[0]] $keep_alive_timeout                    = undef,
-  Optional[Boolean] $no_cannon_url                            = undef,
+  Array[String] $farms                     = [],
+  Optional[Integer[0]] $keep_alive_timeout = undef,
+  Optional[Boolean] $no_cannon_url         = undef,
 ) {
 
   # Check for Apache because it is used by parameter defaults
-  if ! defined(Class['apache']) {
+  if !defined(Class['apache']) {
     fail('You must include the Apache class before using any dispatcher class or resources.')
   }
 
@@ -90,41 +92,45 @@ class dispatcher(
   $_filename = basename($module_file)
 
   $_owner = 'root'
-  $_group = $::apache::params::root_group
 
   apache::mod { 'dispatcher':
     lib => 'mod_dispatcher.so',
   }
 
-  file { "${_mod_path}/${_filename}" :
-    ensure => file,
-    owner  => $_owner,
-    group  => $_group,
-    source => $module_file,
-  }
-
-  file { "${_mod_path}/mod_dispatcher.so" :
-    ensure => link,
-    owner  => $_owner,
-    group  => $_group,
-    target => "${_mod_path}/${_filename}",
-    notify => Class['Apache::Service'],
-  }
-
-  file { "${_farm_path}/dispatcher.conf" :
+  file { "${_mod_path}/${_filename}":
     ensure  => file,
     owner   => $_owner,
-    group   => $_group,
-    content => template("${module_name}/dispatcher.conf.erb"),
+    group   => $::apache::params::root_group,
+    source  => $module_file,
+    require => Package['httpd'],
     notify  => Class['Apache::Service'],
   }
 
-  file { "${_farm_path}/dispatcher.farms.any" :
-    ensure => file,
-    owner  => $_owner,
-    group  => $_group,
-    source => 'puppet:///modules/dispatcher/dispatcher.farms.any',
-    notify => Class['Apache::Service'],
+  file { "${_mod_path}/mod_dispatcher.so":
+    ensure  => link,
+    owner   => $_owner,
+    group   => $::apache::params::root_group,
+    target  => "${_mod_path}/${_filename}",
+    require => Package['httpd'],
+    notify  => Class['Apache::Service'],
+  }
+
+  file { "${_farm_path}/dispatcher.conf":
+    ensure  => file,
+    owner   => $_owner,
+    group   => $::apache::params::root_group,
+    content => template("${module_name}/dispatcher.conf.erb"),
+    require => Package['httpd'],
+    notify  => Class['Apache::Service'],
+  }
+
+  file { "${_farm_path}/dispatcher.farms.any":
+    ensure  => file,
+    owner   => $_owner,
+    group   => $::apache::params::root_group,
+    source  => 'puppet:///modules/dispatcher/dispatcher.farms.any',
+    require => Package['httpd'],
+    notify  => Class['Apache::Service'],
   }
 
   $farms.each |$farm| {
