@@ -18,15 +18,8 @@ describe 'dispatcher::farm', type: :define do
       let(:params) { default_params }
 
       describe 'default parameters' do
-        describe 'clientheaders' do
-          it do
-            is_expected.to contain_concat__fragment('namevar-farm-clientheaders').with(
-              target: 'dispatcher.00-namevar.inc.any',
-              order:  10,
-            )
-          end
-          it { is_expected.to contain_concat__fragment('namevar-farm-clientheaders').with(content: %r{^\s+/clientheaders\s\{$}) }
-        end
+        it { is_expected.to contain_concat__fragment('namevar-farm-clientheaders').with(target: 'dispatcher.00-namevar.inc.any', order: 10) }
+        it { is_expected.to contain_concat__fragment('namevar-farm-clientheaders').with(content: %r{^\s+/clientheaders\s\{$}) }
       end
 
       context 'custom parameters' do
@@ -34,12 +27,7 @@ describe 'dispatcher::farm', type: :define do
         let(:title) { 'customparams' }
 
         describe 'clientheaders' do
-          it do
-            is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(
-              target: 'dispatcher.50-customparams.inc.any',
-              order:  10,
-            )
-          end
+          it { is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(target: 'dispatcher.50-customparams.inc.any', order: 10) }
           it { is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(content: %r{^\s+/clientheaders\s\{$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(content: %r{^\s+"A-Client-Header"$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(content: %r{^\s+"Another-Client-Header"$}) }
