@@ -58,7 +58,7 @@ describe 'dispatcher', type: :class do
       end
 
       context 'with default parameters' do
-        it { is_expected.to compile.with_all_deps.with_all_deps }
+        it { is_expected.to compile.with_all_deps }
         it do
           apache = catalogue.resource('Class[apache]')
           is_expected.to contain_class('dispatcher').only_with(
@@ -143,7 +143,7 @@ describe 'dispatcher', type: :class do
           }
         end
 
-        it { is_expected.to compile.with_all_deps.with_all_deps }
+        it { is_expected.to compile.with_all_deps }
         it do
           is_expected.to contain_class('dispatcher').only_with(
             name:               'Dispatcher',
@@ -221,15 +221,15 @@ describe 'dispatcher', type: :class do
         it { is_expected.to contain_dispatcher__farm('vhost1') }
         it { is_expected.to contain_concat('dispatcher.00-vhost1.inc.any') }
         it { is_expected.to contain_concat_fragment('vhost1-farm-header') }
-        # it { is_expected.to contain_concat_fragment('vhost1-farm-clientheaders') }
+        it { is_expected.to contain_concat_fragment('vhost1-farm-clientheaders') }
         it { is_expected.to contain_dispatcher__farm('vhost2') }
         it { is_expected.to contain_concat('dispatcher.00-vhost2.inc.any') }
         it { is_expected.to contain_concat_fragment('vhost2-farm-header') }
-        # it { is_expected.to contain_concat_fragment('vhost2-farm-clientheaders') }
+        it { is_expected.to contain_concat_fragment('vhost2-farm-clientheaders') }
         it { is_expected.to contain_dispatcher__farm('vhost3') }
         it { is_expected.to contain_concat('dispatcher.00-vhost3.inc.any') }
         it { is_expected.to contain_concat_fragment('vhost3-farm-header') }
-        # it { is_expected.to contain_concat_fragment('vhost3-farm-clientheaders') }
+        it { is_expected.to contain_concat_fragment('vhost3-farm-clientheaders') }
       end
     end
   end

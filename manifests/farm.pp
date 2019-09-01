@@ -6,18 +6,19 @@
 #   dispatcher::farm { 'namevar': }
 define dispatcher::farm (
   # Do i need ensure?
-  Enum['absent', 'present'] $ensure = 'present',
-  Integer $priority                                           = lookup("dispatcher::farm::${name}::priority", Integer, 'first', 0),
-  Array[String] $virtualhosts                                 = lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name]),
-  Array[String] $clientheaders                                = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
+  Enum['absent', 'present'] $ensure = lookup("dispatcher::farm::${name}::ensure", Enum['absent', 'present'], 'first', 'present'),
+  Integer[0] $priority              = lookup("dispatcher::farm::${name}::priority", Integer[0], 'first', 0),
+  Array[String] $virtualhosts       = lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name]),
+  Array[String] $clientheaders      = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
 
-  Optional[Stdlib::Absolutepath] $sessionmanagement_directory
-          = lookup("dispatcher::farm::${name}::sessionmanagement::directory", Optional[Stdlib::Absolutepath], 'first', undef),
-  Optional[String] $sessionmanagement_encode                  = lookup("dispatcher::farm::${name}::sessionmanagement::encode", Optional[String], 'first', undef),
-  Optional[String] $sessionmanagement_header                  = lookup("dispatcher::farm::${name}::sessionmanagement::header", Optional[String], 'first', undef),
-  Optional[Integer[0]] $sessionmanagement_timeout             = lookup("dispatcher::farm::${name}::sessionmanagement::timeout", Optional[Integer[0]], 'first', undef),
+  Optional[Dispatcher::Farm::SessionManagement] $sessionmanagement
+                                    = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'deep', undef),
   # Secure
 ) {
+  # Check for Apache because it is used by parameter defaults
+  if !defined(Class['apache']) {
+    fail('You must include the Apache class before using any dispatcher class or resources.')
+  }
 
   if $priority < 10 {
     $_priority = "0${priority}"
@@ -55,7 +56,7 @@ define dispatcher::farm (
     content => template('dispatcher/farm/_virtualhosts.erb')
   }
 
-  if ($sessionmanagement_directory) {
+  if ($sessionmanagement) {
     concat::fragment { "${name}-farm-sessionmanagement":
       target  => "dispatcher.${_priority}-${name}.inc.any",
       order   => 30,

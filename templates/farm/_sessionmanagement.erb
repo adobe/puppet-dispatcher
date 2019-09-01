@@ -1,7 +1,13 @@
 
   /sessionmanagement {
-    /directory "<%= @sessionmanagement_directory %>"
-    /encode "<%= @sessionmanagement_encode %>"
-    /header "<%= @sessionmanagement_header %>"
-    /timeout "<%= @sessionmanagement_timeout %>"
+    /directory "<%= @sessionmanagement['directory'] %>"
+    <%- if @sessionmanagement['encode'] -%>
+    /encode "<%= @sessionmanagement['encode'] %>"
+    <%- end -%>
+    <%- if @sessionmanagement['header'] -%>
+    /header "<%= @sessionmanagement['header'] %>"
+    <%- end -%>
+    <%- if @sessionmanagement['timeout'] -%>
+    /timeout "<%= @sessionmanagement['timeout'] %>"
+    <%- end -%>
   }

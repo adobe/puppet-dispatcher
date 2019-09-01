@@ -5,7 +5,8 @@ dispatcher::farm::customparams::virtualhosts:
 dispatcher::farm::customparams::clientheaders:
   - A-Client-Header
   - Another-Client-Header
-dispatcher::farm::customparams::sessionmanagement::directory: /path/to/sessions
-dispatcher::farm::customparams::sessionmanagement::encode: sha1
-dispatcher::farm::customparams::sessionmanagement::header: HTTP:authorization
-dispatcher::farm::customparams::sessionmanagement::timeout: 90
+dispatcher::farm::customparams::sessionmanagement:
+  directory: /path/to/sessions
+  encode: sha1
+  header: HTTP:authorization
+  timeout: 90
