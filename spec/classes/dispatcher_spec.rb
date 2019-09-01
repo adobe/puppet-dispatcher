@@ -216,6 +216,7 @@ describe 'dispatcher', type: :class do
       end
 
       context 'farm list' do
+        let(:hiera_config) { 'spec/hiera.yaml' }
         let(:params) { default_params.merge(farms: %w[vhost1 vhost2 vhost3]) }
 
         it { is_expected.to contain_dispatcher__farm('vhost1') }

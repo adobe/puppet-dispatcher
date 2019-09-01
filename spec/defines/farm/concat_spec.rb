@@ -30,6 +30,7 @@ describe 'dispatcher::farm', type: :define do
             priority:      0,
             virtualhosts:  %w[namevar],
             clientheaders: [],
+            renderers:     [{ 'hostname' => 'localhost', 'port' => 4503 }],
           )
         end
         it do
@@ -61,6 +62,7 @@ describe 'dispatcher::farm', type: :define do
               'header'    => 'HTTP:authorization',
               'timeout'   => 90,
             },
+            renderers:     [{ 'hostname' => 'localhost', 'port' => 4503 }],
           )
         end
         it do
