@@ -43,6 +43,11 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'sessionmanagement' expects a Dispatcher::Farm::SessionManagement}) }
           end
+          context 'renderers' do
+            let(:params) { { renderers: {} } }
+
+            it { is_expected.to raise_error(%r{'renderers' expects an Array}) }
+          end
         end
         context 'hiera invalid' do
           context 'ensure' do
@@ -69,6 +74,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-sessionmanagement') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::SessionManagement}) }
+          end
+          context 'renderers' do
+            let(:facts) { os_facts.merge(testname: 'invalid-renderers') }
+
+            it { is_expected.to raise_error(%r{expects an Array}) }
           end
         end
       end

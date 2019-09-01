@@ -22,3 +22,20 @@ dispatcher::log_file: "%{::apache::logroot}/dispatcher.log"
 dispatcher::log_level: 'warn'
 dispatcher::pass_error: false
 dispatcher::use_processed_url: true
+
+dispatcher::farm::namevar::renderers:
+  -
+    hostname: localhost
+    port: 4503
+dispatcher::farm::vhost1::renderers:
+  -
+    hostname: localhost
+    port: 4503
+dispatcher::farm::vhost2::renderers:
+  -
+    hostname: localhost
+    port: 4503
+dispatcher::farm::vhost3::renderers:
+  -
+    hostname: localhost
+    port: 4503

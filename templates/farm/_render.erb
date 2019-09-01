@@ -1,0 +1,24 @@
+
+  /renders {
+  <%- @renderers.each_with_index do |renderer, idx| -%>
+    /renderer<%= idx %> {
+      /hostname "<%= renderer['hostname'] -%>"
+      /port "<%= renderer['port'] -%>"
+    <%- unless renderer['timeout'].nil? -%>
+      /timeout "<%= renderer['timeout'] -%>"
+    <%- end -%>
+    <%- unless renderer['receive_timeout'].nil? -%>
+      /receiveTimeout "<%= renderer['receive_timeout'] -%>"
+    <%- end -%>
+    <%- unless renderer['ipv4'].nil? -%>
+      /ipv4 "<%= renderer['ipv4'] ? 1 : 0 -%>"
+    <%- end -%>
+    <%- unless renderer['secure'].nil? -%>
+      /secure "<%= renderer['secure'] ? 1 : 0 -%>"
+    <%- end -%>
+    <%- unless renderer['always_resolve'].nil? -%>
+      /always-resolve "<%= renderer['always_resolve'] ? 1 : 0 -%>"
+    <%- end -%>
+    }
+  <%- end -%>
+  }
