@@ -221,16 +221,22 @@ describe 'dispatcher', type: :class do
 
         it { is_expected.to contain_dispatcher__farm('vhost1') }
         it { is_expected.to contain_concat('dispatcher.00-vhost1.inc.any') }
-        it { is_expected.to contain_concat_fragment('vhost1-farm-header') }
-        it { is_expected.to contain_concat_fragment('vhost1-farm-clientheaders') }
+        it { is_expected.to contain_concat__fragment('vhost1-farm-header') }
+        it { is_expected.to contain_concat__fragment('vhost1-farm-clientheaders') }
+        it { is_expected.to contain_concat__fragment('vhost1-farm-virtualhosts') }
+        it { is_expected.to contain_concat__fragment('vhost1-farm-renders') }
         it { is_expected.to contain_dispatcher__farm('vhost2') }
         it { is_expected.to contain_concat('dispatcher.00-vhost2.inc.any') }
-        it { is_expected.to contain_concat_fragment('vhost2-farm-header') }
-        it { is_expected.to contain_concat_fragment('vhost2-farm-clientheaders') }
+        it { is_expected.to contain_concat__fragment('vhost2-farm-header') }
+        it { is_expected.to contain_concat__fragment('vhost2-farm-clientheaders') }
+        it { is_expected.to contain_concat__fragment('vhost2-farm-virtualhosts') }
+        it { is_expected.to contain_concat__fragment('vhost2-farm-renders') }
         it { is_expected.to contain_dispatcher__farm('vhost3') }
         it { is_expected.to contain_concat('dispatcher.00-vhost3.inc.any') }
-        it { is_expected.to contain_concat_fragment('vhost3-farm-header') }
-        it { is_expected.to contain_concat_fragment('vhost3-farm-clientheaders') }
+        it { is_expected.to contain_concat__fragment('vhost3-farm-header') }
+        it { is_expected.to contain_concat__fragment('vhost3-farm-clientheaders') }
+        it { is_expected.to contain_concat__fragment('vhost3-farm-virtualhosts') }
+        it { is_expected.to contain_concat__fragment('vhost3-farm-renders') }
       end
     end
   end

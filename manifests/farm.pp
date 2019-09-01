@@ -64,9 +64,9 @@ define dispatcher::farm (
     }
   }
 
-  concat::fragment { "${name}-farm-render":
+  concat::fragment { "${name}-farm-renders":
     target  => "dispatcher.${_priority}-${name}.inc.any",
     order   => 40,
-    content => template('dispatcher/farm/_render.erb')
+    content => template('dispatcher/farm/_renders.erb')
   }
 }
