@@ -1,0 +1,30 @@
+dispatcher::farm::customparams::priority: 50
+dispatcher::farm::customparams::renderers:
+  -
+    hostname: localhost
+    port: 4503
+dispatcher::farm::customparams::filters:
+  -
+    allow: true
+    rank: 10
+    method:
+      regex: true
+      pattern: '(POST|GET)'
+    query:
+      regex: true
+      pattern: '[.]*'
+    protocol:
+      regex: true
+      pattern: 'https?'
+    path:
+      regex: true
+      pattern: '/content/test/.*'
+    selectors:
+      regex: true
+      pattern: '(1|tidy)'
+    extension:
+      regex: true
+      pattern: '(css|js|html)'
+    suffix:
+      regex: true
+      pattern: '/some/path/.*'

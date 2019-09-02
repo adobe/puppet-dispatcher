@@ -27,15 +27,50 @@ dispatcher::farm::namevar::renderers:
   -
     hostname: localhost
     port: 4503
+dispatcher::farm::namevar::filters:
+  -
+    allow: false
+    rank: 01
+    url:
+      regex: true
+      pattern: '.*'
 dispatcher::farm::vhost1::renderers:
   -
     hostname: localhost
     port: 4503
+dispatcher::farm::vhost1::filters:
+  -
+    allow: true
+    rank: 10
+    url:
+      regex: true
+      pattern: '.*'
 dispatcher::farm::vhost2::renderers:
   -
     hostname: localhost
     port: 4503
+dispatcher::farm::vhost2::filters:
+  -
+    allow: true
+    rank: 10
+    url:
+      regex: true
+      pattern: '.*'
 dispatcher::farm::vhost3::renderers:
   -
     hostname: localhost
     port: 4503
+dispatcher::farm::vhost3::filters:
+  -
+    allow: true
+    rank: 10
+    url:
+      regex: true
+      pattern: '.*'
+dispatcher::farm::multiplefilters::filters:
+  -
+    allow: false
+    rank: 01
+    url:
+      regex: true
+      pattern: '.*'

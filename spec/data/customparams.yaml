@@ -14,3 +14,10 @@ dispatcher::farm::customparams::renderers:
   -
     hostname: localhost
     port: 4503
+dispatcher::farm::customparams::filters:
+  -
+    allow: false
+    rank: 10
+    method:
+      regex: false
+      pattern: 'POST'

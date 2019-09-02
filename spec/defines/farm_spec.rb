@@ -18,6 +18,16 @@ describe 'dispatcher::farm', type: :define do
 
       describe 'parameter validation' do
         context 'setting manually' do
+          context 'renderers' do
+            let(:params) { { renderers: {}, filters: { allow: true, url: { regex: true, pattern: '.*' } } } }
+
+            it { is_expected.to raise_error(%r{'renderers' expects an Array}) }
+          end
+          context 'filters' do
+            let(:params) { { renders: { hostname: 'localhost', port: 4503 }, filters: {} } }
+
+            it { is_expected.to raise_error(%r{'filters' expects an Array}) }
+          end
           context 'ensure' do
             let(:params) { { ensure: 'invalid' } }
 
@@ -43,13 +53,18 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'sessionmanagement' expects a Dispatcher::Farm::SessionManagement}) }
           end
-          context 'renderers' do
-            let(:params) { { renderers: {} } }
-
-            it { is_expected.to raise_error(%r{'renderers' expects an Array}) }
-          end
         end
         context 'hiera invalid' do
+          context 'renderers' do
+            let(:facts) { os_facts.merge(testname: 'invalid-renderers') }
+
+            it { is_expected.to raise_error(%r{expects an Array}) }
+          end
+          context 'filters' do
+            let(:facts) { os_facts.merge(testname: 'invalid-filters') }
+
+            it { is_expected.to raise_error(%r{expects an Array}) }
+          end
           context 'ensure' do
             let(:facts) { os_facts.merge(testname: 'invalid-ensure') }
 
@@ -74,11 +89,6 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-sessionmanagement') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::SessionManagement}) }
-          end
-          context 'renderers' do
-            let(:facts) { os_facts.merge(testname: 'invalid-renderers') }
-
-            it { is_expected.to raise_error(%r{expects an Array}) }
           end
         end
       end

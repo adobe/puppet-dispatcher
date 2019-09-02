@@ -40,7 +40,7 @@ yaml:
 
 # Conf files i.e. apache config, splunk.conf files
 conf:
-  ext:  ['.conf', '.erb', '.any']
+  ext:  ['.conf']
   comment:
     open:   '#\n'
     close:  '#\n\n'

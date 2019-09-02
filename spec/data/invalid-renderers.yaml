@@ -1,2 +1,9 @@
 dispatcher::farm::namevar::renderers:
   hash: not an array
+dispatcher::farm::namevar::filters:
+  -
+    allow: true
+    rank: 10
+    url:
+      regex: false
+      pattern: '*'

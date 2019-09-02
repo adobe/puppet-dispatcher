@@ -5,3 +5,10 @@ dispatcher::farm::customparams::renderers:
   -
     hostname: 192.168.0.2
     port: 4505
+dispatcher::farm::customparams::filters:
+  -
+    allow: false
+    rank: 10
+    method:
+      regex: false
+      pattern: 'POST'

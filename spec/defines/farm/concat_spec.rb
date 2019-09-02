@@ -31,6 +31,7 @@ describe 'dispatcher::farm', type: :define do
             virtualhosts:  %w[namevar],
             clientheaders: [],
             renderers:     [{ 'hostname' => 'localhost', 'port' => 4503 }],
+            filters:       [{ 'allow' => false, 'rank' => 1, 'url' => { 'regex' => true, 'pattern' => '.*' } }],
           )
         end
         it do
@@ -63,6 +64,7 @@ describe 'dispatcher::farm', type: :define do
               'timeout'   => 90,
             },
             renderers:     [{ 'hostname' => 'localhost', 'port' => 4503 }],
+            filters:       [{ 'allow' => false, 'rank' => 10, 'method' => { 'regex' => false, 'pattern' => 'POST' } }],
           )
         end
         it do

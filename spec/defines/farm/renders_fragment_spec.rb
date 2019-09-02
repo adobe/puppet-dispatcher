@@ -18,10 +18,16 @@ describe 'dispatcher::farm', type: :define do
       let(:params) { default_params }
 
       describe 'default parameters' do
+        it { is_expected.to contain_concat__fragment('namevar-farm-renders').with(target: 'dispatcher.00-namevar.inc.any', order: 40) }
         it { is_expected.to contain_concat__fragment('namevar-farm-renders').with(content: %r{^\s+/renders\s\{$}) }
         it { is_expected.to contain_concat__fragment('namevar-farm-renders').with(content: %r{^\s+/renderer0\s\{$}) }
         it { is_expected.to contain_concat__fragment('namevar-farm-renders').with(content: %r{^\s+/hostname "localhost"$}) }
         it { is_expected.to contain_concat__fragment('namevar-farm-renders').with(content: %r{^\s+/port "4503"$}) }
+        it { is_expected.not_to contain_concat__fragment('namevar-farm-renders').with(content: %r{/timeout}) }
+        it { is_expected.not_to contain_concat__fragment('namevar-farm-renders').with(content: %r{/receive_timeout}) }
+        it { is_expected.not_to contain_concat__fragment('namevar-farm-renders').with(content: %r{/ipv4}) }
+        it { is_expected.not_to contain_concat__fragment('namevar-farm-renders').with(content: %r{/secure}) }
+        it { is_expected.not_to contain_concat__fragment('namevar-farm-renders').with(content: %r{/always-resolve}) }
       end
 
       context 'custom parameters' do

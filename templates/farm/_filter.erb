@@ -1,0 +1,31 @@
+
+  /filter {
+  <%- @filters.sort_by { |entry| entry['rank'] }.each_with_index do |filter, idx| -%>
+    /<%= sprintf("%04d", idx) %> { /type "<%= filter['allow'] ? 'allow' : 'deny' -%>" <% -%>
+    <%- if filter['url'] -%>
+      <%- %>/url <%= filter['url']['regex'] ? "'#{filter['url']['pattern']}'" : "\"#{filter['url']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['method'] -%>
+      <%- %>/method <%= filter['method']['regex'] ? "'#{filter['method']['pattern']}'" : "\"#{filter['method']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['query'] -%>
+      <%- %>/query <%= filter['query']['regex'] ? "'#{filter['query']['pattern']}'" : "\"#{filter['query']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['protocol'] -%>
+      <%- %>/protocol <%= filter['protocol']['regex'] ? "'#{filter['protocol']['pattern']}'" : "\"#{filter['protocol']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['path'] -%>
+      <%- %>/path <%= filter['path']['regex'] ? "'#{filter['path']['pattern']}'" : "\"#{filter['path']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['selectors'] -%>
+      <%- %>/selectors <%= filter['selectors']['regex'] ? "'#{filter['selectors']['pattern']}'" : "\"#{filter['selectors']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['extension'] -%>
+      <%- %>/extension <%= filter['extension']['regex'] ? "'#{filter['extension']['pattern']}'" : "\"#{filter['extension']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- if filter['suffix'] -%>
+      <%- %>/suffix <%= filter['suffix']['regex'] ? "'#{filter['suffix']['pattern']}'" : "\"#{filter['suffix']['pattern']}\"" %> <% -%>
+    <%- end -%>
+    <%- %>}
+  <%- end -%>
+  }

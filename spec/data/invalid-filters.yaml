@@ -1,0 +1,6 @@
+dispatcher::farm::namevar::renderers:
+  -
+    hostname: localhost
+    port: 4503
+dispatcher::farm::namevar::filters:
+  hash: not an array
