@@ -24,3 +24,4 @@ dispatcher::farm::customparams::filters:
 dispatcher::farm::customparams::vanityurls:
   file: /path/to/vanity/urls
   delay: 6000
+dispatcher::farm::customparams::propagatesyndpost: true

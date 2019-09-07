@@ -14,7 +14,7 @@ define dispatcher::farm (
   Optional[Dispatcher::Farm::SessionManagement]
       $sessionmanagement                             = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
   Optional[Dispatcher::Farm::VanityUrls] $vanityurls = lookup("dispatcher::farm::${name}::vanityurls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
-
+  Boolean $propagatesyndpost                              = lookup("dispatcher::farm::${name}::propagatesyndpost", Boolean, 'first', false),
   # Secure
 ) {
   # Check for Apache because it is used by parameter defaults
@@ -85,4 +85,13 @@ define dispatcher::farm (
       content => template('dispatcher/farm/_vanityurls.erb')
     }
   }
+
+  if ($propagatesyndpost) {
+    concat::fragment { "${name}-farm-propagatesyndpost":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 70,
+      content => '  /propagateSyndPost "1"'
+    }
+  }
+
 }

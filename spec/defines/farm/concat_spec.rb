@@ -32,6 +32,7 @@ describe 'dispatcher::farm', type: :define do
             clientheaders: [],
             renderers:     [{ 'hostname' => 'localhost', 'port' => 4503 }],
             filters:       [{ 'allow' => false, 'rank' => 1, 'url' => { 'regex' => true, 'pattern' => '.*' } }],
+            propagatesyndpost:  false
           )
         end
         it do
@@ -65,7 +66,8 @@ describe 'dispatcher::farm', type: :define do
               'header'    => 'HTTP:authorization',
               'timeout'   => 90,
             },
-            vanityurls:      { 'file' => '/path/to/vanity/urls', 'delay' => 6000 },
+            vanityurls:        { 'file' => '/path/to/vanity/urls', 'delay' => 6000 },
+            propagatesyndpost:      true
           )
         end
         it do

@@ -58,6 +58,11 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'vanityurls' expects a Dispatcher::Farm::VanityUrl}) }
           end
+          context 'propagatesyndpost' do
+            let(:params) { { propagatesyndpost: 'invalid' } }
+
+            it { is_expected.to raise_error(%r{'propagatesyndpost' expects a Boolean}) }
+          end
         end
         context 'hiera invalid' do
           context 'renderers' do
@@ -99,6 +104,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-vanityurls') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::VanityUrls}) }
+          end
+          context 'propagatesyndpost' do
+            let(:facts) { os_facts.merge(testname: 'invalid-propagatesyndpost') }
+
+            it { is_expected.to raise_error(%r{expects a Boolean value}) }
           end
         end
       end
