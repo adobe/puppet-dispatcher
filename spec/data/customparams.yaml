@@ -21,3 +21,6 @@ dispatcher::farm::customparams::filters:
     method:
       regex: false
       pattern: 'POST'
+dispatcher::farm::customparams::vanityurls:
+  file: /path/to/vanity/urls
+  delay: 6000

@@ -5,14 +5,15 @@
 # @example
 #   dispatcher::farm { 'namevar': }
 define dispatcher::farm (
-  Array[Dispatcher::Farm::Renderer] $renderers = lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep'),
-  Array[Dispatcher::Farm::Filter] $filters     = lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep'),
-  Enum['absent', 'present'] $ensure            = lookup("dispatcher::farm::${name}::ensure", Enum['absent', 'present'], 'first', 'present'),
-  Integer[0] $priority                         = lookup("dispatcher::farm::${name}::priority", Integer[0], 'first', 0),
-  Array[String] $virtualhosts                  = lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name]),
-  Array[String] $clientheaders                 = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
+  Array[Dispatcher::Farm::Renderer] $renderers       = lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep'),
+  Array[Dispatcher::Farm::Filter] $filters           = lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep'),
+  Enum['absent', 'present'] $ensure                  = lookup("dispatcher::farm::${name}::ensure", Enum['absent', 'present'], 'first', 'present'),
+  Integer[0] $priority                               = lookup("dispatcher::farm::${name}::priority", Integer[0], 'first', 0),
+  Array[String] $virtualhosts                        = lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name]),
+  Array[String] $clientheaders                       = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
   Optional[Dispatcher::Farm::SessionManagement]
-    $sessionmanagement                         = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'deep', undef),
+      $sessionmanagement                             = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
+  Optional[Dispatcher::Farm::VanityUrls] $vanityurls = lookup("dispatcher::farm::${name}::vanityurls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
 
   # Secure
 ) {
@@ -75,5 +76,13 @@ define dispatcher::farm (
     target  => "dispatcher.${_priority}-${name}.inc.any",
     order   => 50,
     content => template('dispatcher/farm/_filter.erb')
+  }
+
+  if ($vanityurls) {
+    concat::fragment { "${name}-farm-vanityurls":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 60,
+      content => template('dispatcher/farm/_vanityurls.erb')
+    }
   }
 }

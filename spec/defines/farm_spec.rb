@@ -53,6 +53,11 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'sessionmanagement' expects a Dispatcher::Farm::SessionManagement}) }
           end
+          context 'vanityurls' do
+            let(:params) { { vanityurls: [] } }
+
+            it { is_expected.to raise_error(%r{'vanityurls' expects a Dispatcher::Farm::VanityUrl}) }
+          end
         end
         context 'hiera invalid' do
           context 'renderers' do
@@ -89,6 +94,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-sessionmanagement') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::SessionManagement}) }
+          end
+          context 'vanityurls' do
+            let(:facts) { os_facts.merge(testname: 'invalid-vanityurls') }
+
+            it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::VanityUrls}) }
           end
         end
       end

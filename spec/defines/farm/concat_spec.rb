@@ -53,6 +53,8 @@ describe 'dispatcher::farm', type: :define do
 
         it do
           is_expected.to contain_dispatcher__farm('customparams').only_with(
+            renderers:         [{ 'hostname' => 'localhost', 'port' => 4503 }],
+            filters:           [{ 'allow' => false, 'rank' => 10, 'method' => { 'regex' => false, 'pattern' => 'POST' } }],
             ensure:            'present',
             priority:          50,
             virtualhosts:      %w[www.example.com another.example.com],
@@ -63,8 +65,7 @@ describe 'dispatcher::farm', type: :define do
               'header'    => 'HTTP:authorization',
               'timeout'   => 90,
             },
-            renderers:     [{ 'hostname' => 'localhost', 'port' => 4503 }],
-            filters:       [{ 'allow' => false, 'rank' => 10, 'method' => { 'regex' => false, 'pattern' => 'POST' } }],
+            vanityurls:      { 'file' => '/path/to/vanity/urls', 'delay' => 6000 },
           )
         end
         it do
