@@ -12,88 +12,90 @@ describe 'dispatcher::farm', type: :define do
   end
   let(:default_params) { {} }
 
-  on_supported_os.each do |os, os_facts|
-    context "on #{os}" do
-      let(:facts) { os_facts }
-      let(:params) { default_params }
+  describe 'filters' do
+    on_supported_os.each do |os, os_facts|
+      context "on #{os}" do
+        let(:facts) { os_facts }
+        let(:params) { default_params }
 
-      describe 'default parameters' do
-        it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(target: 'dispatcher.00-namevar.inc.any', order: 50) }
-        it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
-        it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{^\s+/0000\s\{\s/type}) }
-        it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{\s/type\s"deny"\s/url}) }
-        it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{\s/url\s'\.\*'\s\}$}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/method}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/query}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/protocol}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/path}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/selectors}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/extension}) }
-        it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/suffix}) }
-      end
+        describe 'default parameters' do
+          it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(target: 'dispatcher.00-namevar.inc.any', order: 50) }
+          it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
+          it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{^\s+/0000\s\{\s/type}) }
+          it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{\s/type\s"deny"\s/url}) }
+          it { is_expected.to contain_concat__fragment('namevar-farm-filter').with(content: %r{\s/url\s'\.\*'\s\}$}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/method}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/query}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/protocol}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/path}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/selectors}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/extension}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-filter').with(content: %r{/suffix}) }
+        end
 
-      context 'simple filters' do
-        let(:facts) { os_facts.merge(testname: 'simple-filters') }
-        let(:title) { 'customparams' }
+        context 'simple filters' do
+          let(:facts) { os_facts.merge(testname: 'simple-filters') }
+          let(:title) { 'customparams' }
 
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(target: 'dispatcher.50-customparams.inc.any', order: 50) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/0000\s\{\s/type}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/type\s"deny"\s/method}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/method\s"\(POST\|GET\)"\s/query}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/query\s"\[.\]\*"\s/protocol}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/protocol\s"https\?"\s/path}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/path\s"/content/test/\.\*"\s/selectors}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/selectors\s"\(1\|tidy\)"\s/extension}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/extension\s"\(css\|js\|html\)"\s/suffix}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/suffix\s"/some/path/\.\*"\s\}$}) }
-        it { is_expected.not_to contain_concat__fragment('customparams-farm-filter').with(content: %r{/url}) }
-      end
-      context 'regex filters' do
-        let(:facts) { os_facts.merge(testname: 'regex-filters') }
-        let(:title) { 'customparams' }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(target: 'dispatcher.50-customparams.inc.any', order: 50) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/0000\s\{\s/type}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/type\s"deny"\s/method}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/method\s"\(POST\|GET\)"\s/query}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/query\s"\[.\]\*"\s/protocol}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/protocol\s"https\?"\s/path}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/path\s"/content/test/\.\*"\s/selectors}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/selectors\s"\(1\|tidy\)"\s/extension}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/extension\s"\(css\|js\|html\)"\s/suffix}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/suffix\s"/some/path/\.\*"\s\}$}) }
+          it { is_expected.not_to contain_concat__fragment('customparams-farm-filter').with(content: %r{/url}) }
+        end
+        context 'regex filters' do
+          let(:facts) { os_facts.merge(testname: 'regex-filters') }
+          let(:title) { 'customparams' }
 
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(target: 'dispatcher.50-customparams.inc.any', order: 50) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/0000\s\{\s/type}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/type\s"allow"\s/method}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/method\s'\(POST\|GET\)'\s/query}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/query\s'\[.\]\*'\s/protocol}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/protocol\s'https\?'\s/path}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/path\s'/content/test/\.\*'\s/selectors}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/selectors\s'\(1\|tidy\)'\s/extension}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/extension\s'\(css\|js\|html\)'\s/suffix}) }
-        it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/suffix\s'/some/path/\.\*'\s\}$}) }
-        it { is_expected.not_to contain_concat__fragment('customparams-farm-filter').with(content: %r{/url}) }
-      end
-      context 'multiple filters' do
-        let(:facts) { os_facts.merge(testname: 'multiple-filters') }
-        let(:title) { 'multiplefilters' }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(target: 'dispatcher.50-customparams.inc.any', order: 50) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{^\s+/0000\s\{\s/type}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/type\s"allow"\s/method}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/method\s'\(POST\|GET\)'\s/query}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/query\s'\[.\]\*'\s/protocol}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/protocol\s'https\?'\s/path}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/path\s'/content/test/\.\*'\s/selectors}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/selectors\s'\(1\|tidy\)'\s/extension}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/extension\s'\(css\|js\|html\)'\s/suffix}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-filter').with(content: %r{\s/suffix\s'/some/path/\.\*'\s\}$}) }
+          it { is_expected.not_to contain_concat__fragment('customparams-farm-filter').with(content: %r{/url}) }
+        end
+        context 'multiple filters' do
+          let(:facts) { os_facts.merge(testname: 'multiple-filters') }
+          let(:title) { 'multiplefilters' }
 
-        it { is_expected.to contain_concat('dispatcher.50-multiplefilters.inc.any') }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-header').with(target: 'dispatcher.50-multiplefilters.inc.any') }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-clientheaders').with(target: 'dispatcher.50-multiplefilters.inc.any') }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-virtualhosts').with(target: 'dispatcher.50-multiplefilters.inc.any') }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-renders').with(target: 'dispatcher.50-multiplefilters.inc.any') }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(target: 'dispatcher.50-multiplefilters.inc.any', order: 50) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/0000\s\{\s/type\s"deny"\s/url\s'\.\*'\s\}$}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/0001\s\{\s/type\s"allow"\s/method}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/method\s'\(POST\|GET\)'\s/query}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/query\s'\[.\]\*'\s/protocol}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/protocol\s'https\?'\s/path}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/path\s'/content/test/\.\*'\s/selectors}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/selectors\s'\(1\|tidy\)'\s/extension}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/extension\s'\(css\|js\|html\)'\s/suffix}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/suffix\s'/some/path/\.\*'\s\}$}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/0002\s\{\s/type\s"deny"\s/method}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/method\s"\(POST\|GET\)"\s/query}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/query\s"\[.\]\*"\s/protocol}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/protocol\s"https\?"\s/path}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/path\s"/content/test/\.\*"\s/selectors}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/selectors\s"\(1\|tidy\)"\s/extension}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/extension\s"\(css\|js\|html\)"\s/suffix}) }
-        it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/suffix\s"/some/path/\.\*"\s\}$}) }
+          it { is_expected.to contain_concat('dispatcher.50-multiplefilters.inc.any') }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-header').with(target: 'dispatcher.50-multiplefilters.inc.any') }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-clientheaders').with(target: 'dispatcher.50-multiplefilters.inc.any') }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-virtualhosts').with(target: 'dispatcher.50-multiplefilters.inc.any') }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-renders').with(target: 'dispatcher.50-multiplefilters.inc.any') }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(target: 'dispatcher.50-multiplefilters.inc.any', order: 50) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/filter\s\{$}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/0000\s\{\s/type\s"deny"\s/url\s'\.\*'\s\}$}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/0001\s\{\s/type\s"allow"\s/method}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/method\s'\(POST\|GET\)'\s/query}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/query\s'\[.\]\*'\s/protocol}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/protocol\s'https\?'\s/path}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/path\s'/content/test/\.\*'\s/selectors}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/selectors\s'\(1\|tidy\)'\s/extension}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/extension\s'\(css\|js\|html\)'\s/suffix}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/suffix\s'/some/path/\.\*'\s\}$}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{^\s+/0002\s\{\s/type\s"deny"\s/method}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/method\s"\(POST\|GET\)"\s/query}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/query\s"\[.\]\*"\s/protocol}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/protocol\s"https\?"\s/path}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/path\s"/content/test/\.\*"\s/selectors}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/selectors\s"\(1\|tidy\)"\s/extension}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/extension\s"\(css\|js\|html\)"\s/suffix}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/suffix\s"/some/path/\.\*"\s\}$}) }
+        end
       end
     end
   end
