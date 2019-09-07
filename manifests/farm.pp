@@ -14,7 +14,7 @@ define dispatcher::farm (
   Optional[Dispatcher::Farm::SessionManagement]
       $sessionmanagement                             = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
   Optional[Dispatcher::Farm::VanityUrls] $vanityurls = lookup("dispatcher::farm::${name}::vanityurls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
-  Boolean $propagatesyndpost                              = lookup("dispatcher::farm::${name}::propagatesyndpost", Boolean, 'first', false),
+  Boolean $propagatesyndpost                         = lookup("dispatcher::farm::${name}::propagatesyndpost", Boolean, 'first', false),
   # Secure
 ) {
   # Check for Apache because it is used by parameter defaults
