@@ -12,7 +12,7 @@ describe 'dispatcher::farm', type: :define do
   end
   let(:default_params) { {} }
 
-  describe 'propagatesyndpost' do
+  describe 'propagate_synd_post' do
     on_supported_os.each do |os, os_facts|
       context "on #{os}" do
         let(:facts) { os_facts }

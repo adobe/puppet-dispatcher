@@ -34,6 +34,20 @@ dispatcher::farm::namevar::filters:
     url:
       regex: true
       pattern: '.*'
+dispatcher::farm::namevar::cache:
+  docroot: /path/to/docroot
+  rules:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: true
+  allowed_clients:
+    -
+      rank: 1
+      glob: '*.*.*.*'
+      allow: false
+
+
 dispatcher::farm::vhost1::renderers:
   -
     hostname: localhost
@@ -45,6 +59,18 @@ dispatcher::farm::vhost1::filters:
     url:
       regex: true
       pattern: '.*'
+dispatcher::farm::vhost1::cache:
+  docroot: /path/to/docroot
+  rules:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: true
+  allowed_clients:
+    -
+      rank: 1
+      glob: '*.*.*.*'
+      allow: false
 dispatcher::farm::vhost2::renderers:
   -
     hostname: localhost
@@ -60,6 +86,18 @@ dispatcher::farm::vhost3::renderers:
   -
     hostname: localhost
     port: 4503
+dispatcher::farm::vhost2::cache:
+  docroot: /path/to/docroot
+  rules:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: true
+  allowed_clients:
+    -
+      rank: 1
+      glob: '*.*.*.*'
+      allow: false
 dispatcher::farm::vhost3::filters:
   -
     allow: true
@@ -67,6 +105,18 @@ dispatcher::farm::vhost3::filters:
     url:
       regex: true
       pattern: '.*'
+dispatcher::farm::vhost3::cache:
+  docroot: /path/to/docroot
+  rules:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: true
+  allowed_clients:
+    -
+      rank: 1
+      glob: '*.*.*.*'
+      allow: false
 dispatcher::farm::multiplefilters::filters:
   -
     allow: false
@@ -74,3 +124,40 @@ dispatcher::farm::multiplefilters::filters:
     url:
       regex: true
       pattern: '.*'
+dispatcher::farm::multiplefilters::cache:
+  docroot: /path/to/docroot
+  rules:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: true
+  allowed_clients:
+    -
+      rank: 1
+      glob: '*.*.*.*'
+      allow: false
+
+dispatcher::farm::customparams::cache:
+  docroot: /path/to/docroot
+  rules:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: true
+  allowed_clients:
+    -
+      rank: 1
+      glob: '*.*.*.*'
+      allow: false
+  invalidate:
+    -
+      rank: 1
+      glob: '*.html'
+      allow: false
+  ignore_url_params:
+    -
+      rank: 1
+      glob: '*'
+      allow: false
+  headers:
+    - Content-Type

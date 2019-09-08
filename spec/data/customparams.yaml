@@ -24,4 +24,36 @@ dispatcher::farm::customparams::filters:
 dispatcher::farm::customparams::vanityurls:
   file: /path/to/vanity/urls
   delay: 6000
-dispatcher::farm::customparams::propagatesyndpost: true
+dispatcher::farm::customparams::propagate_synd_post: true
+dispatcher::farm::customparams::cache:
+  docroot: /different/path/to/docroot
+  rules:
+    -
+      rank: 10
+      glob: '*.js'
+      allow: false
+  allowed_clients:
+    -
+      rank: 10
+      glob: '127.0.0.1'
+      allow: true
+  statfile: /path/to/statfile
+  serve_stale_on_error: true
+  allow_authorized: true
+  statfileslevel: 3
+  invalidate:
+    -
+      rank: 10
+      glob: '*.jpg'
+      allow: true
+  invalidate_handler: /opt/dispatcher/scripts/invalidate.sh
+  ignore_url_params:
+    -
+      rank: 10
+      glob: 'q'
+      allow: true
+  headers:
+    - Cache-Control
+  mode: '0660'
+  grace_period: 10
+  enable_ttl: true

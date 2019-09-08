@@ -1,7 +1,8 @@
 
   /filter {
   <%- @filters.sort_by { |entry| entry['rank'] }.each_with_index do |filter, idx| -%>
-    /<%= sprintf("%04d", idx) %> { /type "<%= filter['allow'] ? 'allow' : 'deny' -%>" <% -%>
+    /<%= sprintf("%04d", idx) %> { <% -%>
+      <%- %>/type "<%= filter['allow'] ? 'allow' : 'deny' -%>" <% -%>
     <%- if filter['url'] -%>
       <%- %>/url <%= filter['url']['regex'] ? "'#{filter['url']['pattern']}'" : "\"#{filter['url']['pattern']}\"" %> <% -%>
     <%- end -%>

@@ -95,6 +95,7 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/selectors\s"\(1\|tidy\)"\s/extension}) }
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/extension\s"\(css\|js\|html\)"\s/suffix}) }
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(content: %r{\s/suffix\s"/some/path/\.\*"\s\}$}) }
+          it { is_expected.to contain_concat__fragment('multiplefilters-farm-cache').with(target: 'dispatcher.50-multiplefilters.inc.any') }
         end
       end
     end

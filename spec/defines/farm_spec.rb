@@ -19,12 +19,12 @@ describe 'dispatcher::farm', type: :define do
       describe 'parameter validation' do
         context 'setting manually' do
           context 'renderers' do
-            let(:params) { { renderers: {}, filters: { allow: true, url: { regex: true, pattern: '.*' } } } }
+            let(:params) { { renderers: {} } }
 
             it { is_expected.to raise_error(%r{'renderers' expects an Array}) }
           end
           context 'filters' do
-            let(:params) { { renders: { hostname: 'localhost', port: 4503 }, filters: {} } }
+            let(:params) { { filters: {} } }
 
             it { is_expected.to raise_error(%r{'filters' expects an Array}) }
           end
@@ -58,10 +58,15 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'vanityurls' expects a Dispatcher::Farm::VanityUrl}) }
           end
-          context 'propagatesyndpost' do
-            let(:params) { { propagatesyndpost: 'invalid' } }
+          context 'propagate_synd_post' do
+            let(:params) { { propagate_synd_post: 'invalid' } }
 
-            it { is_expected.to raise_error(%r{'propagatesyndpost' expects a Boolean}) }
+            it { is_expected.to raise_error(%r{'propagate_synd_post' expects a Boolean}) }
+          end
+          context 'cache' do
+            let(:params) { { cache: [] } }
+
+            it { is_expected.to raise_error(%r{'cache' expects a Dispatcher::Farm::Cache}) }
           end
         end
         context 'hiera invalid' do
@@ -105,10 +110,15 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::VanityUrls}) }
           end
-          context 'propagatesyndpost' do
+          context 'propagate_synd_post' do
             let(:facts) { os_facts.merge(testname: 'invalid-propagatesyndpost') }
 
             it { is_expected.to raise_error(%r{expects a Boolean value}) }
+          end
+          context 'cache' do
+            let(:facts) { os_facts.merge(testname: 'invalid-cache') }
+
+            it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::Cache}) }
           end
         end
       end
