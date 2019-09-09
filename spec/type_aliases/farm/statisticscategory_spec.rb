@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe 'Dispatcher::Farm::StatisticsCategories' do
+describe 'Dispatcher::Farm::StatisticsCategory' do
   describe 'Valid values' do
     [
       { rank: 1, name: 'html', glob: '*.html' },

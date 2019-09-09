@@ -17,8 +17,8 @@ define dispatcher::farm (
   Optional[Dispatcher::Farm::VanityUrls] $vanity_urls   = lookup("dispatcher::farm::${name}::vanity_urls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
   Boolean $propagate_synd_post                          = lookup("dispatcher::farm::${name}::propagate_synd_post", Boolean, 'first', false),
   Optional[Dispatcher::Farm::AuthChecker] $auth_checker = lookup("dispatcher::farm::${name}::auth_checker", Optional[Dispatcher::Farm::AuthChecker], 'deep', undef),
-  Optional[Array[Dispatcher::Farm::StatisticsCategories]]
-      $statistics_categories                            = lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategories]], 'deep', undef)
+  Optional[Array[Dispatcher::Farm::StatisticsCategory]]
+      $statistics_categories                            = lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategory]], 'deep', undef)
   # Secure
 ) {
   # Check for Apache because it is used by parameter defaults
