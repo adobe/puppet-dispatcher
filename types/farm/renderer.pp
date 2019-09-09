@@ -4,12 +4,12 @@
 #
 type Dispatcher::Farm::Renderer = Struct[
   {
-    hostname        => Stdlib::Host,
-    port            => Stdlib::Port,
-    timeout         => Optional[Integer[0]],
-    receive_timeout => Optional[Integer[0]],
-    ipv4            => Optional[Boolean],
-    secure          => Optional[Boolean],
-    always_resolve  => Optional[Boolean],
+    hostname                  => Stdlib::Host,
+    port                      => Stdlib::Port,
+    Optional[timeout]         => Integer[0],
+    Optional[receive_timeout] => Integer[0],
+    Optional[ipv4]            => Boolean,
+    Optional[secure]          => Boolean,
+    Optional[always_resolve]  => Boolean,
   }
 ]

@@ -4,19 +4,19 @@
 #
 type Dispatcher::Farm::Cache = Struct[
   {
-    docroot              => Stdlib::Absolutepath,
-    rules                => Array[Dispatcher::Farm::GlobRule],
-    allowed_clients      => Array[Dispatcher::Farm::GlobRule],
-    statfile             => Optional[Stdlib::Absolutepath],
-    serve_stale_on_error => Optional[Boolean],
-    allow_authorized     => Optional[Boolean],
-    statfileslevel       => Optional[Integer[0]],
-    invalidate           => Optional[Array[Dispatcher::Farm::GlobRule]],
-    invalidate_handler   => Optional[Stdlib::Absolutepath],
-    ignore_url_params    => Optional[Array[Dispatcher::Farm::GlobRule]],
-    headers              => Optional[Array[String]],
-    mode                 => Optional[Stdlib::Filemode],
-    grace_period         => Optional[Integer[0]],
-    enable_ttl           => Optional[Boolean],
+    docroot                        => Stdlib::Absolutepath,
+    rules                          => Array[Dispatcher::Farm::GlobRule],
+    allowed_clients                => Array[Dispatcher::Farm::GlobRule],
+    Optional[statfile]             => Stdlib::Absolutepath,
+    Optional[serve_stale_on_error] => Boolean,
+    Optional[allow_authorized]     => Boolean,
+    Optional[statfileslevel]       => Integer[0],
+    Optional[invalidate]           => Array[Dispatcher::Farm::GlobRule],
+    Optional[invalidate_handler]   => Stdlib::Absolutepath,
+    Optional[ignore_url_params]    => Array[Dispatcher::Farm::GlobRule],
+    Optional[headers]              => Array[String],
+    Optional[mode]                 => Stdlib::Filemode,
+    Optional[grace_period]         => Integer[0],
+    Optional[enable_ttl]           => Boolean,
   }
 ]

@@ -22,27 +22,27 @@ describe 'Dispatcher::Farm::Cache' do
         statfile:        '/path/to/statfile',
       },
       {
-        docroot:         '/path/to/docroot',
-        rules:           [{ rank: 1, glob: '*.html', allow: true }],
-        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
-        serve_stale_on_error:      true,
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        serve_stale_on_error: true,
       },
       {
-        docroot:         '/path/to/docroot',
-        rules:           [{ rank: 1, glob: '*.html', allow: true }],
-        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
-        serve_stale_on_error:      false,
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        serve_stale_on_error: false,
       },
       {
-        docroot:         '/path/to/docroot',
-        rules:           [{ rank: 1, glob: '*.html', allow: true }],
-        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        docroot:          '/path/to/docroot',
+        rules:            [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:  [{ rank: 1, glob: '*.*.*.*', allow: false }],
         allow_authorized: true,
       },
       {
-        docroot:         '/path/to/docroot',
-        rules:           [{ rank: 1, glob: '*.html', allow: true }],
-        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        docroot:          '/path/to/docroot',
+        rules:            [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:  [{ rank: 1, glob: '*.*.*.*', allow: false }],
         allow_authorized: false,
       },
       {
@@ -133,8 +133,19 @@ describe 'Dispatcher::Farm::Cache' do
     [
       {},
       {
+        docroot:         nil,
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
         docroot:         'invalid',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        statfile:        nil,
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
       },
       {
@@ -144,20 +155,39 @@ describe 'Dispatcher::Farm::Cache' do
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
       },
       {
-        docroot:         '/path/to/docroot',
-        rules:           [{ rank: 1, glob: '*.html', allow: true }],
-        serve_stale_on_error:      'invalid',
-        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        serve_stale_on_error: nil,
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
       },
+      {
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        serve_stale_on_error: 'invalid',
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
+        docroot:          '/path/to/docroot',
+        rules:            [{ rank: 1, glob: '*.html', allow: true }],
+        allow_authorized: nil,
+        allowed_clients:  [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
+        docroot:          '/path/to/docroot',
+        rules:            [{ rank: 1, glob: '*.html', allow: true }],
+        allow_authorized: 'invalid',
+        allowed_clients:  [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      { docroot: '/path/to/docroot', allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
+      { docroot: '/path/to/docroot', rules: nil, allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
+      { docroot: '/path/to/docroot', rules: {}, allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
+      { docroot: '/path/to/docroot', rules: ['invalid'], allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
       {
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
-        allow_authorized: 'invalid',
+        statfileslevel:  nil,
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
       },
-      { docroot: '/path/to/docroot', allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
-      { docroot: '/path/to/docroot', rules: {}, allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
-      { docroot: '/path/to/docroot', rules: ['invalid'], allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }] },
       {
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
@@ -173,6 +203,12 @@ describe 'Dispatcher::Farm::Cache' do
       {
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        invalidate:      nil,
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
         invalidate:      {},
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
       },
@@ -181,6 +217,12 @@ describe 'Dispatcher::Farm::Cache' do
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         invalidate:      ['invalid'],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
+        docroot:            '/path/to/docroot',
+        rules:              [{ rank: 1, glob: '*.html', allow: true }],
+        invalidate_handler: nil,
+        allowed_clients:    [{ rank: 1, glob: '*.*.*.*', allow: false }],
       },
       {
         docroot:            '/path/to/docroot',
@@ -201,12 +243,23 @@ describe 'Dispatcher::Farm::Cache' do
       {
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: nil,
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: {},
       },
       {
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: ['invalid'],
+      },
+      {
+        docroot:           '/path/to/docroot',
+        rules:             [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:   [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        ignore_url_params: nil,
       },
       {
         docroot:           '/path/to/docroot',
@@ -224,6 +277,12 @@ describe 'Dispatcher::Farm::Cache' do
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        headers:         nil,
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
         headers:         {},
       },
       {
@@ -231,6 +290,12 @@ describe 'Dispatcher::Farm::Cache' do
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
         headers:         'invalid',
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        mode:            nil,
       },
       {
         docroot:         '/path/to/docroot',
@@ -254,6 +319,12 @@ describe 'Dispatcher::Farm::Cache' do
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        grace_period:    nil,
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
         grace_period:    'invalid',
       },
       {
@@ -266,7 +337,13 @@ describe 'Dispatcher::Farm::Cache' do
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
-        enable_ttl:      'invalid',
+        grace_period:    nil,
+      },
+      {
+        docroot:         '/path/to/docroot',
+        rules:           [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        grace_period:    'invalid',
       },
     ].each do |value|
       describe value.inspect do

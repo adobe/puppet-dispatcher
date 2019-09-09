@@ -24,8 +24,18 @@ describe 'Dispatcher::Farm::Filter' do
   describe 'Invalid group resource values' do
     [
       {},
+      { allow: nil },
       { allow: 'invalid' },
+      { allow: true, rank: nil },
       { allow: true, rank: -1 },
+      { allow: true, rank: 10, method: nil },
+      { allow: true, rank: 10, url: nil },
+      { allow: true, rank: 10, query: nil },
+      { allow: true, rank: 10, protocol: nil },
+      { allow: true, rank: 10, path: nil },
+      { allow: true, rank: 10, selectors: nil },
+      { allow: true, rank: 10, extension: nil },
+      { allow: true, rank: 10, suffix: nil },
       { allow: true, rank: 10, method: {} },
       { allow: true, rank: 10, url: {} },
       { allow: true, rank: 10, query: {} },

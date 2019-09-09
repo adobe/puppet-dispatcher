@@ -6,14 +6,14 @@ type Dispatcher::Farm::Filter = Struct[
   {
     rank      => Integer[0],
     allow     => Boolean,
-    url       => Optional[Dispatcher::Farm::Filter::Pattern],
-    method    => Optional[Dispatcher::Farm::Filter::Pattern],
-    query     => Optional[Dispatcher::Farm::Filter::Pattern],
-    protocol  => Optional[Dispatcher::Farm::Filter::Pattern],
-    path      => Optional[Dispatcher::Farm::Filter::Pattern],
-    selectors => Optional[Dispatcher::Farm::Filter::Pattern],
-    extension => Optional[Dispatcher::Farm::Filter::Pattern],
-    suffix    => Optional[Dispatcher::Farm::Filter::Pattern],
+    Optional[url]       => Dispatcher::Farm::Filter::Pattern,
+    Optional[method]    => Dispatcher::Farm::Filter::Pattern,
+    Optional[query]     => Dispatcher::Farm::Filter::Pattern,
+    Optional[protocol]  => Dispatcher::Farm::Filter::Pattern,
+    Optional[path]      => Dispatcher::Farm::Filter::Pattern,
+    Optional[selectors] => Dispatcher::Farm::Filter::Pattern,
+    Optional[extension] => Dispatcher::Farm::Filter::Pattern,
+    Optional[suffix]    => Dispatcher::Farm::Filter::Pattern,
   }
 ]
 

@@ -20,6 +20,9 @@ describe 'Dispatcher::Farm::SessionManagement' do
     [
       {},
       { directory: 'not/fully/qualified' },
+      { directory: '/path/to/sessions', encode: 123 },
+      { directory: '/path/to/sessions', header: 123 },
+      { directory: '/path/to/sessions', timeout: nil },
       { directory: '/path/to/sessions', timeout: -1 },
     ].each do |value|
       describe value.inspect do

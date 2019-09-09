@@ -4,9 +4,9 @@
 #
 type Dispatcher::Farm::SessionManagement = Struct[
   {
-    directory => Stdlib::Absolutepath,
-    encode    => Optional[String],
-    header    => Optional[String],
-    timeout   => Optional[Integer[0]],
+    directory         => Stdlib::Absolutepath,
+    Optional[encode]  => String,
+    Optional[header]  => String,
+    Optional[timeout] => Integer[0],
   }
 ]
