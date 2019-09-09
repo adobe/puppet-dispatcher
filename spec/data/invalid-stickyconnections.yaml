@@ -1,0 +1,4 @@
+dispatcher::farm::namevar::sticky_connections:
+  - foo
+  - bar
+  - baz

@@ -74,3 +74,11 @@ dispatcher::farm::customparams::statistics_categories:
     rank: 1
     name: 'html'
     glob: '*.html'
+dispatcher::farm::customparams::sticky_connections:
+  paths:
+    - /products
+    - /this
+    - /that
+  domain: example.com
+  http_only: true
+  secure: true

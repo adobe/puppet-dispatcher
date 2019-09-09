@@ -14,11 +14,13 @@ define dispatcher::farm (
   Array[String] $clientheaders                          = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
   Optional[Dispatcher::Farm::SessionManagement]
       $sessionmanagement                                = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
-  Optional[Dispatcher::Farm::VanityUrls] $vanity_urls   = lookup("dispatcher::farm::${name}::vanity_urls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
+  Optional[Dispatcher::Farm::VanityUrls]$vanity_urls    = lookup("dispatcher::farm::${name}::vanity_urls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
   Boolean $propagate_synd_post                          = lookup("dispatcher::farm::${name}::propagate_synd_post", Boolean, 'first', false),
   Optional[Dispatcher::Farm::AuthChecker] $auth_checker = lookup("dispatcher::farm::${name}::auth_checker", Optional[Dispatcher::Farm::AuthChecker], 'deep', undef),
   Optional[Array[Dispatcher::Farm::StatisticsCategory]]
-      $statistics_categories                            = lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategory]], 'deep', undef)
+      $statistics_categories                            = lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategory]], 'deep', undef),
+  Optional[Variant[String[1], Dispatcher::Farm::StickyConnection]]
+      $sticky_connections                               = lookup("dispatcher::farm::${name}::sticky_connections", Optional[Variant[String[1], Dispatcher::Farm::StickyConnection]], 'deep', undef),
   # Secure
 ) {
   # Check for Apache because it is used by parameter defaults
@@ -117,6 +119,14 @@ define dispatcher::farm (
       target  => "dispatcher.${_priority}-${name}.inc.any",
       order   => 100,
       content => template('dispatcher/farm/_statisticscategories.erb')
+    }
+  }
+
+  if ($sticky_connections) {
+    concat::fragment { "${name}-farm-stickyconnections":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 110,
+      content => template('dispatcher/farm/_stickyconnections.erb')
     }
   }
 }

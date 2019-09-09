@@ -78,6 +78,18 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'statistics_categories' expects a value of type Undef or Array}) }
           end
+          context 'sticky_connections' do
+            context 'empty value' do
+              let(:params) { { sticky_connections: '' } }
+
+              it { is_expected.to raise_error(%r{'sticky_connections' expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
+            end
+            context 'array value' do
+              let(:params) { { sticky_connections: [] } }
+
+              it { is_expected.to raise_error(%r{'sticky_connections' expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
+            end
+          end
         end
         context 'hiera invalid' do
           context 'renderers' do
@@ -139,6 +151,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-statisticscategories') }
 
             it { is_expected.to raise_error(%r{expects a value of type Undef or Array}) }
+          end
+          context 'sticky_connections' do
+            let(:facts) { os_facts.merge(testname: 'invalid-stickyconnections') }
+
+            it { is_expected.to raise_error(%r{expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
           end
         end
       end

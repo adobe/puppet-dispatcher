@@ -1,0 +1,20 @@
+  <%- if @sticky_connections.is_a?(Hash) -%>
+  /stickyConnections {
+    /paths {
+      <%- @sticky_connections['paths'].each do |path| -%>
+      "<%= path %>"
+      <%- end -%>
+    }
+    <%- if @sticky_connections['domain'] -%>
+    /domain "<%= @sticky_connections['domain'] %>"
+    <%- end -%>
+    <%- if @sticky_connections['http_only'] -%>
+    /httpOnly "1"
+    <%- end -%>
+    <%- if @sticky_connections['secure'] -%>
+    /secure "1"
+    <%- end -%>
+  }
+  <%- else -%>
+  /stickyConnectionsFor "<%= @sticky_connections %>"
+  <%- end -%>

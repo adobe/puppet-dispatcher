@@ -26,7 +26,7 @@ describe 'Dispatcher::Farm::Renderer' do
   describe 'Invalid group resource values' do
     [
       {},
-      { hostname: nil, port: 4502 },
+      { port: 4502 },
       { hostname: '$', port: 4502 },
       { hostname: '_', port: 4502 },
       { hostname: 'www www.example.com', port: 4502 },
