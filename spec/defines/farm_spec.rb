@@ -68,6 +68,11 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'cache' expects a Dispatcher::Farm::Cache}) }
           end
+          context 'auth_checker' do
+            let(:params) { { auth_checker: [] } }
+
+            it { is_expected.to raise_error(%r{'auth_checker' expects a Dispatcher::Farm::AuthChecker}) }
+          end
         end
         context 'hiera invalid' do
           context 'renderers' do
@@ -119,6 +124,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-cache') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::Cache}) }
+          end
+          context 'auth_checker' do
+            let(:facts) { os_facts.merge(testname: 'invalid-authchecker') }
+
+            it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::AuthChecker}) }
           end
         end
       end

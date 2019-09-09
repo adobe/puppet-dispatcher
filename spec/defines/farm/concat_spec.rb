@@ -89,6 +89,11 @@ describe 'dispatcher::farm', type: :define do
             },
             vanityurls:          { 'file' => '/path/to/vanity/urls', 'delay' => 6000 },
             propagate_synd_post: true,
+            auth_checker:        {
+              'url'     => '/path/to/auth/checker',
+              'filters' => [{ 'rank' => 1, 'glob' => '*', 'allow' => false }, { 'rank' => 10, 'glob' => '/content/secure/*.html', 'allow' => true }],
+              'headers' => [{ 'rank' => 1, 'glob' => '*', 'allow' => false }, { 'rank' => 10, 'glob' => 'Set-Cookie:*', 'allow' => true }],
+            },
           )
         end
         it do

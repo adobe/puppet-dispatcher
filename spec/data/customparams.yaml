@@ -57,3 +57,15 @@ dispatcher::farm::customparams::cache:
   mode: '0660'
   grace_period: 10
   enable_ttl: true
+dispatcher::farm::customparams::auth_checker:
+  url: /path/to/auth/checker
+  filters:
+    -
+      rank: 10
+      glob: '/content/secure/*.html'
+      allow: true
+  headers:
+    -
+      rank: 10
+      glob: 'Set-Cookie:*'
+      allow: true

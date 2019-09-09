@@ -5,17 +5,18 @@
 # @example
 #   dispatcher::farm { 'namevar': }
 define dispatcher::farm (
-  Array[Dispatcher::Farm::Renderer] $renderers       = lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep'),
-  Array[Dispatcher::Farm::Filter] $filters           = lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep'),
-  Dispatcher::Farm::Cache $cache                     = lookup("dispatcher::farm::${name}::cache", Dispatcher::Farm::Cache, 'deep'),
-  Enum['absent', 'present'] $ensure                  = lookup("dispatcher::farm::${name}::ensure", Enum['absent', 'present'], 'first', 'present'),
-  Integer[0] $priority                               = lookup("dispatcher::farm::${name}::priority", Integer[0], 'first', 0),
-  Array[String] $virtualhosts                        = lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name]),
-  Array[String] $clientheaders                       = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
+  Array[Dispatcher::Farm::Renderer] $renderers          = lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep'),
+  Array[Dispatcher::Farm::Filter] $filters              = lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep'),
+  Dispatcher::Farm::Cache $cache                        = lookup("dispatcher::farm::${name}::cache", Dispatcher::Farm::Cache, 'deep'),
+  Enum['absent', 'present'] $ensure                     = lookup("dispatcher::farm::${name}::ensure", Enum['absent', 'present'], 'first', 'present'),
+  Integer[0] $priority                                  = lookup("dispatcher::farm::${name}::priority", Integer[0], 'first', 0),
+  Array[String] $virtualhosts                           = lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name]),
+  Array[String] $clientheaders                          = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
   Optional[Dispatcher::Farm::SessionManagement]
-      $sessionmanagement                             = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
-  Optional[Dispatcher::Farm::VanityUrls] $vanityurls = lookup("dispatcher::farm::${name}::vanityurls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
-  Boolean $propagate_synd_post                       = lookup("dispatcher::farm::${name}::propagate_synd_post", Boolean, 'first', false),
+      $sessionmanagement                                = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
+  Optional[Dispatcher::Farm::VanityUrls] $vanityurls    = lookup("dispatcher::farm::${name}::vanityurls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
+  Boolean $propagate_synd_post                          = lookup("dispatcher::farm::${name}::propagate_synd_post", Boolean, 'first', false),
+  Optional[Dispatcher::Farm::AuthChecker] $auth_checker = lookup("dispatcher::farm::${name}::auth_checker", Optional[Dispatcher::Farm::AuthChecker], 'deep', undef),
   # Secure
 ) {
   # Check for Apache because it is used by parameter defaults
@@ -99,5 +100,13 @@ define dispatcher::farm (
     target  => "dispatcher.${_priority}-${name}.inc.any",
     order   => 80,
     content => template('dispatcher/farm/_cache.erb')
+  }
+
+  if ($auth_checker) {
+    concat::fragment { "${name}-farm-authchecker":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 90,
+      content => template('dispatcher/farm/_authchecker.erb')
+    }
   }
 }

@@ -161,3 +161,15 @@ dispatcher::farm::customparams::cache:
       allow: false
   headers:
     - Content-Type
+dispatcher::farm::customparams::auth_checker:
+  url: /path/to/auth/checker
+  filters:
+    -
+      rank: 1
+      glob: '*'
+      allow: false
+  headers:
+    -
+      rank: 1
+      glob: '*'
+      allow: false

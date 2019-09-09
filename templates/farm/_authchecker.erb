@@ -1,0 +1,16 @@
+  /auth_checker {
+
+    /url "<%= @auth_checker['url'] %>"
+
+    /filter {
+    <%- @auth_checker['filters'].sort_by { |filter| filter['rank'] }.each_with_index do |filter, idx| -%>
+      /<%= sprintf("%04d", idx) %> { /type "<%= filter['allow'] ? 'allow' : 'deny' %>" /glob "<%= filter['glob'] %>" }
+    <%- end %>
+    }
+
+    /headers {
+    <%- @auth_checker['headers'].sort_by { |header| header['rank'] }.each_with_index do |header, idx| -%>
+      /<%= sprintf("%04d", idx) %> { /type "<%= header['allow'] ? 'allow' : 'deny' %>" /glob "<%= header['glob'] %>" }
+    <%- end %>
+    }
+  }
