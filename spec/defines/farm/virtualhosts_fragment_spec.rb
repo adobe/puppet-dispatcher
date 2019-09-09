@@ -21,8 +21,8 @@ describe 'dispatcher::farm', type: :define do
         describe 'default parameters' do
           describe 'virtualhosts' do
             it { is_expected.to contain_concat__fragment('namevar-farm-virtualhosts').with(target: 'dispatcher.00-namevar.inc.any', order: 20) }
-            it { is_expected.to contain_concat__fragment('namevar-farm-virtualhosts').with(content: %r{^\s+/virtualhosts\s\{$}) }
-            it { is_expected.to contain_concat__fragment('namevar-farm-virtualhosts').with(content: %r{^\s+"namevar"$}) }
+            it { is_expected.to contain_concat__fragment('namevar-farm-virtualhosts').with(content: %r{^\s{2}/virtualhosts\s\{$}) }
+            it { is_expected.to contain_concat__fragment('namevar-farm-virtualhosts').with(content: %r{^\s{4}"namevar"$}) }
           end
         end
 
@@ -32,9 +32,9 @@ describe 'dispatcher::farm', type: :define do
 
           describe 'virtualhosts' do
             it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(target: 'dispatcher.50-customparams.inc.any', order: 20) }
-            it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s+/virtualhosts\s\{$}) }
-            it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s+"www.example.com"$}) }
-            it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s+"another.example.com"$}) }
+            it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s{2}/virtualhosts\s\{$}) }
+            it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s{4}"www.example.com"$}) }
+            it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s{4}"another.example.com"$}) }
           end
         end
       end
