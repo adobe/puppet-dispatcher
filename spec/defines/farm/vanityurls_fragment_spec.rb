@@ -10,7 +10,7 @@ describe 'dispatcher::farm', type: :define do
     PUPPETFILE
   end
 
-  describe 'vanityurls' do
+  describe 'vanity_urls' do
     on_supported_os.each do |os, os_facts|
       describe "on #{os}" do
         context 'default parameters' do

@@ -10,7 +10,7 @@ describe 'dispatcher::farm', type: :define do
     PUPPETFILE
   end
 
-  describe 'cache' do
+  describe 'auth_checker' do
     on_supported_os.each do |os, os_facts|
       describe "on #{os}" do
         context 'minimal parameters' do

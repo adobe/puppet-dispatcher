@@ -53,10 +53,10 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'sessionmanagement' expects a Dispatcher::Farm::SessionManagement}) }
           end
-          context 'vanityurls' do
-            let(:params) { { vanityurls: [] } }
+          context 'vanity_urls' do
+            let(:params) { { vanity_urls: [] } }
 
-            it { is_expected.to raise_error(%r{'vanityurls' expects a Dispatcher::Farm::VanityUrl}) }
+            it { is_expected.to raise_error(%r{'vanity_urls' expects a Dispatcher::Farm::VanityUrl}) }
           end
           context 'propagate_synd_post' do
             let(:params) { { propagate_synd_post: 'invalid' } }
@@ -72,6 +72,11 @@ describe 'dispatcher::farm', type: :define do
             let(:params) { { auth_checker: [] } }
 
             it { is_expected.to raise_error(%r{'auth_checker' expects a Dispatcher::Farm::AuthChecker}) }
+          end
+          context 'statistics_categories' do
+            let(:params) { { statistics_categories: {} } }
+
+            it { is_expected.to raise_error(%r{'statistics_categories' expects a value of type Undef or Array}) }
           end
         end
         context 'hiera invalid' do
@@ -110,7 +115,7 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::SessionManagement}) }
           end
-          context 'vanityurls' do
+          context 'vanity_urls' do
             let(:facts) { os_facts.merge(testname: 'invalid-vanityurls') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::VanityUrls}) }
@@ -129,6 +134,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-authchecker') }
 
             it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::AuthChecker}) }
+          end
+          context 'statistics_categories' do
+            let(:facts) { os_facts.merge(testname: 'invalid-statisticscategories') }
+
+            it { is_expected.to raise_error(%r{expects a value of type Undef or Array}) }
           end
         end
       end

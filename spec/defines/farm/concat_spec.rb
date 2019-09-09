@@ -59,9 +59,9 @@ describe 'dispatcher::farm', type: :define do
 
         it do
           is_expected.to contain_dispatcher__farm('customparams').only_with(
-            renderers:           [{ 'hostname' => 'localhost', 'port' => 4503 }],
-            filters:             [{ 'allow' => false, 'rank' => 10, 'method' => { 'regex' => false, 'pattern' => 'POST' } }],
-            cache:               {
+            renderers:             [{ 'hostname' => 'localhost', 'port' => 4503 }],
+            filters:               [{ 'allow' => false, 'rank' => 10, 'method' => { 'regex' => false, 'pattern' => 'POST' } }],
+            cache:                 {
               'docroot'              => '/different/path/to/docroot',
               'rules'                => [{ 'rank' => 1, 'glob' => '*.html', 'allow' => true }, { 'rank' => 10, 'glob' => '*.js', 'allow' => false }],
               'allowed_clients'      => [{ 'rank' => 1, 'glob' => '*.*.*.*', 'allow' => false }, { 'rank' => 10, 'glob' => '127.0.0.1', 'allow' => true }],
@@ -77,23 +77,24 @@ describe 'dispatcher::farm', type: :define do
               'grace_period'         => 10,
               'enable_ttl'           => true,
             },
-            ensure:              'present',
-            priority:            50,
-            virtualhosts:        %w[www.example.com another.example.com],
-            clientheaders:       %w[A-Client-Header Another-Client-Header],
-            sessionmanagement:   {
+            ensure:                'present',
+            priority:              50,
+            virtualhosts:          %w[www.example.com another.example.com],
+            clientheaders:         %w[A-Client-Header Another-Client-Header],
+            sessionmanagement:     {
               'directory' => '/path/to/sessions',
               'encode'    => 'sha1',
               'header'    => 'HTTP:authorization',
               'timeout'   => 90,
             },
-            vanityurls:          { 'file' => '/path/to/vanity/urls', 'delay' => 6000 },
-            propagate_synd_post: true,
-            auth_checker:        {
+            vanity_urls:            { 'file' => '/path/to/vanity/urls', 'delay' => 6000 },
+            propagate_synd_post:   true,
+            auth_checker:          {
               'url'     => '/path/to/auth/checker',
               'filters' => [{ 'rank' => 1, 'glob' => '*', 'allow' => false }, { 'rank' => 10, 'glob' => '/content/secure/*.html', 'allow' => true }],
               'headers' => [{ 'rank' => 1, 'glob' => '*', 'allow' => false }, { 'rank' => 10, 'glob' => 'Set-Cookie:*', 'allow' => true }],
             },
+            statistics_categories: [{ 'rank' => 99, 'name' => 'others', 'glob' => '*' }, { 'rank' => 1, 'name' => 'html', 'glob' => '*.html' }],
           )
         end
         it do

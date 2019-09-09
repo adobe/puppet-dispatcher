@@ -21,7 +21,7 @@ dispatcher::farm::customparams::filters:
     method:
       regex: false
       pattern: 'POST'
-dispatcher::farm::customparams::vanityurls:
+dispatcher::farm::customparams::vanity_urls:
   file: /path/to/vanity/urls
   delay: 6000
 dispatcher::farm::customparams::propagate_synd_post: true
@@ -69,3 +69,8 @@ dispatcher::farm::customparams::auth_checker:
       rank: 10
       glob: 'Set-Cookie:*'
       allow: true
+dispatcher::farm::customparams::statistics_categories:
+  -
+    rank: 1
+    name: 'html'
+    glob: '*.html'

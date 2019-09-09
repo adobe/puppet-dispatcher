@@ -1,4 +1,4 @@
-dispatcher::farm::namevar::vanityurls:
+dispatcher::farm::namevar::vanity_urls:
   - list
   - of
   - values

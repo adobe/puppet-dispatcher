@@ -173,3 +173,8 @@ dispatcher::farm::customparams::auth_checker:
       rank: 1
       glob: '*'
       allow: false
+dispatcher::farm::customparams::statistics_categories:
+  -
+    rank: 99
+    name: 'others'
+    glob: '*'
