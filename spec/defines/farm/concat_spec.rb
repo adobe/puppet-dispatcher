@@ -37,6 +37,7 @@ describe 'dispatcher::farm', type: :define do
             virtualhosts:        %w[namevar],
             clientheaders:       [],
             propagate_synd_post: false,
+            failover:            false,
           )
         end
         it do
@@ -99,6 +100,11 @@ describe 'dispatcher::farm', type: :define do
               'http_only' => true,
               'secure'    => true,
             },
+            health_check:          '/path/to/health/check.html',
+            retry_delay:           20,
+            number_of_retries:     5,
+            unavailable_penalty:   10,
+            failover:              true,
           )
         end
         it do
@@ -133,6 +139,7 @@ describe 'dispatcher::farm', type: :define do
             clientheaders:       [],
             propagate_synd_post: false,
             sticky_connections:  '/products',
+            failover:            false,
           )
         end
         it do

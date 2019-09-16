@@ -82,3 +82,8 @@ dispatcher::farm::customparams::sticky_connections:
   domain: example.com
   http_only: true
   secure: true
+dispatcher::farm::customparams::health_check: /path/to/health/check.html
+dispatcher::farm::customparams::retry_delay: 20
+dispatcher::farm::customparams::number_of_retries: 5
+dispatcher::farm::customparams::unavailable_penalty: 10
+dispatcher::farm::customparams::failover: true

@@ -90,6 +90,31 @@ describe 'dispatcher::farm', type: :define do
               it { is_expected.to raise_error(%r{'sticky_connections' expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
             end
           end
+          context 'health_check' do
+            let(:params) { { health_check: [] } }
+
+            it { is_expected.to raise_error(%r{'health_check' expects a value of type Undef or String}) }
+          end
+          context 'retry_delay' do
+            let(:params) { { retry_delay: -1 } }
+
+            it { is_expected.to raise_error(%r{'retry_delay' expects a value of type Undef or Integer\[0\]}) }
+          end
+          context 'number_of_retries' do
+            let(:params) { { number_of_retries: -1 } }
+
+            it { is_expected.to raise_error(%r{'number_of_retries' expects a value of type Undef or Integer\[0\]}) }
+          end
+          context 'unavailable_penalty' do
+            let(:params) { { unavailable_penalty: -1 } }
+
+            it { is_expected.to raise_error(%r{'unavailable_penalty' expects a value of type Undef or Integer\[0\]}) }
+          end
+          context 'failover' do
+            let(:params) { { failover: 'invalid' } }
+
+            it { is_expected.to raise_error(%r{'failover' expects a Boolean}) }
+          end
         end
         context 'hiera invalid' do
           context 'renderers' do
@@ -156,6 +181,31 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-stickyconnections') }
 
             it { is_expected.to raise_error(%r{expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
+          end
+          context 'health_check' do
+            let(:facts) { os_facts.merge(testname: 'invalid-healthcheck') }
+
+            it { is_expected.to raise_error(%r{expects a value of type Undef or String}) }
+          end
+          context 'retry_delay' do
+            let(:facts) { os_facts.merge(testname: 'invalid-retrydelay') }
+
+            it { is_expected.to raise_error(%r{expects a value of type Undef or Integer\[0\]}) }
+          end
+          context 'number_of_retries' do
+            let(:facts) { os_facts.merge(testname: 'invalid-numberofretries') }
+
+            it { is_expected.to raise_error(%r{expects a value of type Undef or Integer\[0\]}) }
+          end
+          context 'unavailable_penalty' do
+            let(:facts) { os_facts.merge(testname: 'invalid-unavailablepenalty') }
+
+            it { is_expected.to raise_error(%r{expects a value of type Undef or Integer\[0\]}) }
+          end
+          context 'failover' do
+            let(:facts) { os_facts.merge(testname: 'invalid-failover') }
+
+            it { is_expected.to raise_error(%r{ expects a Boolean}) }
           end
         end
       end

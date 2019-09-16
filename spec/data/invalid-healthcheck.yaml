@@ -1,0 +1,2 @@
+dispatcher::farm::namevar::health_check:
+  foo: bar

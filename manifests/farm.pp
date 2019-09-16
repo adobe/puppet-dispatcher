@@ -21,6 +21,11 @@ define dispatcher::farm (
       $statistics_categories                            = lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategory]], 'deep', undef),
   Optional[Variant[String[1], Dispatcher::Farm::StickyConnection]]
       $sticky_connections                               = lookup("dispatcher::farm::${name}::sticky_connections", Optional[Variant[String[1], Dispatcher::Farm::StickyConnection]], 'deep', undef),
+  Optional[String[1]] $health_check                     = lookup("dispatcher::farm::${name}::health_check", Optional[String[1]], 'first', undef),
+  Optional[Integer[0]] $retry_delay                     = lookup("dispatcher::farm::${name}::retry_delay", Optional[Integer[0]], 'first', undef),
+  Optional[Integer[0]] $number_of_retries               = lookup("dispatcher::farm::${name}::number_of_retries", Optional[Integer[0]], 'first', undef),
+  Optional[Integer[0]] $unavailable_penalty             = lookup("dispatcher::farm::${name}::unavailable_penalty", Optional[Integer[0]], 'first', undef),
+  Boolean $failover                                     = lookup("dispatcher::farm::${name}::failover", Boolean, 'first', false),
   # Secure
 ) {
   # Check for Apache because it is used by parameter defaults
@@ -129,4 +134,42 @@ define dispatcher::farm (
       content => template('dispatcher/farm/_stickyconnections.erb')
     }
   }
+
+  if ($health_check) {
+    concat::fragment { "${name}-farm-healthcheck":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 120,
+      content => '  /health_check "/path/to/health/check.html"'
+    }
+  }
+
+  if ($retry_delay) {
+    concat::fragment { "${name}-farm-retrydelay":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 130,
+      content => "  /retryDelay \"${retry_delay}\""
+    }
+  }
+  if ($number_of_retries) {
+    concat::fragment { "${name}-farm-numberofretries":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 140,
+      content => "  /numberOfRetries \"${number_of_retries}\""
+    }
+  }
+  if ($unavailable_penalty) {
+    concat::fragment { "${name}-farm-unavailablepenalty":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 150,
+      content => "  /unavailablePenalty \"${unavailable_penalty}\""
+    }
+  }
+  if ($failover) {
+    concat::fragment { "${name}-farm-failover":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 160,
+      content => '  /failover "1"'
+    }
+  }
+
 }
