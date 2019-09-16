@@ -28,7 +28,7 @@ ruby:
   after: ['^#!', '^#.*encoding:', '^#.*frozen_string_literal:']
   comment:
     open:   '\n#\n'
-    close:  '#\n\n'
+    close:  '#\n'
     prefix: '# '
 
 yaml:
@@ -45,3 +45,5 @@ conf:
     open:   '#\n'
     close:  '#\n\n'
     prefix: '# '
+spec_helper_local:
+  rb:
