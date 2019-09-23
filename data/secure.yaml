@@ -1,0 +1,65 @@
+dispatcher::farm::cache::secured:
+  allowed_clients:
+    -
+      rank: -1
+      glob: '*'
+      allow: false
+
+dispatcher::farm::filters::secured:
+  -
+    allow: false
+    rank: -1
+    url:
+      regex: true
+      pattern: '.*'
+  -
+    allow: false
+    rank: 1000
+    url:
+      regex: false
+      pattern: '/crx/*'
+  -
+    allow: false
+    rank: 1001
+    url:
+      regex: false
+      pattern: '/system/*'
+  -
+    allow: false
+    rank: 1002
+    url:
+      regex: false
+      pattern: '/apps/*'
+  -
+    allow: false
+    rank: 1003
+    selectors:
+      regex: true
+      pattern: '(feed|rss|pages|languages|blueprint|infinity|tidy|sysview|docview|query|[0-9-]+|jcr:content)'
+    extension:
+      regex: true
+      pattern: '(json|xml|html|feed)'
+  -
+    allow: false
+    rank: 1004
+    method:
+      regex: false
+      pattern: 'GET'
+    query:
+      regex: false
+      pattern: 'debug=*'
+  -
+    allow: false
+    rank: 1005
+    method:
+      regex: false
+      pattern: 'GET'
+    query:
+      regex: false
+      pattern: 'wcmmode=*'
+  -
+    allow: false
+    rank: 1006
+    extension:
+      regex: false
+      pattern: 'jsp'

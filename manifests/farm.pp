@@ -44,7 +44,7 @@ define dispatcher::farm (
   Optional[Integer[0]] $number_of_retries               = lookup("dispatcher::farm::${name}::number_of_retries", Optional[Integer[0]], 'first', undef),
   Optional[Integer[0]] $unavailable_penalty             = lookup("dispatcher::farm::${name}::unavailable_penalty", Optional[Integer[0]], 'first', undef),
   Boolean $failover                                     = lookup("dispatcher::farm::${name}::failover", Boolean, 'first', false),
-  # Secure
+  Boolean $secure                                       = lookup("dispatcher::farm::${name}::secure", Boolean, 'first', false),
 ) {
   # Check for Apache because it is used by parameter defaults
   if !defined(Class['apache']) {
@@ -56,6 +56,20 @@ define dispatcher::farm (
   }
   else {
     $_priority = $priority
+  }
+
+  if ($secure) {
+    $_secure_cache = lookup("dispatcher::farm::cache::secured", Hash, 'deep', {})
+    $_cache_tmp = {
+      'allowed_clients' => $cache['allowed_clients'] + $_secure_cache['allowed_clients']
+    }
+    $_cache = deep_merge($cache, $_cache_tmp)
+
+    $_secure_filters = lookup("dispatcher::farm::filters::secured", Array, 'deep', [])
+    $_filters = $_secure_filters + $filters
+  } else {
+    $_cache = $cache
+    $_filters = $filters
   }
 
   concat { "dispatcher.${_priority}-${name}.inc.any":
@@ -188,6 +202,12 @@ define dispatcher::farm (
       order   => 160,
       content => '  /failover "1"'
     }
+  }
+
+  concat::fragment { "${name}-farm-footer":
+    target  => "dispatcher.${_priority}-${name}.inc.any",
+    order   => 999,
+    content => '}'
   }
 
 }

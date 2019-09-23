@@ -73,7 +73,7 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{6}/0001 \{ /type "allow" /glob "\*.jpg" \}$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{4}/invalidateHandler\s"/opt/dispatcher/scripts/invalidate.sh"$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{4}/allowedClients\s\{$}) }
-          it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{6}/0000 \{ /type "deny" /glob "*.*.*.*" \}$}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{6}/0000 \{ /type "deny" /glob "\*\.\*\.\*\.\*" \}$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{6}/0001 \{ /type "allow" /glob "127.0.0.1" \}$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{4}/ignoreUrlParams\s\{$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{6}/0000 \{ /type "deny" /glob "\*" \}$}) }
@@ -84,6 +84,16 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{4}/mode\s"0660"$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{4}/gracePeriod\s"10"$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-cache').with(content: %r{^\s{4}/enableTTL\s"1"$}) }
+        end
+        context 'secure' do
+          let(:facts) { os_facts.merge(testname: 'secure') }
+          let(:title) { 'secure' }
+
+          it { is_expected.to contain_concat__fragment('secure-farm-cache').with(target: 'dispatcher.00-secure.inc.any', order: 80) }
+          it { is_expected.to contain_concat__fragment('secure-farm-cache').with(content: %r{^\s{2}/cache\s\{$}) }
+          it { is_expected.to contain_concat__fragment('secure-farm-cache').with(content: %r{^\s{4}/allowedClients\s\{$}) }
+          it { is_expected.to contain_concat__fragment('secure-farm-cache').with(content: %r{^\s{6}/0000 \{ /type "deny" /glob "\*" \}$}) }
+          it { is_expected.to contain_concat__fragment('secure-farm-cache').with(content: %r{^\s{6}/0001 \{ /type "allow" /glob "127\.0\.0\.1" \}$}) }
         end
       end
     end

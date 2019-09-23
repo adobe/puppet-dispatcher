@@ -1,5 +1,5 @@
   /filter {
-  <%- @filters.sort_by { |entry| entry['rank'] }.each_with_index do |filter, idx| -%>
+  <%- @_filters.sort_by { |entry| entry['rank'] }.each_with_index do |filter, idx| -%>
     /<%= sprintf("%04d", idx) %> { <% -%>
       <%- %>/type "<%= filter['allow'] ? 'allow' : 'deny' -%>" <% -%>
     <%- if filter['url'] -%>

@@ -1,70 +1,70 @@
   /cache {
-    /docroot "<%= @cache['docroot'] %>"
-    <%- if @cache['statfile'] -%>
+    /docroot "<%= @_cache['docroot'] %>"
+    <%- if @_cache['statfile'] -%>
 
-    /statfile "<%= @cache['statfile'] %>"
+    /statfile "<%= @_cache['statfile'] %>"
     <%- end -%>
-    <%- if @cache['serve_stale_on_error'] -%>
+    <%- if @_cache['serve_stale_on_error'] -%>
 
     /serveStaleOnError "1"
     <%- end -%>
-    <%- if @cache['allow_authorized'] -%>
+    <%- if @_cache['allow_authorized'] -%>
 
     /allowAuthorized "1"
     <%- end -%>
 
     /rules {
-    <%- @cache['rules'].sort_by { |rule| rule['rank'] }.each_with_index do |rule, idx| -%>
+    <%- @_cache['rules'].sort_by { |rule| rule['rank'] }.each_with_index do |rule, idx| -%>
       /<%= sprintf("%04d", idx) %> { /type "<%= rule['allow'] ? 'allow' : 'deny' %>" /glob "<%= rule['glob'] %>" }
     <%- end -%>
     }
-    <%- if @cache['statfileslevel'] -%>
+    <%- if @_cache['statfileslevel'] -%>
 
-    /statfileslevel "<%= @cache['statfileslevel'] %>"
+    /statfileslevel "<%= @_cache['statfileslevel'] %>"
     <%- end -%>
-    <%- if @cache['invalidate'] -%>
+    <%- if @_cache['invalidate'] -%>
 
     /invalidate {
-    <%- @cache['invalidate'].sort_by { |inv| inv['rank'] }.each_with_index do |inv, idx| -%>
+    <%- @_cache['invalidate'].sort_by { |inv| inv['rank'] }.each_with_index do |inv, idx| -%>
       /<%= sprintf("%04d", idx) %> { /type "<%= inv['allow'] ? 'allow' : 'deny' %>" /glob "<%= inv['glob'] %>" }
     <%- end -%>
     }
     <%- end -%>
-    <%- if @cache['invalidate_handler'] -%>
+    <%- if @_cache['invalidate_handler'] -%>
 
-    /invalidateHandler "<%= @cache['invalidate_handler'] %>"
+    /invalidateHandler "<%= @_cache['invalidate_handler'] %>"
     <%- end -%>
 
     /allowedClients {
-    <%- @cache['allowed_clients'].sort_by { |client| client['rank'] }.each_with_index do |client, idx| -%>
+    <%- @_cache['allowed_clients'].sort_by { |client| client['rank'] }.each_with_index do |client, idx| -%>
       /<%= sprintf("%04d", idx) %> { /type "<%= client['allow'] ? 'allow' : 'deny' %>" /glob "<%= client['glob'] %>" }
     <%- end -%>
     }
-    <%- if @cache['ignore_url_params'] -%>
+    <%- if @_cache['ignore_url_params'] -%>
 
     /ignoreUrlParams {
-    <%- @cache['ignore_url_params'].sort_by { |ignore| ignore['rank'] }.each_with_index do |ignore, idx| -%>
+    <%- @_cache['ignore_url_params'].sort_by { |ignore| ignore['rank'] }.each_with_index do |ignore, idx| -%>
       /<%= sprintf("%04d", idx) %> { /type "<%= ignore['allow'] ? 'allow' : 'deny' %>" /glob "<%= ignore['glob'] %>" }
     <%- end -%>
     }
     <%- end -%>
-    <%- if @cache['headers'] -%>
+    <%- if @_cache['headers'] -%>
 
     /headers {
-    <%- @cache['headers'].each do |header| -%>
+    <%- @_cache['headers'].each do |header| -%>
       "<%= header -%>"
     <%- end -%>
     }
     <%- end -%>
-    <%- if @cache['mode'] -%>
+    <%- if @_cache['mode'] -%>
 
-    /mode "<%= @cache['mode'] %>"
+    /mode "<%= @_cache['mode'] %>"
     <%- end -%>
-    <%- if @cache['grace_period'] -%>
+    <%- if @_cache['grace_period'] -%>
 
-    /gracePeriod "<%= @cache['grace_period'] %>"
+    /gracePeriod "<%= @_cache['grace_period'] %>"
     <%- end -%>
-    <%- if @cache['enable_ttl'] -%>
+    <%- if @_cache['enable_ttl'] -%>
 
     /enableTTL "1"
     <%- end -%>

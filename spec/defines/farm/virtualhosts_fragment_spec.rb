@@ -55,6 +55,15 @@ describe 'dispatcher::farm', type: :define do
             it { is_expected.to contain_concat__fragment('customparams-farm-virtualhosts').with(content: %r{^\s{4}"another.example.com"$}) }
           end
         end
+        context 'secure flag' do
+          let(:facts) { os_facts.merge(testname: 'secure') }
+          let(:title) { 'secure' }
+
+          describe 'virtualhosts' do
+            it { is_expected.to contain_concat__fragment('secure-farm-virtualhosts').with(target: 'dispatcher.00-secure.inc.any', order: 20) }
+            it { is_expected.to contain_concat__fragment('secure-farm-virtualhosts').with(content: %r{^\s{4}"secure"$}) }
+          end
+        end
       end
     end
   end

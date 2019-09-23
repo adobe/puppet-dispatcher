@@ -24,5 +24,9 @@ defaults:  # Used for any hierarchy level that omits these keys.
   data_hash: yaml_data  # Use the built-in YAML backend.
 
 hierarchy:
-  - name: 'common'
+  -
+    name: 'secure'
+    path: 'secure.yaml'
+  -
+    name: 'common'
     path: 'common.yaml'

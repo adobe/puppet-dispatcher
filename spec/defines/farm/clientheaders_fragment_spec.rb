@@ -47,6 +47,13 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(content: %r{^\s{4}"A-Client-Header"$}) }
           it { is_expected.to contain_concat__fragment('customparams-farm-clientheaders').with(content: %r{^\s{4}"Another-Client-Header"$}) }
         end
+        describe 'secure' do
+          let(:facts) { os_facts.merge(testname: 'secure') }
+          let(:title) { 'secure' }
+
+          it { is_expected.to contain_concat__fragment('secure-farm-clientheaders').with(target: 'dispatcher.00-secure.inc.any', order: 10) }
+          it { is_expected.to contain_concat__fragment('secure-farm-clientheaders').with(content: %r{^\s{2}/clientheaders\s\{$}) }
+        end
       end
     end
   end

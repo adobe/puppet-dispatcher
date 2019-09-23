@@ -28,26 +28,26 @@ describe 'dispatcher::farm', type: :define do
     PUPPETFILE
   end
 
-  describe 'header' do
+  describe 'footer' do
     on_supported_os.each do |os, os_facts|
       describe "on #{os}" do
         context 'default parameters' do
           let(:facts) { os_facts }
           let(:title) { 'namevar' }
 
-          it { is_expected.to contain_concat__fragment('namevar-farm-header').with(target: 'dispatcher.00-namevar.inc.any', order: 0, content: %r{^/namevar\s\{}) }
+          it { is_expected.to contain_concat__fragment('namevar-farm-footer').with(target: 'dispatcher.00-namevar.inc.any', order: 999, content: %r{^\}}) }
         end
         context 'custom parameters' do
           let(:facts) { os_facts.merge(testname: 'customparams') }
           let(:title) { 'customparams' }
 
-          it { is_expected.to contain_concat__fragment('customparams-farm-header').with(target: 'dispatcher.50-customparams.inc.any', order: 0, content: %r{^/customparams\s\{}) }
+          it { is_expected.to contain_concat__fragment('customparams-farm-footer').with(target: 'dispatcher.50-customparams.inc.any', order: 999, content: %r{^\}}) }
         end
         context 'secure' do
           let(:facts) { os_facts.merge(testname: 'secure') }
           let(:title) { 'secure' }
 
-          it { is_expected.to contain_concat__fragment('secure-farm-header').with(target: 'dispatcher.00-secure.inc.any', order: 0, content: %r{^/secure\s\{}) }
+          it { is_expected.to contain_concat__fragment('secure-farm-footer').with(target: 'dispatcher.00-secure.inc.any', order: 999, content: %r{^\}}) }
         end
       end
     end

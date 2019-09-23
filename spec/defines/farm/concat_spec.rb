@@ -56,6 +56,7 @@ describe 'dispatcher::farm', type: :define do
             clientheaders:       [],
             propagate_synd_post: false,
             failover:            false,
+            secure:              false,
           )
         end
         it do
@@ -123,6 +124,7 @@ describe 'dispatcher::farm', type: :define do
             number_of_retries:     5,
             unavailable_penalty:   10,
             failover:              true,
+            secure:                false,
           )
         end
         it do
@@ -158,6 +160,7 @@ describe 'dispatcher::farm', type: :define do
             propagate_synd_post: false,
             sticky_connections:  '/products',
             failover:            false,
+            secure:              false,
           )
         end
         it do

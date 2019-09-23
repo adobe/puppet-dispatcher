@@ -154,6 +154,17 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('customparams-farm-renders').with(content: %r{^\s{6}/port "4505"$}) }
         end
       end
+      context 'secure' do
+        let(:facts) { os_facts.merge(testname: 'secure') }
+        let(:title) { 'secure' }
+
+        it { is_expected.to contain_concat__fragment('secure-farm-renders').with(target: 'dispatcher.00-secure.inc.any', order: 40) }
+        it { is_expected.to contain_concat__fragment('secure-farm-renders').with(content: %r{^\s{2}/renders\s\{$}) }
+        it { is_expected.to contain_concat__fragment('secure-farm-renders').with(content: %r{^\s{4}/renderer0\s\{$}) }
+        it { is_expected.to contain_concat__fragment('secure-farm-renders').with(content: %r{^\s{6}/hostname "localhost"$}) }
+        it { is_expected.to contain_concat__fragment('secure-farm-renders').with(content: %r{^\s{6}/port "4503"$}) }
+        it { is_expected.to contain_concat__fragment('secure-farm-renders').with(content: %r{^\s{6}/secure "1"$}) }
+      end
     end
   end
 end

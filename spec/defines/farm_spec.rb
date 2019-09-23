@@ -133,6 +133,11 @@ describe 'dispatcher::farm', type: :define do
 
             it { is_expected.to raise_error(%r{'failover' expects a Boolean}) }
           end
+          context 'secure' do
+            let(:params) { { secure: 'invalid' } }
+
+            it { is_expected.to raise_error(%r{'secure' expects a Boolean}) }
+          end
         end
         context 'hiera invalid' do
           context 'renderers' do
@@ -224,6 +229,11 @@ describe 'dispatcher::farm', type: :define do
             let(:facts) { os_facts.merge(testname: 'invalid-failover') }
 
             it { is_expected.to raise_error(%r{ expects a Boolean}) }
+          end
+          context 'secure' do
+            let(:params) { { secure: 'invalid' } }
+
+            it { is_expected.to raise_error(%r{expects a Boolean}) }
           end
         end
       end

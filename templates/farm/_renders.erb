@@ -12,8 +12,8 @@
     <%- unless renderer['ipv4'].nil? -%>
       /ipv4 "<%= renderer['ipv4'] ? 1 : 0 -%>"
     <%- end -%>
-    <%- unless renderer['secure'].nil? -%>
-      /secure "<%= renderer['secure'] ? 1 : 0 -%>"
+    <%- if @secure || !renderer['secure'].nil? -%>
+      /secure "<%= @secure || renderer['secure'] ? 1 : 0 -%>"
     <%- end -%>
     <%- unless renderer['always_resolve'].nil? -%>
       /always-resolve "<%= renderer['always_resolve'] ? 1 : 0 -%>"

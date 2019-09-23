@@ -227,6 +227,7 @@ describe 'dispatcher', type: :class do
         it { is_expected.to contain_concat__fragment('vhost1-farm-renders') }
         it { is_expected.to contain_concat__fragment('vhost1-farm-filter') }
         it { is_expected.to contain_concat__fragment('vhost1-farm-cache') }
+        it { is_expected.to contain_concat__fragment('vhost1-farm-footer') }
         it { is_expected.to contain_dispatcher__farm('vhost2') }
         it { is_expected.to contain_concat('dispatcher.00-vhost2.inc.any') }
         it { is_expected.to contain_concat__fragment('vhost2-farm-header') }
@@ -235,6 +236,7 @@ describe 'dispatcher', type: :class do
         it { is_expected.to contain_concat__fragment('vhost2-farm-renders') }
         it { is_expected.to contain_concat__fragment('vhost2-farm-filter') }
         it { is_expected.to contain_concat__fragment('vhost2-farm-cache') }
+        it { is_expected.to contain_concat__fragment('vhost2-farm-footer') }
         it { is_expected.to contain_dispatcher__farm('vhost3') }
         it { is_expected.to contain_concat('dispatcher.00-vhost3.inc.any') }
         it { is_expected.to contain_concat__fragment('vhost3-farm-header') }
@@ -243,7 +245,81 @@ describe 'dispatcher', type: :class do
         it { is_expected.to contain_concat__fragment('vhost3-farm-renders') }
         it { is_expected.to contain_concat__fragment('vhost3-farm-filter') }
         it { is_expected.to contain_concat__fragment('vhost3-farm-cache') }
+        it { is_expected.to contain_concat__fragment('vhost3-farm-footer') }
       end
+
+      context 'secure' do
+        it { is_expected.to compile.with_all_deps }
+        it do
+          apache = catalogue.resource('Class[apache]')
+          is_expected.to contain_class('dispatcher').only_with(
+            name:               'Dispatcher',
+            module_file:        '/full/path/to/file-with-version.so',
+            decline_root:       true,
+            log_file:           "#{apache.parameters[:logroot]}/dispatcher.log",
+            log_level:          'warn',
+            farms:              [],
+            pass_error:         false,
+            use_processed_url:  true,
+            )
+        end
+
+        it do
+          is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
+            ensure: 'file',
+            owner: 'root',
+            group: 'root',
+            source: '/full/path/to/file-with-version.so',
+            )
+        end
+
+        it do
+          is_expected.to contain_apache__mod('dispatcher')
+        end
+
+        it do
+          is_expected.to contain_file("#{lib_path}/mod_dispatcher.so").with(
+            ensure: 'link',
+            owner:  'root',
+            group:  'root',
+            target: "#{lib_path}/file-with-version.so",
+            ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
+        end
+
+        it do
+          is_expected.to contain_file("#{mod_dir}/dispatcher.conf").with(
+            ensure: 'file',
+            owner:  'root',
+            group:  'root',
+            ).with_content(
+            %r{.*DispatcherConfig\s+#{mod_dir}/dispatcher.farms.any},
+            ).with_content(
+            %r{.*DispatcherLog\s+#{log_root}/dispatcher.log},
+            ).with_content(
+            %r{.*DispatcherLogLevel\s+warn},
+            ).with_content(
+            %r{.*DispatcherDeclineRoot\s+On},
+            ).with_content(
+            %r{.*DispatcherUseProcessedURL\s+On},
+            ).with_content(
+            %r{.*DispatcherPassError\s+0},
+            ).without_content(
+            %r{.*DispatcherKeepAliveTimeout.*},
+            ).without_content(
+            %r{.*DispatcherNoCanonURL.*},
+            ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
+        end
+
+        it do
+          is_expected.to contain_file("#{mod_dir}/dispatcher.farms.any").with(
+            ensure: 'file',
+            owner:  'root',
+            group:  'root',
+            source: 'puppet:///modules/dispatcher/dispatcher.farms.any',
+            ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
+        end
+      end
+
     end
   end
 
