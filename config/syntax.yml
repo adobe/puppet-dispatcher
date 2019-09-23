@@ -45,5 +45,3 @@ conf:
     open:   '#\n'
     close:  '#\n\n'
     prefix: '# '
-spec_helper_local:
-  rb:
