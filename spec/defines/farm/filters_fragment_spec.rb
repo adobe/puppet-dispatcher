@@ -123,18 +123,18 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('secure-farm-filter').with(content: %r{^\s{4}/0000\s\{\s/type\s"deny"\s/url\s'\.\*'\s\}$}) }
           it do
             is_expected.to contain_concat__fragment('secure-farm-filter')
-                .with(content: %r{^\s{4}/0001\s\{\s/type\s"allow"\s})
-                .with(content: %r{"allow"\s/path\s"/content/\*"\s/extension})
-                .with(content: %r{/extension\s'\(css\|eot\|gif\|ico\|jpeg\|jpg\|js\|gif\|pdf\|png\|svg\|swf\|ttf\|woff\|woff2\|html\)'\s\}})
+              .with(content: %r{^\s{4}/0001\s\{\s/type\s"allow"\s})
+              .with(content: %r{"allow"\s/path\s"/content/\*"\s/extension})
+              .with(content: %r{/extension\s'\(css\|eot\|gif\|ico\|jpeg\|jpg\|js\|gif\|pdf\|png\|svg\|swf\|ttf\|woff\|woff2\|html\)'\s\}})
           end
           it { is_expected.to contain_concat__fragment('secure-farm-filter').with(content: %r{^\s{4}/0002\s\{\s/type\s"deny"\s/url\s"/crx/\*"\s\}$}) }
           it { is_expected.to contain_concat__fragment('secure-farm-filter').with(content: %r{^\s{4}/0003\s\{\s/type\s"deny"\s/url\s"/system/\*"\s\}$}) }
           it { is_expected.to contain_concat__fragment('secure-farm-filter').with(content: %r{^\s{4}/0004\s\{\s/type\s"deny"\s/url\s"/apps/\*"\s\}$}) }
           it do
             is_expected.to contain_concat__fragment('secure-farm-filter')
-                .with(content: %r{^\s{4}/0005\s\{\s/type\s"deny"\s})
-                .with(content: %r{"deny"\s/selectors\s'\(feed\|rss\|pages\|languages\|blueprint\|infinity\|tidy\|sysview\|docview\|query\|\[0-9-\]\+\|jcr:content\)'})
-                .with(content: %r{jcr:content\)'\s/extension\s'\(json\|xml\|html\|feed\)'\s\}})
+              .with(content: %r{^\s{4}/0005\s\{\s/type\s"deny"\s})
+              .with(content: %r{"deny"\s/selectors\s'\(feed\|rss\|pages\|languages\|blueprint\|infinity\|tidy\|sysview\|docview\|query\|\[0-9-\]\+\|jcr:content\)'})
+              .with(content: %r{jcr:content\)'\s/extension\s'\(json\|xml\|html\|feed\)'\s\}})
           end
           it { is_expected.to contain_concat__fragment('secure-farm-filter').with(content: %r{^\s{4}/0006\s\{\s/type\s"deny"\s/method\s"GET"\s/query\s"debug=\*"\s\}$}) }
           it { is_expected.to contain_concat__fragment('secure-farm-filter').with(content: %r{^\s{4}/0007\s\{\s/type\s"deny"\s/method\s"GET"\s/query\s"wcmmode=\*"\s\}$}) }

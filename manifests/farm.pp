@@ -59,13 +59,13 @@ define dispatcher::farm (
   }
 
   if ($secure) {
-    $_secure_cache = lookup("dispatcher::farm::cache::secured", Hash, 'deep', {})
+    $_secure_cache = lookup('dispatcher::farm::cache::secured', Hash, 'deep', {})
     $_cache_tmp = {
       'allowed_clients' => $cache['allowed_clients'] + $_secure_cache['allowed_clients']
     }
     $_cache = deep_merge($cache, $_cache_tmp)
 
-    $_secure_filters = lookup("dispatcher::farm::filters::secured", Array, 'deep', [])
+    $_secure_filters = lookup('dispatcher::farm::filters::secured', Array, 'deep', [])
     $_filters = $_secure_filters + $filters
   } else {
     $_cache = $cache

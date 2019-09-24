@@ -62,22 +62,22 @@ describe 'dispatcher', type: :class do
         it do
           apache = catalogue.resource('Class[apache]')
           is_expected.to contain_class('dispatcher').only_with(
-            name:               'Dispatcher',
-            module_file:        '/full/path/to/file-with-version.so',
-            decline_root:       true,
-            log_file:           "#{apache.parameters[:logroot]}/dispatcher.log",
-            log_level:          'warn',
-            farms:              [],
-            pass_error:         false,
-            use_processed_url:  true,
+            name:              'Dispatcher',
+            module_file:       '/full/path/to/file-with-version.so',
+            decline_root:      true,
+            log_file:          "#{apache.parameters[:logroot]}/dispatcher.log",
+            log_level:         'warn',
+            farms:             [],
+            pass_error:        false,
+            use_processed_url: true,
           )
         end
 
         it do
           is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
             ensure: 'file',
-            owner: 'root',
-            group: 'root',
+            owner:  'root',
+            group:  'root',
             source: '/full/path/to/file-with-version.so',
           )
         end
@@ -132,14 +132,14 @@ describe 'dispatcher', type: :class do
       context 'with custom parameters' do
         let(:params) do
           {
-            module_file: '/path/to/module/file.so',
-            decline_root: false,
-            log_file: '/custom/path/to/logfile.log',
-            log_level: 'debug',
-            pass_error: '400-411,413-417,500',
-            use_processed_url: false,
+            module_file:        '/path/to/module/file.so',
+            decline_root:       false,
+            log_file:           '/custom/path/to/logfile.log',
+            log_level:          'debug',
+            pass_error:         '400-411,413-417,500',
+            use_processed_url:  false,
             keep_alive_timeout: 0,
-            no_cannon_url: true,
+            no_cannon_url:      true,
           }
         end
 
@@ -162,8 +162,8 @@ describe 'dispatcher', type: :class do
         it do
           is_expected.to contain_file("#{lib_path}/file.so").with(
             ensure: 'file',
-            owner: 'root',
-            group: 'root',
+            owner:  'root',
+            group:  'root',
             source: '/path/to/module/file.so',
           ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
@@ -253,24 +253,24 @@ describe 'dispatcher', type: :class do
         it do
           apache = catalogue.resource('Class[apache]')
           is_expected.to contain_class('dispatcher').only_with(
-            name:               'Dispatcher',
-            module_file:        '/full/path/to/file-with-version.so',
-            decline_root:       true,
-            log_file:           "#{apache.parameters[:logroot]}/dispatcher.log",
-            log_level:          'warn',
-            farms:              [],
-            pass_error:         false,
-            use_processed_url:  true,
-            )
+            name:              'Dispatcher',
+            module_file:       '/full/path/to/file-with-version.so',
+            decline_root:      true,
+            log_file:          "#{apache.parameters[:logroot]}/dispatcher.log",
+            log_level:         'warn',
+            farms:             [],
+            pass_error:        false,
+            use_processed_url: true,
+          )
         end
 
         it do
           is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
             ensure: 'file',
-            owner: 'root',
-            group: 'root',
+            owner:  'root',
+            group:  'root',
             source: '/full/path/to/file-with-version.so',
-            )
+          )
         end
 
         it do
@@ -283,7 +283,7 @@ describe 'dispatcher', type: :class do
             owner:  'root',
             group:  'root',
             target: "#{lib_path}/file-with-version.so",
-            ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -291,23 +291,23 @@ describe 'dispatcher', type: :class do
             ensure: 'file',
             owner:  'root',
             group:  'root',
-            ).with_content(
+          ).with_content(
             %r{.*DispatcherConfig\s+#{mod_dir}/dispatcher.farms.any},
-            ).with_content(
+          ).with_content(
             %r{.*DispatcherLog\s+#{log_root}/dispatcher.log},
-            ).with_content(
+          ).with_content(
             %r{.*DispatcherLogLevel\s+warn},
-            ).with_content(
+          ).with_content(
             %r{.*DispatcherDeclineRoot\s+On},
-            ).with_content(
+          ).with_content(
             %r{.*DispatcherUseProcessedURL\s+On},
-            ).with_content(
+          ).with_content(
             %r{.*DispatcherPassError\s+0},
-            ).without_content(
+          ).without_content(
             %r{.*DispatcherKeepAliveTimeout.*},
-            ).without_content(
+          ).without_content(
             %r{.*DispatcherNoCanonURL.*},
-            ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
 
         it do
@@ -316,7 +316,7 @@ describe 'dispatcher', type: :class do
             owner:  'root',
             group:  'root',
             source: 'puppet:///modules/dispatcher/dispatcher.farms.any',
-            ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
+          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
         end
       end
 
@@ -345,8 +345,8 @@ describe 'dispatcher', type: :class do
           it do
             is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
               ensure: 'file',
-              owner: 'root',
-              group: 'root',
+              owner:  'root',
+              group:  'root',
               source: 'https://full/path/to/file-with-version.so',
             )
           end
@@ -359,8 +359,8 @@ describe 'dispatcher', type: :class do
           it do
             is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
               ensure: 'file',
-              owner: 'root',
-              group: 'root',
+              owner:  'root',
+              group:  'root',
               source: 'file:///full/path/to/file-with-version.so',
             )
           end
