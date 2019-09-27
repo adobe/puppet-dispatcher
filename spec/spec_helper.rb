@@ -21,6 +21,7 @@
 RSpec.configure do |c|
   c.mock_with :rspec
 end
+
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
 
@@ -62,6 +63,7 @@ RSpec.configure do |c|
   end
   c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
   c.after(:suite) do
+    RSpec::Puppet::Coverage.report!(95)
   end
 end
 

@@ -74,22 +74,22 @@ Style/TrailingCommaInLiteral:
 Style/SymbolArray:
   Description: Using percent style obscures symbolic intent of array's contents.
   EnforcedStyle: brackets
+Style/WordArray:
+  EnforcedStyle: percent
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: false
 RSpec/MessageSpies:
   EnforcedStyle: receive
 Style/Documentation:
   Exclude:
   - lib/puppet/parser/functions/**/*
   - spec/**/*
-#Style/WordArray:
-#  EnforcedStyle: brackets
-RSpec/DescribeClass:
-  Enabled: false
-#Style/CollectionMethods:
-#  Enabled: true
-#Style/MethodCalledOnDoEndBlock:
-#  Enabled: true
-#Style/StringMethods:
-#  Enabled: true
+Style/CollectionMethods:
+  Enabled: true
+Style/MethodCalledOnDoEndBlock:
+  Enabled: true
+Style/StringMethods:
+  Enabled: true
 #Layout/EndOfLine:
 #  Enabled: false
 #Layout/IndentHeredoc:
@@ -110,6 +110,8 @@ Metrics/BlockLength:
 #  Enabled: false
 #Metrics/PerceivedComplexity:
 #  Enabled: false
+RSpec/DescribeClass:
+  Enabled: false
 RSpec/ExampleLength:
   Enabled: false
 #RSpec/MessageExpectation:
@@ -124,6 +126,3 @@ RSpec/NestedGroups:
 #  Enabled: false
 #Style/SymbolProc:
 #  Enabled: false
-
-Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
