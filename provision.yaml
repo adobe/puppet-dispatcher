@@ -19,7 +19,7 @@
 ---
 deb:
   provisioner: docker
-  images: ['debian:9', 'ubuntu:16.04', 'ubuntu:18.04']
+  images: ['ubuntu:18.04']
 el:
   provisioner: docker
-  images: ['centos:7', 'oraclelinux:7', 'scientificlinux/sl:7']
+  images: ['centos/systemd', 'oraclelinux:7', 'scientificlinux/sl:7']

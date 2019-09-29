@@ -9,4 +9,6 @@ fixtures:
     concat: 'puppetlabs/concat'
     apache: 'puppetlabs/apache'
   repositories:
-    provision: 'git://github.com/puppetlabs/provision.git'
+    provision:
+      repo: 'git://github.com/bstopp/provision.git'
+      branch: 'feature/centos-systemd'
