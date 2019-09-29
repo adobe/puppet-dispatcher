@@ -1,3 +1,4 @@
+
   /filter {
   <%- @_filters.sort_by { |entry| entry['rank'] }.each_with_index do |filter, idx| -%>
     /<%= sprintf("%04d", idx) %> { <% -%>

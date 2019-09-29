@@ -26,7 +26,7 @@
     DispatcherLogLevel          <%= @log_level %>
     DispatcherDeclineRoot       <%= @decline_root ? 'On' : 'Off' %>
     DispatcherUseProcessedURL   <%= @use_processed_url ? 'On' : 'Off' %>
-<% if @pass_error && @pass_error == true -%>
+<% if @pass_error == true -%>
     DispatcherPassError         1
 <% elsif @pass_error -%>
     DispatcherPassError         <%= @pass_error %>
@@ -36,7 +36,7 @@
 <% if @keep_alive_timeout -%>
     DispatcherKeepAliveTimeout  <%= @keep_alive_timeout %>
 <% end -%>
-<% if @keep_alive_timeout -%>
+<% if @no_cannon_url -%>
     DispatcherNoCanonURL        <%= @no_cannon_url ? 'On' : 'Off' %>
 <% end -%>
 </IfModule>
