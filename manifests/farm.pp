@@ -51,6 +51,15 @@ define dispatcher::farm (
     fail('You must include the Apache class before using any dispatcher class or resources.')
   }
 
+  if $::osfamily == 'RedHat' or $::operatingsystem =~ /^[Aa]mazon$/ {
+    $_farm_path = $::apache::mod_dir
+
+  } elsif $::osfamily == 'Debian' {
+    $_farm_path = $::apache::mod_enable_dir
+  } else {
+    fail("Class['dispatcher']: Unsupported osfamily: ${::osfamily}")
+  }
+
   if $priority < 10 {
     $_priority = "0${priority}"
   }
@@ -73,14 +82,15 @@ define dispatcher::farm (
   }
 
   concat { "dispatcher.${_priority}-${name}.inc.any":
-    ensure  => $ensure,
-    path    => "${::apache::vhost_dir}/dispatcher.${_priority}-${name}.inc.any",
-    owner   => 'root',
-    group   => $::apache::params::root_group,
-    mode    => $::apache::params::file_mode,
-    order   => 'numeric',
-    require => Package['httpd'],
-    notify  => Class['apache::service'],
+    ensure         => $ensure,
+    path           => "${_farm_path}/dispatcher.${_priority}-${name}.inc.any",
+    owner          => 'root',
+    group          => $::apache::params::root_group,
+    mode           => $::apache::params::file_mode,
+    order          => 'numeric',
+    ensure_newline => true,
+    require        => Package['httpd'],
+    notify         => Class['apache::service'],
   }
 
   concat::fragment { "${name}-farm-header":
@@ -89,10 +99,12 @@ define dispatcher::farm (
     content => template('dispatcher/farm/_file_header.erb')
   }
 
-  concat::fragment { "${name}-farm-clientheaders":
-    target  => "dispatcher.${_priority}-${name}.inc.any",
-    order   => 10,
-    content => template('dispatcher/farm/_clientheaders.erb')
+  if ($clientheaders.size > 0) {
+    concat::fragment { "${name}-farm-clientheaders":
+      target  => "dispatcher.${_priority}-${name}.inc.any",
+      order   => 10,
+      content => template('dispatcher/farm/_clientheaders.erb')
+    }
   }
 
   concat::fragment { "${name}-farm-virtualhosts":

@@ -35,8 +35,8 @@ describe 'dispatcher::farm', type: :define do
           let(:facts) { os_facts }
           let(:title) { 'namevar' }
 
-          it { is_expected.to contain_concat__fragment('namevar-farm-clientheaders').with(target: 'dispatcher.00-namevar.inc.any', order: 10) }
-          it { is_expected.to contain_concat__fragment('namevar-farm-clientheaders').with(content: %r{^\s{2}/clientheaders\s\{$}) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-clientheaders').with(target: 'dispatcher.00-namevar.inc.any', order: 10) }
+          it { is_expected.not_to contain_concat__fragment('namevar-farm-clientheaders').with(content: %r{^\s{2}/clientheaders\s\{$}) }
         end
         context 'custom parameters' do
           let(:facts) { os_facts.merge(testname: 'customparams') }
@@ -51,8 +51,8 @@ describe 'dispatcher::farm', type: :define do
           let(:facts) { os_facts.merge(testname: 'secure') }
           let(:title) { 'secure' }
 
-          it { is_expected.to contain_concat__fragment('secure-farm-clientheaders').with(target: 'dispatcher.00-secure.inc.any', order: 10) }
-          it { is_expected.to contain_concat__fragment('secure-farm-clientheaders').with(content: %r{^\s{2}/clientheaders\s\{$}) }
+          it { is_expected.not_to contain_concat__fragment('secure-farm-clientheaders').with(target: 'dispatcher.00-secure.inc.any', order: 10) }
+          it { is_expected.not_to contain_concat__fragment('secure-farm-clientheaders').with(content: %r{^\s{2}/clientheaders\s\{$}) }
         end
       end
     end

@@ -88,7 +88,6 @@ describe 'dispatcher::farm', type: :define do
 
           it { is_expected.to contain_concat('dispatcher.50-multiplefilters.inc.any') }
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-header').with(target: 'dispatcher.50-multiplefilters.inc.any') }
-          it { is_expected.to contain_concat__fragment('multiplefilters-farm-clientheaders').with(target: 'dispatcher.50-multiplefilters.inc.any') }
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-virtualhosts').with(target: 'dispatcher.50-multiplefilters.inc.any') }
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-renders').with(target: 'dispatcher.50-multiplefilters.inc.any') }
           it { is_expected.to contain_concat__fragment('multiplefilters-farm-filter').with(target: 'dispatcher.50-multiplefilters.inc.any', order: 50) }

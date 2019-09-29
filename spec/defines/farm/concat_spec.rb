@@ -33,7 +33,15 @@ describe 'dispatcher::farm', type: :define do
 
   on_supported_os.each do |os, os_facts|
     context "on #{os}" do
-      let(:vhost_dir) { catalogue.resource('Class[apache]').parameters[:vhost_dir] }
+      let(:mod_dir) do
+        case os_facts[:osfamily]
+        when 'RedHat'
+          catalogue.resource('Class[apache]').parameters[:mod_dir]
+        when 'Debian'
+          catalogue.resource('Class[apache]').parameters[:mod_enable_dir]
+        end
+
+      end
       let(:file_mode) { catalogue.resource('Class[apache]').parameters[:file_mode] }
 
       context 'default parameters' do
@@ -61,12 +69,13 @@ describe 'dispatcher::farm', type: :define do
         end
         it do
           is_expected.to contain_concat('dispatcher.00-namevar.inc.any').with(
-            ensure: 'present',
-            path:   "#{vhost_dir}/dispatcher.00-namevar.inc.any",
-            owner:  'root',
-            group:  'root',
-            mode:   file_mode,
-            order:  'numeric',
+            ensure:         'present',
+            path:           "#{mod_dir}/dispatcher.00-namevar.inc.any",
+            owner:          'root',
+            group:          'root',
+            mode:           file_mode,
+            order:          'numeric',
+            ensure_newline: true,
           ).that_requires('Package[httpd]').that_notifies('Class[apache::service]')
         end
       end
@@ -129,12 +138,13 @@ describe 'dispatcher::farm', type: :define do
         end
         it do
           is_expected.to contain_concat('dispatcher.50-customparams.inc.any').with(
-            ensure: 'present',
-            path:   "#{vhost_dir}/dispatcher.50-customparams.inc.any",
-            owner:  'root',
-            group:  'root',
-            mode:   file_mode,
-            order:  'numeric',
+            ensure:         'present',
+            path:           "#{mod_dir}/dispatcher.50-customparams.inc.any",
+            owner:          'root',
+            group:          'root',
+            mode:           file_mode,
+            order:          'numeric',
+            ensure_newline: true,
           ).that_requires('Package[httpd]').that_notifies('Class[apache::service]')
         end
       end
@@ -165,12 +175,13 @@ describe 'dispatcher::farm', type: :define do
         end
         it do
           is_expected.to contain_concat('dispatcher.00-namevar.inc.any').with(
-            ensure: 'present',
-            path:   "#{vhost_dir}/dispatcher.00-namevar.inc.any",
-            owner:  'root',
-            group:  'root',
-            mode:   file_mode,
-            order:  'numeric',
+            ensure:         'present',
+            path:           "#{mod_dir}/dispatcher.00-namevar.inc.any",
+            owner:          'root',
+            group:          'root',
+            mode:           file_mode,
+            order:          'numeric',
+            ensure_newline: true,
           ).that_requires('Package[httpd]').that_notifies('Class[apache::service]')
         end
       end
