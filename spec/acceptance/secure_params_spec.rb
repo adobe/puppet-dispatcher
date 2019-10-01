@@ -47,7 +47,7 @@ else
 end
 
 describe 'dispatcher' do
-  context 'default settings' do
+  context 'secure settings' do
     describe 'is idempotent' do
       let(:pp) do
         <<~PUPPETCODE
@@ -64,7 +64,7 @@ describe 'dispatcher' do
             require      => File[$dir],
           }
           class { 'apache' :
-            default_ssl_vhost => true, 
+            default_ssl_vhost => true,
           }
           class { 'dispatcher' :
             module_file => "$dir/#{dispatcher_file}",
@@ -139,36 +139,17 @@ describe 'dispatcher' do
       end
       describe 'filters' do
         its(:content) { is_expected.to match %r{^\s{2}/filter\s\{$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0000\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/url} }
-        its(:content) { is_expected.to match %r{\s/url\s'\.\*'\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0001\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"allow"\s/path} }
-        its(:content) { is_expected.to match %r{\s/path\s"/content/\*"\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0002\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/url} }
-        its(:content) { is_expected.to match %r{\s/url\s"/crx/\*"\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0003\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/url} }
-        its(:content) { is_expected.to match %r{\s/url\s"/system/\*"\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0004\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/url} }
-        its(:content) { is_expected.to match %r{\s/url\s"/apps/\*"\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0005\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/selectors} }
+        its(:content) { is_expected.to match %r{^\s{4}/0000\s\{\s/type\s"deny"\s/url\s'\.\*'\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0001\s\{\s/type\s"allow"\s/path\s"/content/\*"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0002\s\{\s/type\s"deny"\s/url\s"/crx/\*"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0003\s\{\s/type\s"deny"\s/url\s"/system/\*"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0004\s\{\s/type\s"deny"\s/url\s"/apps/\*"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0005\s\{\s/type\s"deny"\s/selectors} }
         its(:content) { is_expected.to match %r{\s/selectors\s'\(feed\|rss\|pages\|languages\|blueprint\|infinity\|tidy\|sysview\|docview\|query\|\[0-9-\]\+\|jcr:content\)'} }
         its(:content) { is_expected.to match %r{jcr:content\)'\s/extension\s'\(json\|xml\|html\|feed\)'\s\}} }
-        its(:content) { is_expected.to match %r{^\s{4}/0006\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/method} }
-        its(:content) { is_expected.to match %r{\s/method\s"GET"\s/query} }
-        its(:content) { is_expected.to match %r{\s/query\s"debug=\*"\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0007\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/method} }
-        its(:content) { is_expected.to match %r{\s/method\s"GET"\s/query} }
-        its(:content) { is_expected.to match %r{\s/query\s"wcmmode=\*"\s\}$} }
-        its(:content) { is_expected.to match %r{^\s{4}/0008\s\{\s/type} }
-        its(:content) { is_expected.to match %r{\s/type\s"deny"\s/extension} }
-        its(:content) { is_expected.to match %r{\s/extension\s"jsp"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0006\s\{\s/type\s"deny"\s/method\s"GET"\s/query\s"debug=\*"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0007\s\{\s/type\s"deny"\s/method\s"GET"\s/query\s"wcmmode=\*"\s\}$} }
+        its(:content) { is_expected.to match %r{^\s{4}/0008\s\{\s/type\s"deny"\s/extension\s"jsp"\s\}$} }
       end
       describe 'vanity_urls' do
         its(:content) { is_expected.not_to match %r{/vanity_urls\s\{} }
