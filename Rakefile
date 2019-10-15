@@ -85,7 +85,7 @@ task :headers do
     :copyright_software_description => "A module to manage AEM Dispatcher installations and configuration files.",
     :copyright_holders => ['Adobe Inc'],
     :copyright_years => ['2019'],
-    :add_path => 'manifests:files:templates:spec',
+    :add_path => 'manifests:types:files:templates:spec',
     :output_dir => '.',
     :syntax => 'config/syntax.yml',
     :word_wrap => 200
