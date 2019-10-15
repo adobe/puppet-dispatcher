@@ -27,12 +27,10 @@
 # - Reloads the Apache service
 #
 # @example
-#   ```puppet
 #   class { 'dispatcher' :
 #     module_file => '/path/to/module/file.so'
 #   }
 #   contain dispatcher
-#   ```
 #
 # @param module_file
 #   Specifes the source location of the dispatcher module. This is the file that will be copied into the Apache module library path.
@@ -53,8 +51,15 @@
 #   Sets the value for `DispatcherUseProcessedURL`. Defaults to `true`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 #
 # @param farms
-#   A list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name. Use hiera data to specify
-#   the remaining parameters.
+#   A list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name. Use hiera data to specify the remaining parameters.<br/>
+#   For example, to configure a Dispatcher with two farms *author* and *publish*:
+#   ```puppet
+#   class { 'dispatcher' :
+#     module_file => '/path/to/module/file.so',
+#     farms       => ['author', 'publish'],
+#   }
+#   contain dispatcher
+#   ```
 #
 # @param keep_alive_timeout
 #   If specified, sets the value for `DispatcherKeepAliveTimeout`. Default For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
@@ -82,7 +87,6 @@ class dispatcher (
   if $::osfamily == 'RedHat' or $::operatingsystem =~ /^[Aa]mazon$/ {
     $_mod_path = "${::apache::httpd_dir}/${::apache::lib_path}"
     $_farm_path = $::apache::mod_dir
-
   } elsif $::osfamily == 'Debian' {
     $_mod_path = $::apache::lib_path
     $_farm_path = $::apache::mod_enable_dir
