@@ -14,25 +14,25 @@ dispatcher::farm::filters::secured:
       pattern: '.*'
   -
     allow: false
-    rank: 1000
+    rank: 9993
     url:
       regex: false
       pattern: '/crx/*'
   -
     allow: false
-    rank: 1001
+    rank: 9994
     url:
       regex: false
       pattern: '/system/*'
   -
     allow: false
-    rank: 1002
+    rank: 9995
     url:
       regex: false
       pattern: '/apps/*'
   -
     allow: false
-    rank: 1003
+    rank: 9996
     selectors:
       regex: true
       pattern: '(feed|rss|pages|languages|blueprint|infinity|tidy|sysview|docview|query|[0-9-]+|jcr:content)'
@@ -41,7 +41,7 @@ dispatcher::farm::filters::secured:
       pattern: '(json|xml|html|feed)'
   -
     allow: false
-    rank: 1004
+    rank: 9997
     method:
       regex: false
       pattern: 'GET'
@@ -50,7 +50,7 @@ dispatcher::farm::filters::secured:
       pattern: 'debug=*'
   -
     allow: false
-    rank: 1005
+    rank: 9998
     method:
       regex: false
       pattern: 'GET'
@@ -59,7 +59,7 @@ dispatcher::farm::filters::secured:
       pattern: 'wcmmode=*'
   -
     allow: false
-    rank: 1006
+    rank: 9999
     extension:
       regex: false
       pattern: 'jsp'

@@ -16,12 +16,140 @@
 # limitations under the License.
 #
 
-# @summary A short summary of the purpose of this defined type.
+# @summary
+#   Installs and configures an AEM Dispatcher farm instance on your system.
 #
-# A description of what this defined type does
+# A farm reqeuires a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
+# The remainder of the paramers have provided, reasonable defaults.
 #
 # @example
-#   dispatcher::farm { 'namevar': }
+#   dispatcher::farm { 'publish' :
+#     renderers => [
+#       { hostname => 'localhost', port => 4502 },
+#     ],
+#     filters => [
+#       { allow => false,
+#         rank  => 1,
+#         url   => { regex => true, pattern => '.*' },
+#       },
+#     ],
+#     cache => {
+#       docroot => '/var/www/html',
+#       rules => [
+#         { rank => 1, glob => '*.html', allow => true },
+#       ],
+#       allowed_clients => [
+#         { rank => 1, glob => '*.*.*.*', allow => false },
+#         { rank => 2, glob => '127.0.0.1', allow => true },
+#       ],
+#     }
+#   }
+#
+# @param renderers
+#   Specifes an array of renderers that to which this Farm will dispatch requests. Used to create the */renders* directive. See the
+#   `Dispatcher::Farm::Renderer` documentattion for details on the parameter's structure.
+#
+# @param filters
+#   Specifies an array of filters that will be applied to the incoming requests. Used to create the */filter* directive. See the
+#   `Dispatcher::Farm::Filter` documentattion for details on the parameter's structure.
+#
+# @param cache
+#   Configures the */cache* directive for the farm. See the `Dispatcher::Farm::Cache` documentattion for details on the parameter's structure.
+#
+# @param ensure
+#   Specifies if the farm host is present or absent.
+#
+# @param priority
+#   Defines the priority for this farm. The priority will impact the order the file farm is loaded by the dispatcher module, and therefore
+#   has implications for host resolution and request processing. For more information see the Dispatcher farm documentation.
+#
+# @param virtualhosts
+#   Specifies the list of virtual hosts for which this farm will process requests. Used to create the */virtualhosts*
+#   directive. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#identifying-virtual-hosts-virtualhosts)
+#   for more details.
+#
+# @param clientheaders
+#   Specifies the list of headers which will be passed through. Used to create the */clientheaders* directive. See the
+#   [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#specifying-the-http-headers-to-pass-through-clientheaders)
+#   for more details.
+#
+# @param sessionmanagement
+#   Configures the */sessionmanagement* directive for a farm, used for seecuring cache access. See the
+#   `Dispatcher::Farm::SessionManagement` documentation for details on the parameter's structure.
+#
+# @param vanity_urls
+#   Configures the */vanity_urls* directive for a farm. See the `Dispatcher::Farm::VanityUrls` documentation for
+#   details on the parameter's structure.
+#
+# @param propagate_synd_post
+#   Sets the flag for the */propagateSyndPost* directive. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#forwarding-syndication-requests-propagatesyndpost)
+#   for more details.
+#
+# @param auth_checker
+#   Configures the */auth_checker* directive for a farm. See the `Dispatcher::Farm::AuthChecker` documentation for
+#   more details.
+#
+# @param statistics_categories
+#   Configures the */statistics* directive for a farm. See the `Dispatcher::Farm::StatisticsCategory` documentation for
+#   more details.
+#
+# @param sticky_connections
+#   Configures either the */stickyConnectionsFor* or */stickyConnections* directive for a farm. See the
+#   `Dispatcher::Farm::StickyConnection` documentation for more details.
+#
+# @param health_check
+#   If specified, sets the */health_check* url for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#specifying-a-health-check-page)
+#   for details on the directive's use.
+#
+# @param retry_delay
+#   If specified, sets the */retryDelay* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#specifying-the-page-retry-delay)
+#   for details on the directive's use.
+#
+# @param number_of_retries
+#   If specified, sets the */numberOfRetries* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-the-number-of-retries)
+#   for details on the directive's use.
+#
+# @param unavailable_penalty
+#   If specified, sets the */unavailablePenalty* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#reflecting-server-unavailability-in-dispatcher-statistics)
+#   for details on the directive's use.
+#
+# @param failover
+#   If specified, sets the */failover* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#using-the-failover-mechanism)
+#   for details on the directive's use.
+#
+# @param secure
+#   If set to `true`, will enable a set of rules intended to secure this farm based on the the [Dispatcher Security Checklist](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/security-checklist.html).
+#
+#   The following rules are applied when this flag is set.
+#
+#   This filter will defined and positioned first in the list, providing a default security filter:
+#   ```
+#     /0000 { /type "deny" /url '.*' }
+#   ```
+#
+#   These filters will be appended to the end of the filter list. Any user-defined filters will have a lower rank, and
+#   therefore will be listed before these. The intent of these filters is to protect the system from inadvernt access to
+#   code, crawling, or systems which should be secure in production.
+#   ```
+#     /9993 { /type "deny" /url "/crx/*" }
+#     /9994 { /type "deny" /url "/system/*" }
+#     /9995 { /type "deny" /url "/apps/*" }
+#     /9996 { /type "deny" /selectors '(feed|rss|pages|languages|blueprint|infinity|tidy|sysview|docview|query|[0-9-]+|jcr:content)' /extension '(json|xml|html|feed)' }
+#     /9997 { /type "deny" /method "GET" /query "debug=*" }
+#     /9998 { /type "deny" /method "GET" /query "wcmmode=*" }
+#     /9999 { /type "deny" /extension "jsp" }
+#   ```
+#
+#   A default deny rule for cache invalidation will be added; it is expected there will be additional user-defined value(s) for approved clients.
+#   ```
+#     /cache {
+#       ...
+#       /allowedClients {
+#         /0000 { /type "deny" /glob "*" }
+#       }
+#     }
+#   ```
+#
 define dispatcher::farm (
   Array[Dispatcher::Farm::Renderer] $renderers          = lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep'),
   Array[Dispatcher::Farm::Filter] $filters              = lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep'),
@@ -32,13 +160,13 @@ define dispatcher::farm (
   Array[String] $clientheaders                          = lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', []),
   Optional[Dispatcher::Farm::SessionManagement]
       $sessionmanagement                                = lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef),
-  Optional[Dispatcher::Farm::VanityUrls]$vanity_urls    = lookup("dispatcher::farm::${name}::vanity_urls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
+  Optional[Dispatcher::Farm::VanityUrls] $vanity_urls   = lookup("dispatcher::farm::${name}::vanity_urls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef),
   Boolean $propagate_synd_post                          = lookup("dispatcher::farm::${name}::propagate_synd_post", Boolean, 'first', false),
   Optional[Dispatcher::Farm::AuthChecker] $auth_checker = lookup("dispatcher::farm::${name}::auth_checker", Optional[Dispatcher::Farm::AuthChecker], 'deep', undef),
   Optional[Array[Dispatcher::Farm::StatisticsCategory]]
       $statistics_categories                            = lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategory]], 'deep', undef),
-  Optional[Variant[String[1], Dispatcher::Farm::StickyConnection]]
-      $sticky_connections                               = lookup("dispatcher::farm::${name}::sticky_connections", Optional[Variant[String[1], Dispatcher::Farm::StickyConnection]], 'deep', undef),
+  Optional[Dispatcher::Farm::StickyConnection]
+      $sticky_connections                               = lookup("dispatcher::farm::${name}::sticky_connections", Optional[Dispatcher::Farm::StickyConnection], 'deep', undef),
   Optional[String[1]] $health_check                     = lookup("dispatcher::farm::${name}::health_check", Optional[String[1]], 'first', undef),
   Optional[Integer[0]] $retry_delay                     = lookup("dispatcher::farm::${name}::retry_delay", Optional[Integer[0]], 'first', undef),
   Optional[Integer[0]] $number_of_retries               = lookup("dispatcher::farm::${name}::number_of_retries", Optional[Integer[0]], 'first', undef),
@@ -183,7 +311,7 @@ define dispatcher::farm (
     concat::fragment { "${name}-farm-healthcheck":
       target  => "dispatcher.${_priority}-${name}.inc.any",
       order   => 120,
-      content => '  /health_check "/path/to/health/check.html"'
+      content => "  /health_check \"${health_check}\""
     }
   }
 
@@ -194,6 +322,7 @@ define dispatcher::farm (
       content => "  /retryDelay \"${retry_delay}\""
     }
   }
+
   if ($number_of_retries) {
     concat::fragment { "${name}-farm-numberofretries":
       target  => "dispatcher.${_priority}-${name}.inc.any",
@@ -201,6 +330,7 @@ define dispatcher::farm (
       content => "  /numberOfRetries \"${number_of_retries}\""
     }
   }
+
   if ($unavailable_penalty) {
     concat::fragment { "${name}-farm-unavailablepenalty":
       target  => "dispatcher.${_priority}-${name}.inc.any",
@@ -208,6 +338,7 @@ define dispatcher::farm (
       content => "  /unavailablePenalty \"${unavailable_penalty}\""
     }
   }
+
   if ($failover) {
     concat::fragment { "${name}-farm-failover":
       target  => "dispatcher.${_priority}-${name}.inc.any",
