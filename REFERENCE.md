@@ -9,7 +9,30 @@
 
 **Defined types**
 
-* [`dispatcher::farm`](#dispatcherfarm): A short summary of the purpose of this defined type.
+* [`dispatcher::farm`](#dispatcherfarm): Installs and configures an AEM Dispatcher farm instance on your system.
+
+**Data types**
+
+* [`Dispatcher::Farm::AuthChecker`](#dispatcherfarmauthchecker): A hash of AuthChecker attributes.
+Used to configure the `/auth_checker` parameter instance of a Farm.
+* [`Dispatcher::Farm::Cache`](#dispatcherfarmcache): A hash of cache attributes.
+Used to configure the `/cache` parameter instance of a Farm.
+* [`Dispatcher::Farm::Filter`](#dispatcherfarmfilter): A hash of filter attributes.
+Used to configure the `/filter` parameter instance of a Farm.
+* [`Dispatcher::Farm::Filter::Pattern`](#dispatcherfarmfilterpattern): A hash of filter pattern attributes.
+Used to configure confgure the different options for a filter parameter.
+* [`Dispatcher::Farm::GlobRule`](#dispatcherfarmglobrule): A hash of glob rule attributes.
+Used to configure glob rules for different Farm Cache sections.
+* [`Dispatcher::Farm::Renderer`](#dispatcherfarmrenderer): A hash of renderer attributes.
+Used to configure the `/renderer` parameter instance of a Farm.
+* [`Dispatcher::Farm::SessionManagement`](#dispatcherfarmsessionmanagement): A hash of sessionmanagement attributes.
+Used to configure the `/sessionmanagement` parameter of a Farm.
+* [`Dispatcher::Farm::StatisticsCategory`](#dispatcherfarmstatisticscategory): A hash of Statistic attributes.
+Used to configure the `/statistics` parameter instance of a Farm.
+* [`Dispatcher::Farm::StickyConnection`](#dispatcherfarmstickyconnection): A hash of Statistic attributes.
+Used to configure the `/statistics` parameter instance of a Farm.
+* [`Dispatcher::Farm::VanityUrls`](#dispatcherfarmvanityurls): A hash of vanity url attributes.
+Used to configure the `/vanith_url` parameter instance of a Farm.
 
 ## Classes
 
@@ -27,12 +50,10 @@ When this class is declared with the default options, Puppet:
 ##### 
 
 ```puppet
-```puppet
 class { 'dispatcher' :
   module_file => '/path/to/module/file.so'
 }
 contain dispatcher
-```
 ```
 
 #### Parameters
@@ -75,6 +96,22 @@ Data type: `Boolean`
 
 Sets the value for `DispatcherUseProcessedURL`. Defaults to `true`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 
+##### `farms`
+
+Data type: `Array[String]`
+
+A list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name. Use hiera data to specify the remaining parameters.<br/>
+For example, to configure a Dispatcher with two farms *author* and *publish*:
+```puppet
+class { 'dispatcher' :
+  module_file => '/path/to/module/file.so',
+  farms       => ['author', 'publish'],
+}
+contain dispatcher
+```
+
+Default value: []
+
 ##### `keep_alive_timeout`
 
 Data type: `Optional[Integer[0]]`
@@ -91,54 +128,95 @@ If specified, sets the value for `DispatcherNoCanonURL`. For details see the [Di
 
 Default value: `undef`
 
-##### `farms`
-
-Data type: `Array[String]`
-
-A list of Dispatcher Farm names. If specified a `dispatcher::farm` defintion will be created for each name. Use hiera data to specify
-the remaining parameters.
-
-Default value: []
-
 ## Defined types
 
 ### dispatcher::farm
 
-A description of what this defined type does
+A farm reqeuires a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
+The remainder of the paramers have provided, reasonable defaults.
 
 #### Examples
 
 ##### 
 
 ```puppet
-dispatcher::farm { 'namevar': }
+dispatcher::farm { 'publish' :
+  renderers => [
+    { hostname => 'localhost', port => 4502 },
+  ],
+  filters => [
+    { allow => false,
+      rank  => 1,
+      url   => { regex => true, pattern => '.*' },
+    },
+  ],
+  cache => {
+    docroot => '/var/www/html',
+    rules => [
+      { rank => 1, glob => '*.html', allow => true },
+    ],
+    allowed_clients => [
+      { rank => 1, glob => '*.*.*.*', allow => false },
+      { rank => 2, glob => '127.0.0.1', allow => true },
+    ],
+  }
+}
 ```
 
 #### Parameters
 
 The following parameters are available in the `dispatcher::farm` defined type.
 
+##### `renderers`
+
+Data type: `Array[Dispatcher::Farm::Renderer]`
+
+Specifes an array of renderers that to which this Farm will dispatch requests. Used to create the */renders* directive. See the
+`Dispatcher::Farm::Renderer` documentattion for details on the parameter's structure.
+
+Default value: lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep')
+
+##### `filters`
+
+Data type: `Array[Dispatcher::Farm::Filter]`
+
+Specifies an array of filters that will be applied to the incoming requests. Used to create the */filter* directive. See the
+`Dispatcher::Farm::Filter` documentattion for details on the parameter's structure.
+
+Default value: lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep')
+
+##### `cache`
+
+Data type: `Dispatcher::Farm::Cache`
+
+Configures the */cache* directive for the farm. See the `Dispatcher::Farm::Cache` documentattion for details on the parameter's structure.
+
+Default value: lookup("dispatcher::farm::${name}::cache", Dispatcher::Farm::Cache, 'deep')
+
 ##### `ensure`
 
 Data type: `Enum['absent', 'present']`
 
+Specifies if the farm host is present or absent.
 
-
-Default value: 'present'
+Default value: lookup("dispatcher::farm::${name}::ensure", Enum['absent', 'present'], 'first', 'present')
 
 ##### `priority`
 
-Data type: `Integer`
+Data type: `Integer[0]`
 
+Defines the priority for this farm. The priority will impact the order the file farm is loaded by the dispatcher module, and therefore
+has implications for host resolution and request processing. For more information see the Dispatcher farm documentation.
 
-
-Default value: lookup("dispatcher::farm::${name}::priority", Integer, 'first', 0)
+Default value: lookup("dispatcher::farm::${name}::priority", Integer[0], 'first', 0)
 
 ##### `virtualhosts`
 
 Data type: `Array[String]`
 
-
+Specifies the list of virtual hosts for which this farm will process requests. Used to create the */virtualhosts*
+directive. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#identifying-virtual-hosts-virtualhosts)
+for more details.
 
 Default value: lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 'deep', [$name])
 
@@ -146,39 +224,272 @@ Default value: lookup("dispatcher::farm::${name}::virtualhosts", Array[String], 
 
 Data type: `Array[String]`
 
-
+Specifies the list of headers which will be passed through. Used to create the */clientheaders* directive. See the
+[Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#specifying-the-http-headers-to-pass-through-clientheaders)
+for more details.
 
 Default value: lookup("dispatcher::farm::${name}::clientheaders", Array[String], 'deep', [])
 
-##### `sessionmanagement_directory`
+##### `sessionmanagement`
 
-Data type: `Optional[Stdlib::Absolutepath]`
+Data type: `Optional[Dispatcher::Farm::SessionManagement]`
 
+Configures the */sessionmanagement* directive for a farm, used for seecuring cache access. See the
+`Dispatcher::Farm::SessionManagement` documentation for details on the parameter's structure.
 
+Default value: lookup("dispatcher::farm::${name}::sessionmanagement", Optional[Dispatcher::Farm::SessionManagement], 'first', undef)
 
-Default value: lookup("dispatcher::farm::${name}::sessionmanagement::directory", Optional[Stdlib::Absolutepath], 'first', undef)
+##### `vanity_urls`
 
-##### `sessionmanagement_encode`
+Data type: `Optional[Dispatcher::Farm::VanityUrls]`
 
-Data type: `Optional[String]`
+Configures the */vanity_urls* directive for a farm. See the `Dispatcher::Farm::VanityUrls` documentation for
+details on the parameter's structure.
 
+Default value: lookup("dispatcher::farm::${name}::vanity_urls", Optional[Dispatcher::Farm::VanityUrls], 'first', undef)
 
+##### `propagate_synd_post`
 
-Default value: lookup("dispatcher::farm::${name}::sessionmanagement::encode", Optional[String], 'first', undef)
+Data type: `Boolean`
 
-##### `sessionmanagement_header`
+Sets the flag for the */propagateSyndPost* directive. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#forwarding-syndication-requests-propagatesyndpost)
+for more details.
 
-Data type: `Optional[String]`
+Default value: lookup("dispatcher::farm::${name}::propagate_synd_post", Boolean, 'first', false)
 
+##### `auth_checker`
 
+Data type: `Optional[Dispatcher::Farm::AuthChecker]`
 
-Default value: lookup("dispatcher::farm::${name}::sessionmanagement::header", Optional[String], 'first', undef)
+Configures the */auth_checker* directive for a farm. See the `Dispatcher::Farm::AuthChecker` documentation for
+more details.
 
-##### `sessionmanagement_timeout`
+Default value: lookup("dispatcher::farm::${name}::auth_checker", Optional[Dispatcher::Farm::AuthChecker], 'deep', undef)
+
+##### `statistics_categories`
+
+Data type: `Optional[Array[Dispatcher::Farm::StatisticsCategory]]`
+
+Configures the */statistics* directive for a farm. See the `Dispatcher::Farm::StatisticsCategory` documentation for
+more details.
+
+Default value: lookup("dispatcher::farm::${name}::statistics_categories", Optional[Array[Dispatcher::Farm::StatisticsCategory]], 'deep', undef)
+
+##### `sticky_connections`
+
+Data type: `Optional[Dispatcher::Farm::StickyConnection]`
+
+Configures either the */stickyConnectionsFor* or */stickyConnections* directive for a farm. See the
+`Dispatcher::Farm::StickyConnection` documentation for more details.
+
+Default value: lookup("dispatcher::farm::${name}::sticky_connections", Optional[Dispatcher::Farm::StickyConnection], 'deep', undef)
+
+##### `health_check`
+
+Data type: `Optional[String[1]]`
+
+If specified, sets the */health_check* url for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#specifying-a-health-check-page)
+for details on the directive's use.
+
+Default value: lookup("dispatcher::farm::${name}::health_check", Optional[String[1]], 'first', undef)
+
+##### `retry_delay`
 
 Data type: `Optional[Integer[0]]`
 
+If specified, sets the */retryDelay* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#specifying-the-page-retry-delay)
+for details on the directive's use.
 
+Default value: lookup("dispatcher::farm::${name}::retry_delay", Optional[Integer[0]], 'first', undef)
 
-Default value: lookup("dispatcher::farm::${name}::sessionmanagement::timeout", Optional[Integer[0]], 'first', undef)
+##### `number_of_retries`
+
+Data type: `Optional[Integer[0]]`
+
+If specified, sets the */numberOfRetries* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-the-number-of-retries)
+for details on the directive's use.
+
+Default value: lookup("dispatcher::farm::${name}::number_of_retries", Optional[Integer[0]], 'first', undef)
+
+##### `unavailable_penalty`
+
+Data type: `Optional[Integer[0]]`
+
+If specified, sets the */unavailablePenalty* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#reflecting-server-unavailability-in-dispatcher-statistics)
+for details on the directive's use.
+
+Default value: lookup("dispatcher::farm::${name}::unavailable_penalty", Optional[Integer[0]], 'first', undef)
+
+##### `failover`
+
+Data type: `Boolean`
+
+If specified, sets the */failover* directive for a farm. See the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#using-the-failover-mechanism)
+for details on the directive's use.
+
+Default value: lookup("dispatcher::farm::${name}::failover", Boolean, 'first', false)
+
+##### `secure`
+
+Data type: `Boolean`
+
+If set to `true`, will enable a set of rules intended to secure this farm based on the the [Dispatcher Security Checklist](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/security-checklist.html).
+
+The following rules are applied when this flag is set.
+
+This filter will defined and positioned first in the list, providing a default security filter:
+```
+  /0000 { /type "deny" /url '.*' }
+```
+
+These filters will be appended to the end of the filter list. Any user-defined filters will have a lower rank, and
+therefore will be listed before these. The intent of these filters is to protect the system from inadvernt access to
+code, crawling, or systems which should be secure in production.
+```
+  /9993 { /type "deny" /url "/crx/*" }
+  /9994 { /type "deny" /url "/system/*" }
+  /9995 { /type "deny" /url "/apps/*" }
+  /9996 { /type "deny" /selectors '(feed|rss|pages|languages|blueprint|infinity|tidy|sysview|docview|query|[0-9-]+|jcr:content)' /extension '(json|xml|html|feed)' }
+  /9997 { /type "deny" /method "GET" /query "debug=*" }
+  /9998 { /type "deny" /method "GET" /query "wcmmode=*" }
+  /9999 { /type "deny" /extension "jsp" }
+```
+
+A default deny rule for cache invalidation will be added; it is expected there will be additional user-defined value(s) for approved clients.
+```
+  /cache {
+    ...
+    /allowedClients {
+      /0000 { /type "deny" /glob "*" }
+    }
+  }
+```
+
+Default value: lookup("dispatcher::farm::${name}::secure", Boolean, 'first', false)
+
+## Data types
+
+### Dispatcher::Farm::AuthChecker
+
+AuthChecker attributes hash.
+
+Alias of `Struct[{
+    url     => Stdlib::Absolutepath,
+    filters => Array[Dispatcher::Farm::GlobRule],
+    headers => Array[Dispatcher::Farm::GlobRule],
+  }]`
+
+### Dispatcher::Farm::Cache
+
+Cache attributes hash.
+
+Alias of `Struct[{
+    docroot                        => Stdlib::Absolutepath,
+    rules                          => Array[Dispatcher::Farm::GlobRule],
+    allowed_clients                => Array[Dispatcher::Farm::GlobRule],
+    Optional[statfile]             => Stdlib::Absolutepath,
+    Optional[serve_stale_on_error] => Boolean,
+    Optional[allow_authorized]     => Boolean,
+    Optional[statfileslevel]       => Integer[0],
+    Optional[invalidate]           => Array[Dispatcher::Farm::GlobRule],
+    Optional[invalidate_handler]   => Stdlib::Absolutepath,
+    Optional[ignore_url_params]    => Array[Dispatcher::Farm::GlobRule],
+    Optional[headers]              => Array[String],
+    Optional[mode]                 => Stdlib::Filemode,
+    Optional[grace_period]         => Integer[0],
+    Optional[enable_ttl]           => Boolean,
+  }]`
+
+### Dispatcher::Farm::Filter
+
+Filter attributes hash.
+
+Alias of `Struct[{
+    rank      => Integer[0],
+    allow     => Boolean,
+    Optional[url]       => Dispatcher::Farm::Filter::Pattern,
+    Optional[method]    => Dispatcher::Farm::Filter::Pattern,
+    Optional[query]     => Dispatcher::Farm::Filter::Pattern,
+    Optional[protocol]  => Dispatcher::Farm::Filter::Pattern,
+    Optional[path]      => Dispatcher::Farm::Filter::Pattern,
+    Optional[selectors] => Dispatcher::Farm::Filter::Pattern,
+    Optional[extension] => Dispatcher::Farm::Filter::Pattern,
+    Optional[suffix]    => Dispatcher::Farm::Filter::Pattern,
+  }]`
+
+### Dispatcher::Farm::Filter::Pattern
+
+Filter Pattern attributes hash.
+
+Alias of `Struct[{
+    regex   => Boolean,
+    pattern => String
+  }]`
+
+### Dispatcher::Farm::GlobRule
+
+Glob rule attributes hash.
+
+Alias of `Struct[{
+    rank  => Integer[0],
+    glob  => String,
+    allow => Boolean,
+  }]`
+
+### Dispatcher::Farm::Renderer
+
+Renderer attributes hash.
+
+Alias of `Struct[{
+    hostname                  => Stdlib::Host,
+    port                      => Stdlib::Port,
+    Optional[timeout]         => Integer[0],
+    Optional[receive_timeout] => Integer[0],
+    Optional[ipv4]            => Boolean,
+    Optional[secure]          => Boolean,
+    Optional[always_resolve]  => Boolean,
+  }]`
+
+### Dispatcher::Farm::SessionManagement
+
+SessionManagement attributes hash.
+
+Alias of `Struct[{
+    directory         => Stdlib::Absolutepath,
+    Optional[encode]  => String,
+    Optional[header]  => String,
+    Optional[timeout] => Integer[0],
+  }]`
+
+### Dispatcher::Farm::StatisticsCategory
+
+Statistic attributes hash.
+
+Alias of `Struct[{
+    rank => Integer[0],
+    name => String,
+    glob => String,
+  }]`
+
+### Dispatcher::Farm::StickyConnection
+
+StickyConnection attributes hash.
+
+Alias of `Variant[String[1], Struct[
+    {
+      paths               => Array[String],
+      Optional[domain]    => String,
+      Optional[http_only] => Boolean,
+      Optional[secure]    => Boolean,
+    }
+  ]]`
+
+### Dispatcher::Farm::VanityUrls
+
+Vanity URL attributes hash.
+
+Alias of `Struct[{
+    file  => Stdlib::Absolutepath,
+    delay => Integer[0],
+  }]`
 
