@@ -100,12 +100,12 @@ describe 'dispatcher::farm', type: :define do
             context 'empty value' do
               let(:params) { { sticky_connections: '' } }
 
-              it { is_expected.to raise_error(%r{'sticky_connections' expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
+              it { is_expected.to raise_error(%r{'sticky_connections' expects a Dispatcher::Farm::StickyConnection}) }
             end
             context 'array value' do
               let(:params) { { sticky_connections: [] } }
 
-              it { is_expected.to raise_error(%r{'sticky_connections' expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
+              it { is_expected.to raise_error(%r{'sticky_connections' expects a Dispatcher::Farm::StickyConnection}) }
             end
           end
           context 'health_check' do
@@ -203,7 +203,7 @@ describe 'dispatcher::farm', type: :define do
           context 'sticky_connections' do
             let(:facts) { os_facts.merge(testname: 'invalid-stickyconnections') }
 
-            it { is_expected.to raise_error(%r{expects a value of type Undef, String\[1\], or Dispatcher::Farm::StickyConnection}) }
+            it { is_expected.to raise_error(%r{expects a Dispatcher::Farm::StickyConnection}) }
           end
           context 'health_check' do
             let(:facts) { os_facts.merge(testname: 'invalid-healthcheck') }

@@ -23,6 +23,7 @@ require 'spec_helper'
 describe 'Dispatcher::Farm::StickyConnection' do
   describe 'Valid values' do
     [
+      '/products',
       { paths: ['/products'] },
       { paths: ['/products'], domain: 'example.com' },
       { paths: ['/products'], http_only: true },
@@ -38,6 +39,8 @@ describe 'Dispatcher::Farm::StickyConnection' do
 
   describe 'Invalid group resource values' do
     [
+      '',
+      false,
       {},
       { paths: {} },
       { paths: ['/products'], domain: false },
