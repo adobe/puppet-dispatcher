@@ -1,47 +1,62 @@
 # Dispatcher
+[description]: #description
+[setup]: #setup
+[dispatcher affects]: #what-the-dispatcher-module-affects
+[setup requirements]: #setup-requirements
+[Beginning With Dispatcher]: #beginning-with-dispatcher
+[Usage]: #usage
 
-Welcome to your new module. A short overview of the generated parts can be found in the PDK documentation at https://puppet.com/pdk/latest/pdk_generating_modules.html .
 
-The README template below provides a starting point with details about what information to include in your README.
+[puppet module]: https://puppet.com/docs/puppet/latest/modules_fundamentals.html
+[apache module]: https://forge.puppet.com/puppetlabs/apache
 
+[dispatcher]: https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/dispatcher.html
+[Dispatcher Module]: https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html
 #### Table of Contents
 
-1. [Description](#description)
-2. [Setup - The basics of getting started with dispatcher](#setup)
-    * [What dispatcher affects](#what-dispatcher-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with dispatcher](#beginning-with-dispatcher)
-3. [Usage - Configuration options and additional functionality](#usage)
+1. [Description][Description]
+2. [Setup - The basics of getting started with dispatcher][setup]
+    * [What dispatcher affects][dispatcher affects]
+    * [Setup requirements][setup requirements]
+    * [Beginning with dispatcher][Beginning with Dispatcher]
+3. [Usage - Configuration options and additional functionality][Usage]
 4. [Limitations - OS compatibility, etc.](#limitations)
 5. [Development - Guide for contributing to the module](#development)
 
 ## Description
 
-Briefly tell users why they might want to use your module. Explain what your module does and what kind of problems users can solve with it.
-
-This should be a fairly short description helps the user decide if your module is what they want.
+[Dispatcher][] is Adobe Experience Manager's caching and/or load balancing tool. This [Puppet module][] will facilitate the configuration and management of Adobe Dispatcher modules in your infrastructure. It can configure the module and any number of farms definitions in an a simple and efficient manner.
 
 ## Setup
 
-### What dispatcher affects **OPTIONAL**
+### What the Dispatcher module affects:
 
-If it's obvious what your module touches, you can skip this section. For example, folks can probably figure out that your mysql_instance module affects their MySQL instances.
+* Dispatcher module configuration files
+* Dispatcher farm configuration files
 
-If there's more that they should know about, though, this is the place to mention:
+### Setup Requirements
 
-* Files, packages, services, or operations that the module will alter, impact, or execute.
-* Dependencies that your module automatically installs.
-* Warnings or other important notices.
+Because the dispatcher module depends on the [Apache module][], it must be included in the catalog, otherwise an error will be raised.
 
-### Setup Requirements **OPTIONAL**
+This module will configure the dispatcher, but the module must be provided by the consumer. Ensure that the [dispatcher module][] is made available within the catalog.
 
-If your module requires anything extra before setting up (pluginsync enabled, another module, etc.), mention it here.
+### Beginning with Dispatcher
 
-If your most recent release breaks compatibility or requires particular steps for upgrading, you might want to include an additional "Upgrading" section here.
+To have Puppet install the Dispatcher with default parameters (but no farms), declare the dispatcher class:
 
-### Beginning with dispatcher
+```puppet
+class { 'dispatcher' :
+  module_file => '/path/to/module/file.so'
+}
+```  
 
-The very basic steps needed for a user to get the module up and running. This can include setup steps, if necessary, or it can be an example of the most basic use of the module.
+When you declare this class with the default options, the module:
+
+* Installs the module in the operating system dependent Apache installation directory.
+* Places the dispatcher configuration file in the operating system dependent Apache directory.
+* Configures the module with default log file, log level, and other optional flags.
+
+> **Note**: While the dispatcher module does not require any farms to be defined, the system will not function correctly without any - and none are defined/provided by default.
 
 ## Usage
 
@@ -85,3 +100,22 @@ In the Development section, tell other users the ground rules for contributing t
 ## Release Notes/Contributors/Etc. **Optional**
 
 If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
+
+## Generate docs:
+
+```
+puppet strings generate --format markdown
+```
+
+## Acceptance Tests:
+
+* `bundle exec rake 'litmus:provision_list[debian]'`
+* On Debian:
+  * Maybe not needed if using WaffleImages: `bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes=ssh_nodes` 
+  * `bundle exec bolt command run 'apt-get remove -y openssl' --inventoryfile inventory.yaml --nodes=ssh_nodes`
+  * `bundle exec bolt command run 'ln -sf "$(find /usr/lib/x86_64-linux-gnu -name "libssl.so*1.0*" -type f -print |sort -dr|head -1)" /usr/lib/x86_64-linux-gnu/libssl.so.10' --inventoryfile inventory.yaml --nodes=ssh_nodes`
+  * `bundle exec bolt command run 'ln -sf "$(find /usr/lib/x86_64-linux-gnu -name "libcrypto.so*1.0*" -type f -print |sort -dr|head -1)" /usr/lib/x86_64-linux-gnu/libcrypto.so.10' --inventoryfile inventory.yaml --nodes=ssh_nodes`
+  
+* `bundle exec rake litmus:install_agent`
+* `bundle exec rake litmus:install_module`
+* `bundle exec rake litmus:acceptance:parallel`
