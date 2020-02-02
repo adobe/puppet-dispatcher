@@ -8,6 +8,7 @@ fixtures:
     stdlib: 'puppetlabs/stdlib'
     concat: 'puppetlabs/concat'
     apache: 'puppetlabs/apache'
+    selinux_core: 'puppetlabs/selinux_core'
   repositories:
     provision:
       repo: 'git://github.com/bstopp/provision.git'
