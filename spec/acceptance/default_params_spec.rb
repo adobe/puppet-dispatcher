@@ -24,7 +24,7 @@ require 'puppet_litmus'
 include PuppetLitmus
 
 dispatcher_target  = 'apache2.4'
-dispatcher_version = '4.3.2'
+dispatcher_version = '4.3.3'
 dispatcher_file    = "dispatcher-#{dispatcher_target}-#{dispatcher_version}.so"
 dispatcher_tarfile = "dispatcher-#{dispatcher_target}-linux-x86_64-#{dispatcher_version}.tar.gz"
 dispatcher_src     = "http://download.macromedia.com/dispatcher/download/#{dispatcher_tarfile}"

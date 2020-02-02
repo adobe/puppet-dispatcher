@@ -119,6 +119,18 @@ class dispatcher (
     notify  => Class['Apache::Service'],
   }
 
+  if $facts['selinux_enforced'] {
+    File["${_mod_path}/${_filename}"] {
+      seltype => 'httpd_modules_t',
+    }
+
+    File["${_mod_path}/mod_dispatcher.so"] {
+      seltype => 'httpd_modules_t',
+    }
+
+    ensure_resource('selboolean', 'httpd_can_network_connect', { value => 'on', persistent => true })
+  }
+
   file { "${_farm_path}/dispatcher.conf":
     ensure  => file,
     owner   => $_owner,

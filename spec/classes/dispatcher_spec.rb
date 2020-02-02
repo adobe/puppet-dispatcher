@@ -317,6 +317,19 @@ describe 'dispatcher', type: :class do
         end
       end
 
+      context 'selinux' do
+        let(:facts) { os_facts.merge(selinux_enforced: true) }
+
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_file("#{lib_path}/file-with-version.so").with('seltype' => 'httpd_modules_t') }
+        it { is_expected.to contain_file("#{lib_path}/mod_dispatcher.so").with('seltype' => 'httpd_modules_t') }
+        it do
+          is_expected.to contain_selboolean('httpd_can_network_connect').with(
+            'value' => 'on',
+            'persistent' => true,
+          )
+        end
+      end
     end
   end
 
