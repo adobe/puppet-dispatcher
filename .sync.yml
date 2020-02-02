@@ -19,3 +19,91 @@ Rakefile:
       EnforcedStyle: percent
     Layout/EmptyLinesAroundBlockBody:
       Enabled: false
+
+.travis.yml:
+  dist: xenial
+  deploy_to_forge:
+    enabled: true
+    tag_regex: '^v\d'
+  user: adobeinc
+  secure: ''
+  includes:
+  - bundler_args:
+    dist: xenial
+    env: PLATFORMS=debian_puppet5
+    rvm: 2.5.1
+    before_script:
+      - bundle exec rake 'litmus:provision_list[debian]'
+      - bundle exec rake 'litmus:install_agent[puppet5]'
+      - bundle exec rake litmus:install_module
+    script:
+      - bundle exec rake litmus:acceptance:parallel
+    services: docker
+    sudo: required
+    stage: acceptance
+  - bundler_args:
+    dist: xenial
+    env: PLATFORMS=debian_puppet6
+    rvm: 2.5.1
+    before_script:
+      - bundle exec rake 'litmus:provision_list[debian]'
+      - bundle exec rake 'litmus:install_agent[puppet6]'
+      - bundle exec rake litmus:install_module
+    script:
+      - bundle exec rake litmus:acceptance:parallel
+    services: docker
+    sudo: required
+    stage: acceptance
+  - bundler_args:
+    dist: xenial
+    env: PLATFORMS=ubuntu_puppet5
+    rvm: 2.5.1
+    before_script:
+      - bundle exec rake 'litmus:provision_list[ubuntu]'
+      - bundle exec rake 'litmus:install_agent[puppet5]'
+      - bundle exec rake litmus:install_module
+    script:
+      - bundle exec rake litmus:acceptance:parallel
+    services: docker
+    sudo: required
+    stage: acceptance
+  - bundler_args:
+    dist: xenial
+    env: PLATFORMS=ubuntu_puppet6
+    rvm: 2.5.1
+    before_script:
+      - bundle exec rake 'litmus:provision_list[ubuntu]'
+      - bundle exec rake 'litmus:install_agent[puppet6]'
+      - bundle exec rake litmus:install_module
+    script:
+      - bundle exec rake litmus:acceptance:parallel
+    services: docker
+    sudo: required
+    stage: acceptance
+  - bundler_args:
+    dist: xenial
+    env: PLATFORMS=el_puppet5
+    rvm: 2.5.1
+    before_script:
+      - bundle exec rake 'litmus:provision_list[el]'
+      - bundle exec rake 'litmus:install_agent[puppet5]'
+      - bundle exec rake litmus:install_module
+    script:
+      - bundle exec rake litmus:acceptance:parallel
+    services: docker
+    sudo: required
+    stage: acceptance
+  - bundler_args:
+    dist: xenial
+    env: PLATFORMS=el_puppet6
+    rvm: 2.5.1
+    before_script:
+      - bundle exec rake 'litmus:provision_list[el]'
+      - bundle exec rake 'litmus:install_agent[puppet6]'
+      - bundle exec rake litmus:install_module
+    script:
+      - bundle exec rake litmus:acceptance:parallel
+    services: docker
+    sudo: required
+    stage: acceptance
+  simplecov: true

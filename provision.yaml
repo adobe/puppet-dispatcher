@@ -19,7 +19,10 @@
 ---
 debian:
   provisioner: docker
-  images: ['waffleimage/debian9', 'waffleimage/ubuntu18.04']
+  images: ['waffleimage/debian9']
+ubuntu:
+  provisioner: docker
+  images: ['waffleimage/ubuntu18.04']
 el:
   provisioner: docker
   images: ['waffleimage/centos7', 'waffleimage/oraclelinux7', 'waffleimage/scientificlinux7']
