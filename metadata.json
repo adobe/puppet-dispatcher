@@ -69,7 +69,7 @@
       "version_requirement": ">= 4.10.0 < 7.0.0"
     }
   ],
-  "pdk-version": "1.14.0",
-  "template-url": "https://github.com/puppetlabs/pdk-templates#1.12.0",
-  "template-ref": "1.12.0-0-g55d9ae2"
+  "pdk-version": "1.15.0",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#1.15.0",
+  "template-ref": "tags/1.15.0-0-g0bc522e"
 }
