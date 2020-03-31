@@ -10,6 +10,4 @@ fixtures:
     apache: 'puppetlabs/apache'
     selinux_core: 'puppetlabs/selinux_core'
   repositories:
-    provision:
-      repo: 'git://github.com/bstopp/provision.git'
-      branch: 'feature/centos-systemd'
+    provision: 'https://github.com/puppetlabs/provision.git'

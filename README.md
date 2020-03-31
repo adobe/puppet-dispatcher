@@ -109,13 +109,8 @@ puppet strings generate --format markdown
 
 ## Acceptance Tests:
 
-* `bundle exec rake 'litmus:provision_list[debian]'`
-* On Debian:
-  * Maybe not needed if using WaffleImages: `bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes=ssh_nodes` 
-  * `bundle exec bolt command run 'apt-get remove -y openssl' --inventoryfile inventory.yaml --nodes=ssh_nodes`
-  * `bundle exec bolt command run 'ln -sf "$(find /usr/lib/x86_64-linux-gnu -name "libssl.so*1.0*" -type f -print |sort -dr|head -1)" /usr/lib/x86_64-linux-gnu/libssl.so.10' --inventoryfile inventory.yaml --nodes=ssh_nodes`
-  * `bundle exec bolt command run 'ln -sf "$(find /usr/lib/x86_64-linux-gnu -name "libcrypto.so*1.0*" -type f -print |sort -dr|head -1)" /usr/lib/x86_64-linux-gnu/libcrypto.so.10' --inventoryfile inventory.yaml --nodes=ssh_nodes`
-  
-* `bundle exec rake litmus:install_agent`
-* `bundle exec rake litmus:install_module`
-* `bundle exec rake litmus:acceptance:parallel`
+* `pdk bundle exec rake 'litmus:provision_list[debian]'`  
+* `pdk bundle exec rake litmus:install_agent`
+* `pdk bundle exec rake litmus:install_module`
+* `pdk bundle exec rake litmus:acceptance:parallel`
+* `pdk bundle exec rake litmus:tear_down`
