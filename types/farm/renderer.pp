@@ -16,9 +16,20 @@
 # limitations under the License.
 #
 
-# Renderer attributes hash.
+#
 # @summary A hash of renderer attributes.
 #   Used to configure the `/renderer` parameter instance of a Farm.
+#
+# The Renderer attributes structure. This type is passed to a `dispatcher::farm` to confgure the *renders* parameter. This will define the properties as specified in the Dispatcher documentation for [defining page renderers](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#defining-page-renderers-renders).
+#
+# Parameters:
+#  - hostname:        `Stdlib::Host:`
+#  - port:            `Stdlib::Port:`
+#  - timeout:         `Integer[0]:`
+#  - receive_timeout: `Integer[0]:`
+#  - ipv4:            `Boolean:`
+#  - secure:          `Boolean:`
+#  - always_resolve:  `Boolean:`
 #
 type Dispatcher::Farm::Renderer = Struct[
   {

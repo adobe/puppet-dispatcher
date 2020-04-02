@@ -19,7 +19,7 @@
 # @summary
 #   Installs and configures an AEM Dispatcher farm instance on your system.
 #
-# A farm reqeuires a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
+# This will configure an AEM Dispatcher Farm instance on the node. Farms require a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
 # The remainder of the paramers have provided, reasonable defaults.
 #
 # @example
@@ -47,14 +47,14 @@
 #
 # @param renderers
 #   Specifes an array of renderers that to which this Farm will dispatch requests. Used to create the */renders* directive. See the
-#   `Dispatcher::Farm::Renderer` documentattion for details on the parameter's structure.
+#   `Dispatcher::Farm::Renderer` documentation for details on the parameter's structure.
 #
 # @param filters
 #   Specifies an array of filters that will be applied to the incoming requests. Used to create the */filter* directive. See the
-#   `Dispatcher::Farm::Filter` documentattion for details on the parameter's structure.
+#   `Dispatcher::Farm::Filter` documentation for details on the parameter's structure.
 #
 # @param cache
-#   Configures the */cache* directive for the farm. See the `Dispatcher::Farm::Cache` documentattion for details on the parameter's structure.
+#   Configures the */cache* directive for the farm. See the `Dispatcher::Farm::Cache` documentation for details on the parameter's structure.
 #
 # @param ensure
 #   Specifies if the farm host is present or absent.

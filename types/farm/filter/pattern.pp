@@ -16,9 +16,15 @@
 # limitations under the License.
 #
 
-# Filter Pattern attributes hash.
+#
 # @summary A hash of filter pattern attributes.
 #   Used to configure confgure the different options for a filter parameter.
+#
+# This structure is used to configure an individual **filter** for use in the `Dispatcher::Farm::Filter` attributes.
+#
+# Parameters:
+#  - regex:   `Boolean`
+#  - pattern: `String`
 #
 type Dispatcher::Farm::Filter::Pattern = Struct[
   {
