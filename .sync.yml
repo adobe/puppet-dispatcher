@@ -1,8 +1,8 @@
 ---
 mock_with: ':rspec'
-appveyor.yml:
-  delete: true
 .gitlab-ci.yml:
+  delete: true
+appveyor.yml:
   delete: true
 spec/spec_helper.rb:
   coverage_report: true
@@ -10,6 +10,29 @@ spec/spec_helper.rb:
 Rakefile:
   extra_disabled_lint_checks:
     - '140chars'
+  extras:
+    - 'task :headers do'
+    - "  require 'copyright_header' if Bundler.rubygems.find_name('copyright-header')"
+    - '  args = {'
+    - "    :license => 'ASL2',"
+    - "    :copyright_software => 'Puppet Dispatcher Module',"
+    - '    :copyright_software_description => "A module to manage AEM Dispatcher installations and configuration files.",'
+    - "    :copyright_holders => ['Adobe Inc'],"
+    - "    :copyright_years => ['2019'],"
+    - "    :add_path => 'manifests:types:files:templates:spec',"
+    - "    :output_dir => '.',"
+    - "    :syntax => 'config/syntax.yml',"
+    - '    :word_wrap => 200'
+    - '  }'
+    - '  command_line = CopyrightHeader::CommandLine.new( args )'
+    - '  command_line.execute'
+    - 'end'
+
+Gemfile:
+  required:
+    ':development':
+      - gem: copyright-header
+        version: '~>1.0'
 
 .rubocop.yml:
   default_configs:

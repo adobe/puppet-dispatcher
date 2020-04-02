@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet_litmus/rake_tasks' if Bundler.rubygems.find_name('puppet_litmus').any?
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-syntax/tasks/puppet-syntax'
@@ -87,7 +89,6 @@ end
 
 task :headers do
   require 'copyright_header' if Bundler.rubygems.find_name('copyright-header')
-
   args = {
     :license => 'ASL2',
     :copyright_software => 'Puppet Dispatcher Module',
@@ -99,7 +100,6 @@ task :headers do
     :syntax => 'config/syntax.yml',
     :word_wrap => 200
   }
-
   command_line = CopyrightHeader::CommandLine.new( args )
   command_line.execute
 end
