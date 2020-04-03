@@ -20,10 +20,23 @@
 # @summary A hash of filter attributes.
 #   Used to configure the `/filter` parameter instance of a Farm.
 #
+# Filter attributes hash. This type is passed to a `dispatcher::farm` to confgure the *filter* parameter. This will define the properties as specified in the Dispatcher documentation for [granting access to content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-access-to-content-filter).
+# Parameters:
+#  - rank:      `Integer[0]`
+#  - allow:     `Boolean`
+#  - url:       `Dispatcher::Farm::Filter::Pattern`
+#  - method:    `Dispatcher::Farm::Filter::Pattern`
+#  - query:     `Dispatcher::Farm::Filter::Pattern`
+#  - protocol:  `Dispatcher::Farm::Filter::Pattern`
+#  - path:      `Dispatcher::Farm::Filter::Pattern`
+#  - selectors: `Dispatcher::Farm::Filter::Pattern`
+#  - extension: `Dispatcher::Farm::Filter::Pattern`
+#  - suffix:    `Dispatcher::Farm::Filter::Pattern`
+#
 type Dispatcher::Farm::Filter = Struct[
   {
-    rank      => Integer[0],
-    allow     => Boolean,
+    rank                => Integer[0],
+    allow               => Boolean,
     Optional[url]       => Dispatcher::Farm::Filter::Pattern,
     Optional[method]    => Dispatcher::Farm::Filter::Pattern,
     Optional[query]     => Dispatcher::Farm::Filter::Pattern,

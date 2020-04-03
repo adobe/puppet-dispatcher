@@ -1,27 +1,53 @@
 # Dispatcher
 [description]: #description
 [setup]: #setup
-[dispatcher affects]: #what-the-dispatcher-module-affects
-[setup requirements]: #setup-requirements
-[Beginning With Dispatcher]: #beginning-with-dispatcher
-[Usage]: #usage
+[affects]: #what-the-dispatcher-module-affects
+[requirements]: #setup-requirements
+[beginning]: #beginning-with-dispatcher
+[usage]: #usage
 
+[dispatcher configuration]: #dispatcher-configuration
+[farm definition]: #defining-a-farm
+[farm security]: #securing-a-farm
 
+[PDK]: https://puppet.com/docs/pdk/1.x/pdk.html
+[PDK Validation]: https://puppet.com/docs/pdk/1.x/pdk_testing.html#validating
+[PDK Unit Testing]: https://puppet.com/docs/pdk/1.x/pdk_testing.html#testing-validating
+
+[Facter]: http://docs.puppet.com/facter/
 [puppet module]: https://puppet.com/docs/puppet/latest/modules_fundamentals.html
-[apache module]: https://forge.puppet.com/puppetlabs/apache
+[Apache module]: https://forge.puppet.com/puppetlabs/apache
 
 [dispatcher]: https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/dispatcher.html
-[Dispatcher Module]: https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html
+[Dispatcher module]: https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html
+
+[`dispatcher`]: REFERENCE.md#dispatcher
+[`dispatcher::farm`]: REFERENCE.md#dispatcherfarm
+[`Dispatcher::Farm::Renderer`]: REFERENCE.md#dispatcherfarmrenderer
+[`Dispatcher::Farm::Filter`]: REFERENCE.md#dispatcherfarmfilter
+[`Dispatcher::Farm::Cache`]: REFERENCE.md#dispatcherfarmcache
+
+[REFERENCE.md]: REFERENCE.md
+[metadata.json]: metadata.json
+[Contributing]: .github/CONTRIBUTING.md
+
+
+
 #### Table of Contents
 
 1. [Description][Description]
 2. [Setup - The basics of getting started with dispatcher][setup]
-    * [What dispatcher affects][dispatcher affects]
-    * [Setup requirements][setup requirements]
-    * [Beginning with dispatcher][Beginning with Dispatcher]
-3. [Usage - Configuration options and additional functionality][Usage]
+    * [What dispatcher affects][affects]
+    * [Setup requirements][requirements]
+    * [Beginning with dispatcher][beginning]
+3. [Usage - Configuration options and additional functionality][usage]
+    * [Dispatcher Configuration][dispatcher configuration]
+    * [Defining a Farm][farm definition]
+    * [Securing a Farm][farm security]
 4. [Limitations - OS compatibility, etc.](#limitations)
-5. [Development - Guide for contributing to the module](#development)
+5. [Contributing - Guidelines for contributing](#contributing)
+6. [Development - Guide for contributing to the module](#development)
+
 
 ## Description
 
@@ -36,9 +62,9 @@
 
 ### Setup Requirements
 
-Because the dispatcher module depends on the [Apache module][], it must be included in the catalog, otherwise an error will be raised.
+Because the dispatcher module depends on the [Apache module][], that module must be included in the catalog, otherwise an error will be raised.
 
-This module will configure the dispatcher, but the module must be provided by the consumer. Ensure that the [dispatcher module][] is made available within the catalog.
+This module will configure the dispatcher, but the module must be provided by the consumer. Ensure that the [Dispatcher module][] is made available within the catalog.
 
 ### Beginning with Dispatcher
 
@@ -60,62 +86,229 @@ When you declare this class with the default options, the module:
 
 ## Usage
 
-Include usage examples for common use cases in the **Usage** section. Show your users how to use your module to solve problems, and be sure to include code examples. Include three to five examples of the most important or common tasks a user can accomplish with your module. Show users how to accomplish more complex tasks that involve different types, classes, and functions working in tandem.
+### Dispatcher Configuration
+
+The default parameters for the [`dispatcher`][] class configures the Dispatcher module with reasonable defaults to ensure operation.  Minimally, a reference to the dispatcher module file must be provided by the consumer.
+
+```puppet
+class { 'dispatcher' :
+  module_file => '/path/to/module/file.so'
+}
+```
+
+See the [`dispatcher`][] class reference for a list of all parameters and their defaults.
+
+#### Specifying Farms to Load from Hiera
+
+The `dispatcher` class can be passed a list of farm names. These will signal to load farms directly from hiera data, so that no other resources need to be defined.
+
+```puppet
+class { 'dispatcher' :
+  module_file => '/path/to/module/file.so',
+  farms       => ['author', 'publish'],
+}
+```
+
+### Defining a Farm
+
+The [`dispatcher::farm`] configures a render farm definition for the Dispatcher. A minimal configuration is required for successful operation - these parameters are `renderers`, `filters`, and `cache`.
+
+```puppet
+dispatcher::farm { 'publish' :
+  renderers => [
+    { hostname => 'localhost', port => 4502 },
+  ],
+  filters => [
+    {
+      allow => false,
+      rank  => 1,
+      url   => { regex => true, pattern => '.*' },
+    },
+  ],
+  cache => {
+    docroot => '/var/www/html',
+    rules => [
+      { rank => 1, glob => '*.html', allow => true },
+    ],
+    allowed_clients => [
+      { rank => 1, glob => '*', allow => false },
+      { rank => 2, glob => '127.0.0.1', allow => true },
+    ],
+  }
+}
+```
+
+See the [`dispatcher::farm`][] defined type reference for a list of all parameters and their defaults.
+
+> **Note**: It is recommended that the farms be defined using hiera data rather than define them as in-line resources in the catalog. See the examples or spec data for ways to achieve this.
+
+#### Required Parameters
+
+##### Renderers
+
+The `renderers` parameter must be passed a list of [`Dispatcher::Farm::Renderer`][] struct types. This struct allows the farm to be configured with one or more renderer endpoints.
+
+```puppet
+dispatcher::farm { 'publish' :
+...
+  renderers => [
+    { hostname => '192.168.0.1', port => 4502 },
+    { hostname => '192.168.0.1', port => 4502 },
+  ],
+...
+}
+```
+
+See the [`Dispatcher::Farm::Renderer`][] struct type reference for a list of all parameters.
+
+##### Filters
+
+The `filters` parameter must be passed a list of [`Dispatcher::Farm::Filter`][] struct types. This struct defines the order and rules for allowing content to be accessible via the Dispatcher.
+
+Since Adobe has recommended not using **glob** references, they are not supported in Filters. Regex support is available - this flag is used to determine the quote type: `'` (regex) or `"` (normal).
+
+This example has two rules:
+ * Deny access to all content
+ * Allows `html` files from the `/content` path
+
+They will be ordered **deny** then **allow**, as the rank attribute determines order.
+
+```puppet
+dispatcher::farm { 'publish' :
+...
+  filters => [
+    {
+      'allow' => true,
+      'rank' => 10,
+      'path' => { 'regex' => false, 'pattern' => '/content/*' },
+      'extension' => { 'regex' => false, 'pattern' => '.html' },
+    },
+    { 'allow' => false, 'rank' => 1, 'url' => { 'regex' => true, 'pattern' => '.*' } },
+  ],
+...
+}
+```
+
+See the [`Dispatcher::Farm::Filter`][] struct type reference for a list of all parameters.
+
+##### Cache
+
+The `cache` parameter must be passed a [`Dispatcher::Farm::Cache`][] struct type. This configures the rules for the farm's cache.
+
+This example specifies a docroot, cache files with the `html` extension, and allow the local system to flush the cache.
+
+```puppet
+dispatcher::farm { 'publish' :
+...
+  cache => {
+    docroot => '/var/www/html',
+    rules => [
+      { rank => 1, glob => '*.html', allow => true },
+    ],
+    allowed_clients => [
+      { rank => 1, glob => '*', allow => false },
+      { rank => 2, glob => '127.0.0.1', allow => true },
+    ],
+  }
+...
+}
+```
+
+See the [`Dispatcher::Farm::Cache`][] struct type reference for a list of all parameters.
+
+### Securing a Farm
+
+The [`dispatcher::farm`][] defined type supports a custom parameter `secure` which will indicate whether or not to enable the Adobe Best Practices for securing a dispatcher. Enabling this flag will define the following Farm configurations:
+
+#### Filters
+
+First, block all access - This forces consumers to explicitly define access rights via other, subsequent filters. Regardless of other filters defined, this will always be the first one.
+
+```
+  /0000 { /type "deny" /url '.*' }
+```
+
+Finally, block access to specific AEM resource paths, selectors, URL parameters and source files. Again, regardless of other filters defined, these entries will always be at the end of the list. This will ensure that even if another filter grants access, these override other definitions.
+
+> If access is needed to any resources blocked by these filters, then the Farm must be set to `secure => false`. There is no mechanism to override the order of these filters.
+
+```
+  /9993 { /type "deny" /url "/crx/*" }
+  /9994 { /type "deny" /url "/system/*" }
+  /9995 { /type "deny" /url "/apps/*" }
+  /9996 { /type "deny" /selectors '(feed|rss|pages|languages|blueprint|infinity|tidy|sysview|docview|query|[0-9-]+|jcr:content)' /extension '(json|xml|html|feed)' }
+  /9997 { /type "deny" /method "GET" /query "debug=*" }
+  /9998 { /type "deny" /method "GET" /query "wcmmode=*" }
+  /9999 { /type "deny" /extension "jsp" }
+```
+
+#### Cache
+
+Adobe Security best practices recommend that only explicit agents be allowed to flush the Dispatcher's cache. Therefore enabling farm security defines the following `allowedClient` entry. Again, regardless of other definitions in the [`Dispatcher::Farm::Cache`][] struct, this entry will always be first - forcing consumers to be explicit about the allowed clients.
+
+```
+/cache {
+  ...
+  /allowedClients {
+    /0000 { /type "deny" /glob "*" }
+  }
+}
+```
 
 ## Reference
 
-This section is deprecated. Instead, add reference information to your code as Puppet Strings comments, and then use Strings to generate a REFERENCE.md in your module. For details on how to add code comments and generate documentation with Strings, see the Puppet Strings [documentation](https://puppet.com/docs/puppet/latest/puppet_strings.html) and [style guide](https://puppet.com/docs/puppet/latest/puppet_strings_style.html)
+For information on classes, types, and structs see the [REFERENCE.md][].
 
-If you aren't ready to use Strings yet, manually create a REFERENCE.md in the root of your module directory and list out each of your module's classes, defined types, facts, functions, Puppet tasks, task plans, and resource types and providers, along with the parameters for each.
+### Templates
 
-For each element (class, defined type, function, and so on), list:
-
-  * The data type, if applicable.
-  * A description of what the element does.
-  * Valid values, if the data type doesn't make it obvious.
-  * Default value, if any.
-
-For example:
-
-```
-### `pet::cat`
-
-#### Parameters
-
-##### `meow`
-
-Enables vocalization in your cat. Valid options: 'string'.
-
-Default: 'medium-loud'.
-```
+This module relies heavily on templates to configure the [`dispatcher::farm`][] defined type. These templates are based on [Facter][] and properties in the [Apache module][] that are specific to your operating system. None of these templates are meant for configuration.
 
 ## Limitations
 
-In the Limitations section, list any incompatibilities, known issues, or other warnings.
+For an extensive list of supported operating systems, see the [metadata.json][].
+
+## Contributing
+
+We always appreciate any community contributions to this project. Please check out our [Contributing][] guidelines for more information.
 
 ## Development
 
-In the Development section, tell other users the ground rules for contributing to your project and how they should submit their work.
+### Testing
 
-## Release Notes/Contributors/Etc. **Optional**
-
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You can also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
-
-## Generate docs:
+This module uses [PDK][] for development. When making updates to the module, please run the [PDK Validation][] and [PDK Unit Testing] commands.
 
 ```
-puppet strings generate --format markdown
+  $ pdk validate
+  ...
+  $ pdk test unit --puppet-version 5
+  ...
+  $ pdk test unit --puppet-version 6
 ```
 
-## Acceptance Tests:
+When developing or testing, it is recommended _not_ to use the `bundle` command directly. PDK and Bundle aren't always friendly. If a bundle command will be run, use PDK to "wrap" the bundle command. See the [Acceptance Tests](#acceptance-tests) section for example with running Litmus.
 
-* `bundle exec rake 'litmus:provision_list[debian]'`
-* On Debian:
-  * Maybe not needed if using WaffleImages: `bundle exec bolt command run 'apt-get install wget -y' --inventoryfile inventory.yaml --nodes=ssh_nodes` 
-  * `bundle exec bolt command run 'apt-get remove -y openssl' --inventoryfile inventory.yaml --nodes=ssh_nodes`
-  * `bundle exec bolt command run 'ln -sf "$(find /usr/lib/x86_64-linux-gnu -name "libssl.so*1.0*" -type f -print |sort -dr|head -1)" /usr/lib/x86_64-linux-gnu/libssl.so.10' --inventoryfile inventory.yaml --nodes=ssh_nodes`
-  * `bundle exec bolt command run 'ln -sf "$(find /usr/lib/x86_64-linux-gnu -name "libcrypto.so*1.0*" -type f -print |sort -dr|head -1)" /usr/lib/x86_64-linux-gnu/libcrypto.so.10' --inventoryfile inventory.yaml --nodes=ssh_nodes`
-  
-* `bundle exec rake litmus:install_agent`
-* `bundle exec rake litmus:install_module`
-* `bundle exec rake litmus:acceptance:parallel`
+> **Note**: This module should be tested against both Puppet v5.x and v6.x
+
+### Acceptance Tests
+
+This module uses [puppet_litmus](https://github.com/puppetlabs/puppet_litmus) to perform acceptance tests. There are three provision groups: `debian`, `ubuntu` and `el`. Before submitting a Pull Request, please add acceptance tests and validate the changes:
+ 
+```
+  $ pdk bundle exec rake 'litmus:provision_list[<group>]'
+    ...
+  $ pdk bundle exec rake litmus:install_agent
+    ...
+  $ pdk bundle exec rake litmus:install_module
+    ...
+  $ pdk bundle exec rake litmus:acceptance:parallel
+    ...
+  $ pdk bundle exec rake litmus:tear_down
+```
+
+### Documentation
+
+If you submit a change to this module, be sure to regenerate the reference documentation as follows. (This may be removed after validation that it is created by TravisCI.)
+
+```
+$ pdk bundle exec rake strings:generate:reference
+```

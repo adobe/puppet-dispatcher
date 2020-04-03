@@ -16,9 +16,15 @@
 # limitations under the License.
 #
 
-# Vanity URL attributes hash.
+#
 # @summary A hash of vanity url attributes.
 #   Used to configure the `/vanith_url` parameter instance of a Farm.
+#
+# The Vanity URL attributes structure. This type is passed to a `dispatcher::farm` to confgure the *vanity_urls* parameter. This will define the properties as specified in the Dispatcher documentation for [enabling access to Vanity URLs](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#enabling-access-to-vanity-urls-vanity-urls).
+#
+# Parameters:
+#  - file:  `Stdlib::Absolutepath`
+#  - delay: `Integer[0]`
 #
 type Dispatcher::Farm::VanityUrls = Struct[
   {

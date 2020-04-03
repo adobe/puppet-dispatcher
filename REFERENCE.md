@@ -132,7 +132,7 @@ Default value: `undef`
 
 ### dispatcher::farm
 
-A farm reqeuires a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
+This will configure an AEM Dispatcher Farm instance on the node. Farms reqeuire a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
 The remainder of the paramers have provided, reasonable defaults.
 
 #### Examples
@@ -156,7 +156,7 @@ dispatcher::farm { 'publish' :
       { rank => 1, glob => '*.html', allow => true },
     ],
     allowed_clients => [
-      { rank => 1, glob => '*.*.*.*', allow => false },
+      { rank => 1, glob => '*', allow => false },
       { rank => 2, glob => '127.0.0.1', allow => true },
     ],
   }
@@ -172,7 +172,7 @@ The following parameters are available in the `dispatcher::farm` defined type.
 Data type: `Array[Dispatcher::Farm::Renderer]`
 
 Specifes an array of renderers that to which this Farm will dispatch requests. Used to create the */renders* directive. See the
-`Dispatcher::Farm::Renderer` documentattion for details on the parameter's structure.
+`Dispatcher::Farm::Renderer` documentation for details on the parameter's structure.
 
 Default value: lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::Farm::Renderer], 'deep')
 
@@ -181,7 +181,7 @@ Default value: lookup("dispatcher::farm::${name}::renderers", Array[Dispatcher::
 Data type: `Array[Dispatcher::Farm::Filter]`
 
 Specifies an array of filters that will be applied to the incoming requests. Used to create the */filter* directive. See the
-`Dispatcher::Farm::Filter` documentattion for details on the parameter's structure.
+`Dispatcher::Farm::Filter` documentation for details on the parameter's structure.
 
 Default value: lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Farm::Filter], 'deep')
 
@@ -189,7 +189,7 @@ Default value: lookup("dispatcher::farm::${name}::filters", Array[Dispatcher::Fa
 
 Data type: `Dispatcher::Farm::Cache`
 
-Configures the */cache* directive for the farm. See the `Dispatcher::Farm::Cache` documentattion for details on the parameter's structure.
+Configures the */cache* directive for the farm. See the `Dispatcher::Farm::Cache` documentation for details on the parameter's structure.
 
 Default value: lookup("dispatcher::farm::${name}::cache", Dispatcher::Farm::Cache, 'deep')
 
@@ -371,7 +371,12 @@ Default value: lookup("dispatcher::farm::${name}::secure", Boolean, 'first', fal
 
 ### Dispatcher::Farm::AuthChecker
 
-AuthChecker attributes hash.
+AuthChecker attributes hash. This type is passed to a `dispatcher::farm` to confgure the *auth_checker* parameter. The defines the properties as specified in the Dispatcher documentation for [caching secured content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/permissions-cache.html#configure-dispatcher-for-permission-sensitive-caching).
+
+Parameters:
+ - url:      `StdLib::Absolutepath`
+ - filters:  `Array[Dispatcher::Farm::GlobRule]`
+ - headers:  `Array[Dispatcher::Farm::GlobRule]`
 
 Alias of `Struct[{
     url     => Stdlib::Absolutepath,
@@ -381,7 +386,23 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::Cache
 
-Cache attributes hash.
+The Cache attributes structure. This type is passed to a `dispatcher::farm` to confgure the *cache* parameter. The defines the properties as specified in the Dispatcher documentation for [caching content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-the-dispatcher-cache-cache).
+
+Parameters:
+ - docroot:               `StdLib::Absolutepath`
+ - rules:                 `Array[Dispatcher::Farm::GlobRule]`
+ - allowed_clients:       `Array[Dispatcher::Farm::GlobRule]`
+ - statfile               `Stdlib::Absolutepath`
+ - serve_stale_on_error:  `Boolean`
+ - allow_authorized       `Boolean,
+ - statfileslevel         `Integer[0]`
+ - invalidate             `Array[Dispatcher::Farm::GlobRule]`
+ - invalidate_handler     `Stdlib::Absolutepath`
+ - ignore_url_params      `Array[Dispatcher::Farm::GlobRule`
+ - headers                `Array[String]`
+ - mode                   `Stdlib::Filemode`
+ - grace_period           `Integer[0]`
+ - enable_ttl             `Boolean`
 
 Alias of `Struct[{
     docroot                        => Stdlib::Absolutepath,
@@ -403,10 +424,22 @@ Alias of `Struct[{
 ### Dispatcher::Farm::Filter
 
 Filter attributes hash.
+Filter attributes hash. This type is passed to a `dispatcher::farm` to confgure the *filter* parameter. The defines the properties as specified in the Dispatcher documentation for [granting access to content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-access-to-content-filter).
+Parameters:
+ - rank:      `Integer[0]`
+ - allow:     `Boolean`
+ - url:       `Dispatcher::Farm::Filter::Pattern`
+ - method:    `Dispatcher::Farm::Filter::Pattern`
+ - query:     `Dispatcher::Farm::Filter::Pattern`
+ - protocol:  `Dispatcher::Farm::Filter::Pattern`
+ - path:      `Dispatcher::Farm::Filter::Pattern`
+ - selectors: `Dispatcher::Farm::Filter::Pattern`
+ - extension: `Dispatcher::Farm::Filter::Pattern`
+ - suffix:    `Dispatcher::Farm::Filter::Pattern`
 
 Alias of `Struct[{
-    rank      => Integer[0],
-    allow     => Boolean,
+    rank                => Integer[0],
+    allow               => Boolean,
     Optional[url]       => Dispatcher::Farm::Filter::Pattern,
     Optional[method]    => Dispatcher::Farm::Filter::Pattern,
     Optional[query]     => Dispatcher::Farm::Filter::Pattern,
@@ -428,7 +461,12 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::GlobRule
 
-Glob rule attributes hash.
+This structure represents a glob that can be used across many of the other struct types. It's used to enforce and standardize their parameters.
+
+Parameters:
+ - rank:  `Integer[0]`
+ - glob:  `String`
+ - allow: `Boolean`
 
 Alias of `Struct[{
     rank  => Integer[0],
@@ -438,7 +476,16 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::Renderer
 
-Renderer attributes hash.
+The Renderer attributes structure. This type is passed to a `dispatcher::farm` to confgure the *renders* parameter. The defines the properties as specified in the Dispatcher documentation for [defining page renderers](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#defining-page-renderers-renders).
+
+Parameters:
+ - hostname:        `Stdlib::Host:`
+ - port:            `Stdlib::Port:`
+ - timeout:         `Integer[0]:`
+ - receive_timeout: `Integer[0]:`
+ - ipv4:            `Boolean:`
+ - secure:          `Boolean:`
+ - always_resolve:  `Boolean:`
 
 Alias of `Struct[{
     hostname                  => Stdlib::Host,
@@ -452,7 +499,7 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::SessionManagement
 
-SessionManagement attributes hash.
+The SEssion Management
 
 Alias of `Struct[{
     directory         => Stdlib::Absolutepath,

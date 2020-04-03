@@ -16,11 +16,23 @@
 # limitations under the License.
 #
 
-# StickyConnection attributes hash.
+#
 # @summary A hash of Statistic attributes.
 #   Used to configure the `/statistics` parameter instance of a Farm.
 #
+# The SticyConnection attributes structure. This type is passed to a `dispatcher::farm` to confgure the *sticky_connections* parameter. This will define the properties as specified in the Dispatcher documentation for [creating sticky connections](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#identifying-a-sticky-connection-folder-stickyconnectionsfor). Which struct used will determine if `/stickyConnectionsFor` or `/stickyConnections` is created as a result.
+#
+# `/stickyConnectionsFor` Parameters:
+#  - String[1]
+#
+# `/stickyConnections` Parameters:
+#  - paths:     `Array[String]`
+#  - domain:    `String`
+#  - http_only: `Boolean`
+#  - secure:    `Boolean`
+#
 type Dispatcher::Farm::StickyConnection = Variant[
+
   String[1],
   Struct[
     {

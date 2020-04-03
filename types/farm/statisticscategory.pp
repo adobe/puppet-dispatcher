@@ -16,9 +16,16 @@
 # limitations under the License.
 #
 
-# Statistic attributes hash.
+#
 # @summary A hash of Statistic attributes.
 #   Used to configure the `/statistics` parameter instance of a Farm.
+#
+# The Statistics Category attributes structure. This type is passed to a `dispatcher::farm` to confgure the *statistics_categories* parameter. This will define the properties as specified in the Dispatcher documentation for [configuring the load balancer](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-load-balancing-statistics).
+#
+# Parameters:
+#  - rank: `Integer[0]`
+#  - name: `String`
+#  - glob: `String`
 #
 type Dispatcher::Farm::StatisticsCategory = Struct[
   {

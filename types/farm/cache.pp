@@ -16,9 +16,27 @@
 # limitations under the License.
 #
 
-# Cache attributes hash.
+#
 # @summary A hash of cache attributes.
 #   Used to configure the `/cache` parameter instance of a Farm.
+#
+# The Cache attributes structure. This type is passed to a `dispatcher::farm` to confgure the *cache* parameter. This will define the properties as specified in the Dispatcher documentation for [caching content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-the-dispatcher-cache-cache).
+#
+# Parameters:
+#  - docroot:               `StdLib::Absolutepath`
+#  - rules:                 `Array[Dispatcher::Farm::GlobRule]`
+#  - allowed_clients:       `Array[Dispatcher::Farm::GlobRule]`
+#  - statfile               `Stdlib::Absolutepath`
+#  - serve_stale_on_error:  `Boolean`
+#  - allow_authorized       `Boolean`
+#  - statfileslevel         `Integer[0]`
+#  - invalidate             `Array[Dispatcher::Farm::GlobRule]`
+#  - invalidate_handler     `Stdlib::Absolutepath`
+#  - ignore_url_params      `Array[Dispatcher::Farm::GlobRule`
+#  - headers                `Array[String]`
+#  - mode                   `Stdlib::Filemode`
+#  - grace_period           `Integer[0]`
+#  - enable_ttl             `Boolean`
 #
 type Dispatcher::Farm::Cache = Struct[
   {

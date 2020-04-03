@@ -16,9 +16,16 @@
 # limitations under the License.
 #
 
-# AuthChecker attributes hash.
+#
 # @summary A hash of AuthChecker attributes.
 #   Used to configure the `/auth_checker` parameter instance of a Farm.
+#
+# AuthChecker attributes hash. This type is passed to a `dispatcher::farm` to confgure the *auth_checker* parameter. This will define the properties as specified in the Dispatcher documentation for [caching secured content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/permissions-cache.html#configure-dispatcher-for-permission-sensitive-caching).
+#
+# Parameters:
+#  - url:      `StdLib::Absolutepath`
+#  - filters:  `Array[Dispatcher::Farm::GlobRule]`
+#  - headers:  `Array[Dispatcher::Farm::GlobRule]`
 #
 type Dispatcher::Farm::AuthChecker = Struct[
   {
