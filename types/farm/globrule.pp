@@ -16,9 +16,16 @@
 # limitations under the License.
 #
 
-# Glob rule attributes hash.
+#
 # @summary A hash of glob rule attributes.
 #   Used to configure glob rules for different Farm Cache sections.
+#
+# This structure represents a glob that can be used across many of the other struct types. It's used to enforce and standardize their parameters.
+#
+# Parameters:
+#  - rank:  `Integer[0]`
+#  - glob:  `String`
+#  - allow: `Boolean`
 #
 type Dispatcher::Farm::GlobRule = Struct[
   {

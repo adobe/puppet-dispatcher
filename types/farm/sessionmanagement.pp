@@ -16,9 +16,17 @@
 # limitations under the License.
 #
 
-# SessionManagement attributes hash.
+#
 # @summary A hash of sessionmanagement attributes.
 #   Used to configure the `/sessionmanagement` parameter of a Farm.
+#
+# The Session Management attributes structure. This type is passed to a `dispatcher::farm` to confgure the *sessionmanagement* parameter. This will define the properties as specified in the Dispatcher documentation for [authentication session management](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#enabling-secure-sessions-sessionmanagement).
+#
+# Parameters:
+#  - directory: `Stdlib::Absolutepath`
+#  - encode:    `String`
+#  - header:    `String`
+#  - timeout:   `Integer[0]`
 #
 type Dispatcher::Farm::SessionManagement = Struct[
   {
