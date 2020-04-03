@@ -111,7 +111,7 @@ deploy:
   provider: puppetforge
   username: adobeinc
   password:
-    secure: ""
+    secure: "VPXzKLm2xwavEH7zOH1Iw1Lq1jczETbvlC+WZhafwpx18lLOVid5+g4pFjzC4bmli+AkM0LsHsj8VDx+JNGql9R1bp9d49v56ldI8TnpCKOHNlMntXDoQr4bs5KNLMWz1lwfjpIXFeDWBWZgYbKnqCbw9dlrAbk6/j3g1b7IIQ2ukB4cmXO5luqdwPhHVM/0uVYqGDz74W+v8JVow2ciPDjPEkJWB4u48T/cNd54W58+YHwTbRr/6g+1n3K2Xa2h3HtvzUFVdmkiyA7QrZoIylKRHqb0mUK2sRuIJw+9p3kOYF4nRmxIXHWecWp4PKSYzJfTDltJ9teDWaHo5WynbgIo7SJelUbMH1U6ss9ZV5A72pyanCfsOtyXKT5jx00/9akxLKsKtkF33PEi30hs1p1LupSvXGkUzTlI/EnDuevFMk1wojgvViCLG6tZTqebJtx+jOVXpyoPTciPjft/S7DZmS2DliwXQvQlKOh4JK5bwNfam+94eRBoyw/lI3520tkfM0cCG4lSKe5sB4qfMVdbrMJwuRe0WCl+U057VNxP71Ardff2MJwzM1QgzR66QttoCqBXQkjnfDdzS05SHcVvZhtXXLwCFjziFOCLIsaOSOxzR7P85RK99myxHau2tdGBwSQZ4MVqfFdeiK3OQ6/M29sjCdpgHtKsjRGxVcc="
   on:
     tags: true
     all_branches: true
