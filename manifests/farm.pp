@@ -25,7 +25,7 @@
 # @example
 #   dispatcher::farm { 'publish' :
 #     renderers => [
-#       { hostname => 'localhost', port => 4502 },
+#       { hostname => 'localhost', port => 4503 },
 #     ],
 #     filters => [
 #       { allow => false,
