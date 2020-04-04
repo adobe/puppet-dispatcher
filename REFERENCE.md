@@ -132,7 +132,7 @@ Default value: `undef`
 
 ### dispatcher::farm
 
-This will configure an AEM Dispatcher Farm instance on the node. Farms reqeuire a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
+This will configure an AEM Dispatcher Farm instance on the node. Farms require a minimum set of configuation details to properly function. These are the `renderers`, `filters`, and `cache`.
 The remainder of the paramers have provided, reasonable defaults.
 
 #### Examples
@@ -142,7 +142,7 @@ The remainder of the paramers have provided, reasonable defaults.
 ```puppet
 dispatcher::farm { 'publish' :
   renderers => [
-    { hostname => 'localhost', port => 4502 },
+    { hostname => 'localhost', port => 4503 },
   ],
   filters => [
     { allow => false,
@@ -371,7 +371,7 @@ Default value: lookup("dispatcher::farm::${name}::secure", Boolean, 'first', fal
 
 ### Dispatcher::Farm::AuthChecker
 
-AuthChecker attributes hash. This type is passed to a `dispatcher::farm` to confgure the *auth_checker* parameter. The defines the properties as specified in the Dispatcher documentation for [caching secured content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/permissions-cache.html#configure-dispatcher-for-permission-sensitive-caching).
+AuthChecker attributes hash. This type is passed to a `dispatcher::farm` to confgure the *auth_checker* parameter. This will define the properties as specified in the Dispatcher documentation for [caching secured content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/permissions-cache.html#configure-dispatcher-for-permission-sensitive-caching).
 
 Parameters:
  - url:      `StdLib::Absolutepath`
@@ -386,7 +386,7 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::Cache
 
-The Cache attributes structure. This type is passed to a `dispatcher::farm` to confgure the *cache* parameter. The defines the properties as specified in the Dispatcher documentation for [caching content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-the-dispatcher-cache-cache).
+The Cache attributes structure. This type is passed to a `dispatcher::farm` to confgure the *cache* parameter. This will define the properties as specified in the Dispatcher documentation for [caching content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-the-dispatcher-cache-cache).
 
 Parameters:
  - docroot:               `StdLib::Absolutepath`
@@ -394,7 +394,7 @@ Parameters:
  - allowed_clients:       `Array[Dispatcher::Farm::GlobRule]`
  - statfile               `Stdlib::Absolutepath`
  - serve_stale_on_error:  `Boolean`
- - allow_authorized       `Boolean,
+ - allow_authorized       `Boolean`
  - statfileslevel         `Integer[0]`
  - invalidate             `Array[Dispatcher::Farm::GlobRule]`
  - invalidate_handler     `Stdlib::Absolutepath`
@@ -424,7 +424,7 @@ Alias of `Struct[{
 ### Dispatcher::Farm::Filter
 
 Filter attributes hash.
-Filter attributes hash. This type is passed to a `dispatcher::farm` to confgure the *filter* parameter. The defines the properties as specified in the Dispatcher documentation for [granting access to content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-access-to-content-filter).
+Filter attributes hash. This type is passed to a `dispatcher::farm` to confgure the *filter* parameter. This will define the properties as specified in the Dispatcher documentation for [granting access to content](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-access-to-content-filter).
 Parameters:
  - rank:      `Integer[0]`
  - allow:     `Boolean`
@@ -452,7 +452,11 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::Filter::Pattern
 
-Filter Pattern attributes hash.
+This structure is used to configure an individual **filter** for use in the `Dispatcher::Farm::Filter` attributes.
+
+Parameters:
+ - regex:   `Boolean`
+ - pattern: `String`
 
 Alias of `Struct[{
     regex   => Boolean,
@@ -476,7 +480,7 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::Renderer
 
-The Renderer attributes structure. This type is passed to a `dispatcher::farm` to confgure the *renders* parameter. The defines the properties as specified in the Dispatcher documentation for [defining page renderers](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#defining-page-renderers-renders).
+The Renderer attributes structure. This type is passed to a `dispatcher::farm` to confgure the *renders* parameter. This will define the properties as specified in the Dispatcher documentation for [defining page renderers](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#defining-page-renderers-renders).
 
 Parameters:
  - hostname:        `Stdlib::Host:`
@@ -499,7 +503,13 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::SessionManagement
 
-The SEssion Management
+The Session Management attributes structure. This type is passed to a `dispatcher::farm` to confgure the *sessionmanagement* parameter. This will define the properties as specified in the Dispatcher documentation for [authentication session management](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#enabling-secure-sessions-sessionmanagement).
+
+Parameters:
+ - directory: `Stdlib::Absolutepath`
+ - encode:    `String`
+ - header:    `String`
+ - timeout:   `Integer[0]`
 
 Alias of `Struct[{
     directory         => Stdlib::Absolutepath,
@@ -510,7 +520,12 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::StatisticsCategory
 
-Statistic attributes hash.
+The Statistics Category attributes structure. This type is passed to a `dispatcher::farm` to confgure the *statistics_categories* parameter. This will define the properties as specified in the Dispatcher documentation for [configuring the load balancer](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#configuring-load-balancing-statistics).
+
+Parameters:
+ - rank: `Integer[0]`
+ - name: `String`
+ - glob: `String`
 
 Alias of `Struct[{
     rank => Integer[0],
@@ -520,7 +535,16 @@ Alias of `Struct[{
 
 ### Dispatcher::Farm::StickyConnection
 
-StickyConnection attributes hash.
+The SticyConnection attributes structure. This type is passed to a `dispatcher::farm` to confgure the *sticky_connections* parameter. This will define the properties as specified in the Dispatcher documentation for [creating sticky connections](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#identifying-a-sticky-connection-folder-stickyconnectionsfor). Which struct used will determine if `/stickyConnectionsFor` or `/stickyConnections` is created as a result.
+
+`/stickyConnectionsFor` Parameters:
+ - String[1]
+
+`/stickyConnections` Parameters:
+ - paths:     `Array[String]`
+ - domain:    `String`
+ - http_only: `Boolean`
+ - secure:    `Boolean`
 
 Alias of `Variant[String[1], Struct[
     {
@@ -533,7 +557,11 @@ Alias of `Variant[String[1], Struct[
 
 ### Dispatcher::Farm::VanityUrls
 
-Vanity URL attributes hash.
+The Vanity URL attributes structure. This type is passed to a `dispatcher::farm` to confgure the *vanity_urls* parameter. This will define the properties as specified in the Dispatcher documentation for [enabling access to Vanity URLs](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/configuring/dispatcher-configuration.html#enabling-access-to-vanity-urls-vanity-urls).
+
+Parameters:
+ - file:  `Stdlib::Absolutepath`
+ - delay: `Integer[0]`
 
 Alias of `Struct[{
     file  => Stdlib::Absolutepath,
