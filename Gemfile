@@ -29,6 +29,7 @@ group :development do
   gem "puppet-module-win-default-r#{minor_version}", '~> 0.4',   require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "puppet-module-win-dev-r#{minor_version}", '~> 0.4',       require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "copyright-header", '~>1.0',                               require: false
+  gem "github_changelog_generator", '>=1.15',                    require: false
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']
