@@ -35,11 +35,10 @@ platform           = node_config.dig('platform')
 case platform
 when %r{(centos|oracle|scientific)}
   vhost_path = '/etc/httpd/conf.d'
-  service   = 'httpd'
+  service = 'httpd'
 when %r{(debian|ubuntu)}
-  mod_path  = '/usr/lib/apache2/modules'
-  conf_path = '/etc/apache2/mods-enabled'
-  log_path  = '/var/log/apache2'
+  vhost_path = '/etc/apache2/sites-available'
+  service = 'apache2'
 else
   raise 'Unknown platform.'
 end
@@ -70,7 +69,7 @@ describe 'dispatcher' do
           }
           dispatcher::farm { 'default' :
             renderers => [{ hostname => 'localhost', port => 4503 }],
-            virtualhosts => ['*'],      
+            virtualhosts => ['*'],
             filters   => [
               { 'allow' => false, 'rank' => 1, 'url' => { 'regex' => true, 'pattern' => '.*' }},
               { 'allow' => true, 'rank' => 2, 'path' => { 'regex' => false, 'pattern' => '/content/*' }, 'extension' => { 'regex' => false, 'pattern' => 'html' }}
@@ -95,12 +94,12 @@ describe 'dispatcher' do
       its(:content) { is_expected.to match %r{</IfModule>$} }
     end
     describe 'vhost loaded' do
-      it 'should block request' do
+      it 'blocks request' do
         run_shell('curl -s -o /dev/null -w "%{http_code}" http://localhost/not/allowed') do |r|
           expect(r.stdout).to match %r{404}
         end
       end
-      it 'should allow request' do
+      it 'allows request' do
         run_shell('curl -s -o /dev/null -w "%{http_code}" http://localhost/content/allowed.html') do |r|
           expect(r.stdout).to match %r{502}
         end
