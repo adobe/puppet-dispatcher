@@ -134,4 +134,3 @@ Gemfile:
     services: docker
     sudo: required
     stage: acceptance
-  simplecov: true

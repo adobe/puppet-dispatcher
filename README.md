@@ -31,7 +31,26 @@
 [metadata.json]: metadata.json
 [Contributing]: .github/CONTRIBUTING.md
 
-
+<p align="center">
+    <a href="https://travis-ci.com/github/adobe/puppet-dispatcher" title="Travis.com">
+        <img alt="Travis (.com)" src="https://img.shields.io/travis/com/adobe/puppet-dispatcher">
+    </a>
+    <a href="https://github.com/adobe/puppet-dispatcher/issues" title="Issues">
+        <img alt="GitHub issues" src="https://img.shields.io/github/issues/adobe/puppet-dispatcher">
+    </a>
+    <a href="" title="Puppet Forge">
+        <img alt="Puppet Forge downloads" src="https://img.shields.io/puppetforge/dt/adobeinc/dispatcher">
+    </a>
+    <a href="" title="Version">
+        <img alt="Puppet Forge version" src="https://img.shields.io/puppetforge/v/adobeinc/dispatcher">
+    </a>
+    <a href="" title="Forge Rating">
+        <img alt="Puppet Forge feedback score" src="https://img.shields.io/puppetforge/f/adobeinc/dispatcher">
+    </a>
+    <a href="" title="PDK Version">
+        <img alt="Puppet Forge – PDK version" src="https://img.shields.io/puppetforge/pdk-version/adobeinc/dispatcher">
+    </a>
+</p>
 
 #### Table of Contents
 
