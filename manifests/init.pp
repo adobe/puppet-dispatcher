@@ -179,9 +179,9 @@ class dispatcher (
 
   $vhosts.each |$vhost| {
     apache::vhost::fragment { "${vhost}-dispatcher-fragment":
-      vhost     => $vhost,
-      priority  => getparam(Apache::Vhost[$vhost], 'priority'),
-      content   => $fragment
+      vhost    => $vhost,
+      priority => getparam(Apache::Vhost[$vhost], 'priority'),
+      content  => $fragment
     }
   }
 }

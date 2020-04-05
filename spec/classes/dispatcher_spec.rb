@@ -250,16 +250,16 @@ describe 'dispatcher', type: :class do
       context 'vhost' do
         context 'not found' do
           let(:params) { default_params.merge(vhosts: %w[notfound]) }
+
           it { is_expected.to raise_error(%r{'-notfound.conf'}) }
         end
 
         context 'default vhost' do
           let(:params) { default_params.merge(vhosts: %w[default]) }
+
           it { is_expected.to compile.with_all_deps }
           it do
-            is_expected.to contain_apache__vhost__fragment(
-              'default-dispatcher-fragment'
-            ).with(
+            is_expected.to contain_apache__vhost__fragment('default-dispatcher-fragment').with(
               vhost: 'default',
               priority: catalogue.resource('Apache::Vhost[default]').parameters[:priority],
               content: '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
@@ -283,18 +283,14 @@ describe 'dispatcher', type: :class do
 
           it { is_expected.to compile.with_all_deps }
           it do
-            is_expected.to contain_apache__vhost__fragment(
-              'default-dispatcher-fragment'
-            ).with(
+            is_expected.to contain_apache__vhost__fragment('default-dispatcher-fragment').with(
               vhost:    'default',
               priority: catalogue.resource('Apache::Vhost[default]').parameters[:priority],
               content:  '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
             )
           end
           it do
-            is_expected.to contain_apache__vhost__fragment(
-              'custom-dispatcher-fragment'
-            ).with(
+            is_expected.to contain_apache__vhost__fragment('custom-dispatcher-fragment').with(
               vhost:    'custom',
               priority: 50,
               content:  '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
@@ -529,13 +525,14 @@ describe 'dispatcher', type: :class do
 
       context 'farms' do
         context 'not array' do
-          let (:params) { default_params.merge(farms: 'foo') }
-          it { is_expected.to raise_error(%r{parameter 'farms' expects an Array value}) }
+          let(:params) { default_params.merge(farms: 'foo') }
 
-          context 'not string array' do
-            let (:params) { default_params.merge(farms: [123, 456]) }
-            it { is_expected.to raise_error(%r{parameter 'farms' index 1 expects a String value}) }
-          end
+          it { is_expected.to raise_error(%r{parameter 'farms' expects an Array value}) }
+        end
+        context 'not string array' do
+          let(:params) { default_params.merge(farms: [123, 456]) }
+
+          it { is_expected.to raise_error(%r{parameter 'farms' index 1 expects a String value}) }
         end
       end
 
@@ -579,13 +576,14 @@ describe 'dispatcher', type: :class do
 
       context 'vhosts' do
         context 'not array' do
-          let (:params) { default_params.merge(vhosts: 'foo') }
-          it { is_expected.to raise_error(%r{parameter 'vhosts' expects an Array value}) }
+          let(:params) { default_params.merge(vhosts: 'foo') }
 
-          context 'not string array' do
-            let (:params) { default_params.merge(vhosts: [123, 456]) }
-            it { is_expected.to raise_error(%r{parameter 'vhosts' index 1 expects a String value}) }
-          end
+          it { is_expected.to raise_error(%r{parameter 'vhosts' expects an Array value}) }
+        end
+        context 'not string array' do
+          let(:params) { default_params.merge(vhosts: [123, 456]) }
+
+          it { is_expected.to raise_error(%r{parameter 'vhosts' index 1 expects a String value}) }
         end
       end
     end
