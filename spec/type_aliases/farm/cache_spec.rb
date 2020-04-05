@@ -34,6 +34,18 @@ describe 'Dispatcher::Farm::Cache' do
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }, { rank: 20, glob: '127.0.0.1', allow: true }],
       },
       {
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        manage_docroot:       true,
+      },
+      {
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        manage_docroot:       false,
+      },
+      {
         docroot:         '/path/to/docroot',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
@@ -159,6 +171,12 @@ describe 'Dispatcher::Farm::Cache' do
         docroot:         'invalid',
         rules:           [{ rank: 1, glob: '*.html', allow: true }],
         allowed_clients: [{ rank: 1, glob: '*.*.*.*', allow: false }],
+      },
+      {
+        docroot:              '/path/to/docroot',
+        rules:                [{ rank: 1, glob: '*.html', allow: true }],
+        allowed_clients:      [{ rank: 1, glob: '*.*.*.*', allow: false }],
+        manage_docroot:       'invalid',
       },
       {
         docroot:         '/path/to/docroot',

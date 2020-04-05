@@ -26,6 +26,7 @@
 #  - docroot:               `StdLib::Absolutepath`
 #  - rules:                 `Array[Dispatcher::Farm::GlobRule]`
 #  - allowed_clients:       `Array[Dispatcher::Farm::GlobRule]`
+#  - manage_docroot         `Boolean`
 #  - statfile               `Stdlib::Absolutepath`
 #  - serve_stale_on_error:  `Boolean`
 #  - allow_authorized       `Boolean`
@@ -43,6 +44,7 @@ type Dispatcher::Farm::Cache = Struct[
     docroot                        => Stdlib::Absolutepath,
     rules                          => Array[Dispatcher::Farm::GlobRule],
     allowed_clients                => Array[Dispatcher::Farm::GlobRule],
+    Optional[manage_docroot]       => Boolean,
     Optional[statfile]             => Stdlib::Absolutepath,
     Optional[serve_stale_on_error] => Boolean,
     Optional[allow_authorized]     => Boolean,
