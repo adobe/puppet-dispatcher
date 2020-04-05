@@ -95,6 +95,26 @@ describe 'dispatcher::farm', type: :define do
           it { is_expected.to contain_concat__fragment('secure-farm-cache').with(content: %r{^\s{6}/0000 \{ /type "deny" /glob "\*" \}$}) }
           it { is_expected.to contain_concat__fragment('secure-farm-cache').with(content: %r{^\s{6}/0001 \{ /type "allow" /glob "127\.0\.0\.1" \}$}) }
         end
+        context 'manage docroot' do
+          let(:facts) { os_facts.merge(testname: 'managedocroot') }
+          let(:title) { 'managedocroot' }
+
+          it { is_expected.to contain_file('/path/to/docroot').with(owner: 'root', group: 'root') }
+
+          context 'selinux' do
+            let(:facts) { os_facts.merge(testname: 'managedocroot', selinux_enforced: true) }
+            let(:title) { 'managedocroot' }
+
+            it { is_expected.to contain_file('/path/to/docroot').with(owner: 'root', group: 'root', seltype: 'httpd_sys_rw_content_t') }
+            it { is_expected.to contain_concat('dispatcher.00-managedocroot.inc.any') }
+            it { is_expected.to contain_concat__fragment('managedocroot-farm-header') }
+            it { is_expected.to contain_concat__fragment('managedocroot-farm-renders') }
+            it { is_expected.to contain_concat__fragment('managedocroot-farm-virtualhosts') }
+            it { is_expected.to contain_concat__fragment('managedocroot-farm-cache') }
+            it { is_expected.to contain_concat__fragment('managedocroot-farm-filter') }
+            it { is_expected.to contain_concat__fragment('managedocroot-farm-footer') }
+          end
+        end
       end
     end
   end

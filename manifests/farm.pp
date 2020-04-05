@@ -195,6 +195,18 @@ define dispatcher::farm (
     $_priority = $priority
   }
 
+  if ($cache['manage_docroot']) {
+    file { $cache['docroot'] :
+      owner => 'root',
+      group => $::apache::params::root_group,
+    }
+    if $facts['selinux_enforced'] {
+      File[$cache['docroot']] {
+        seltype => 'httpd_sys_rw_content_t',
+      }
+    }
+  }
+
   if ($secure) {
     $_secure_cache = lookup('dispatcher::farm::cache::secured', Hash, 'deep', {})
     $_cache_tmp = {

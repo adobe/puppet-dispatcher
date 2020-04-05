@@ -266,6 +266,34 @@ Adobe Security best practices recommend that only explicit agents be allowed to 
 }
 ```
 
+### SELinux Docroot Support
+
+Normally the Apache module is responsible for managing the *docroot* for a given farm and VirtualHost. However, when SELinux is enabled and enforcing, this creates an issue as the default setting for the *docroot* is read only.
+
+This module allows you to switch ownership of the docroot from the Apache module to this module. Thus, when SELinux is enforcing, the `seltype` will be correctly set to read/write on this folder. To do so, set the `manage_docroot` of the `Dispatcher::Farm::Cache` struct to `true`. 
+
+> **Note**: The [`manage_docroot`](https://github.com/puppetlabs/puppetlabs-apache/blob/master/REFERENCE.md#manage_docroot) of the Apache VirtualHost resource must be set to `false` or a catalog error will occur. 
+
+```puppet
+dispatcher::farm { 'publish' :
+...
+  cache => {
+    docroot => '/var/www/html',
+    manage_docroot => true,
+    rules => [
+      { rank => 1, glob => '*.html', allow => true },
+    ],
+    allowed_clients => [
+      { rank => 1, glob => '*', allow => false },
+      { rank => 2, glob => '127.0.0.1', allow => true },
+    ],
+  }
+...
+}
+``` 
+
+> **Note**: This module only supports managing the `docroot` based on default parameters in the Apache module. To customize further, the `docroot` must be managed externally.  
+
 ## Reference
 
 For information on classes, types, and structs see the [REFERENCE.md][].

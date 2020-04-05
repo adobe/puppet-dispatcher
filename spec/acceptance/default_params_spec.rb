@@ -42,6 +42,7 @@ when %r{(debian|ubuntu)}
   mod_path  = '/usr/lib/apache2/modules'
   conf_path = '/etc/apache2/mods-enabled'
   log_path  = '/var/log/apache2'
+  service   = 'apache2'
 else
   raise 'Unknown platform.'
 end
