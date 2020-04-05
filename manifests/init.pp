@@ -16,6 +16,7 @@
 # limitations under the License.
 #
 
+#
 # @summary
 #   Installs and sets up the AEM Dispatcher module on your system.
 #
@@ -67,6 +68,26 @@
 # @param no_cannon_url
 #   If specified, sets the value for `DispatcherNoCanonURL`. For details see the [Dispatcher documentation](https://docs.adobe.com/content/help/en/experience-manager-dispatcher/using/getting-started/dispatcher-install.html#apache-web-server-configure-apache-web-server-for-dispatcher).
 #
+# @param vhosts
+#   A list of Apache VirthalHosts names. If specified a then the necessary fragment to load the Dispatcher will be appended to that conf file. If the virtual host is not in the catalog, an error will occur.<br/>
+#
+#   The custom fragment that is added:
+#
+#   ```
+#   <IfModule disp_apache2.c>
+#     SetHandler dispatcher-handler
+#   </IfModule>
+#   ```
+#
+#   For example, to load the Dispatcher module in the *default* Apache VirtualHost:
+#   ```puppet
+#   class { 'dispatcher' :
+#     module_file => '/path/to/module/file.so',
+#     vhosts      => ['default'],
+#   }
+#   contain dispatcher
+#   ```
+#
 class dispatcher (
   Stdlib::Filesource $module_file,
   Boolean $decline_root,
@@ -77,6 +98,7 @@ class dispatcher (
   Array[String] $farms                     = [],
   Optional[Integer[0]] $keep_alive_timeout = undef,
   Optional[Boolean] $no_cannon_url         = undef,
+  Array[String] $vhosts                    = [],
 ) {
 
   # Check for Apache because it is used by parameter defaults
@@ -153,4 +175,13 @@ class dispatcher (
     ensure_resource('dispatcher::farm', $farm, { 'ensure' => 'present' })
   }
 
+  $fragment = "\n  <IfModule disp_apache2.c>\n    SetHandler dispatcher-handler\n  </IfModule>\n\n"
+
+  $vhosts.each |$vhost| {
+    apache::vhost::fragment { "${vhost}-dispatcher-fragment":
+      vhost     => $vhost,
+      priority  => getparam(Apache::Vhost[$vhost], 'priority'),
+      content   => $fragment
+    }
+  }
 }

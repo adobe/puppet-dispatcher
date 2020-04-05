@@ -70,6 +70,7 @@ describe 'dispatcher', type: :class do
             farms:             [],
             pass_error:        false,
             use_processed_url: true,
+            vhosts:            [],
           )
         end
 
@@ -156,6 +157,7 @@ describe 'dispatcher', type: :class do
             farms:              [],
             keep_alive_timeout: 0,
             no_cannon_url:      true,
+            vhosts:            [],
           )
         end
 
@@ -245,76 +247,61 @@ describe 'dispatcher', type: :class do
         it { is_expected.to contain_concat__fragment('vhost3-farm-footer') }
       end
 
-      context 'secure' do
-        it { is_expected.to compile.with_all_deps }
-        it do
-          apache = catalogue.resource('Class[apache]')
-          is_expected.to contain_class('dispatcher').only_with(
-            name:              'Dispatcher',
-            module_file:       '/full/path/to/file-with-version.so',
-            decline_root:      true,
-            log_file:          "#{apache.parameters[:logroot]}/dispatcher.log",
-            log_level:         'warn',
-            farms:             [],
-            pass_error:        false,
-            use_processed_url: true,
-          )
+      context 'vhost' do
+        context 'not found' do
+          let(:params) { default_params.merge(vhosts: %w[notfound]) }
+          it { is_expected.to raise_error(%r{'-notfound.conf'}) }
         end
 
-        it do
-          is_expected.to contain_file("#{lib_path}/file-with-version.so").with(
-            ensure: 'file',
-            owner:  'root',
-            group:  'root',
-            source: '/full/path/to/file-with-version.so',
-          )
+        context 'default vhost' do
+          let(:params) { default_params.merge(vhosts: %w[default]) }
+          it { is_expected.to compile.with_all_deps }
+          it do
+            is_expected.to contain_apache__vhost__fragment(
+              'default-dispatcher-fragment'
+            ).with(
+              vhost: 'default',
+              priority: catalogue.resource('Apache::Vhost[default]').parameters[:priority],
+              content: '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
+            )
+          end
         end
 
-        it do
-          is_expected.to contain_apache__mod('dispatcher')
+        context 'multiple vhosts' do
+          let(:pre_condition) do
+            <<~PUPPETFILE
+              class { 'apache' : }
+              apache::vhost { 'custom':
+                port     => '80',
+                priority => '50',
+                docroot  => '/var/www/custom',
+              }
+            PUPPETFILE
+          end
+
+          let(:params) { default_params.merge(vhosts: %w[default custom]) }
+
+          it { is_expected.to compile.with_all_deps }
+          it do
+            is_expected.to contain_apache__vhost__fragment(
+              'default-dispatcher-fragment'
+            ).with(
+              vhost:    'default',
+              priority: catalogue.resource('Apache::Vhost[default]').parameters[:priority],
+              content:  '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
+            )
+          end
+          it do
+            is_expected.to contain_apache__vhost__fragment(
+              'custom-dispatcher-fragment'
+            ).with(
+              vhost:    'custom',
+              priority: 50,
+              content:  '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
+            )
+          end
         end
 
-        it do
-          is_expected.to contain_file("#{lib_path}/mod_dispatcher.so").with(
-            ensure: 'link',
-            owner:  'root',
-            group:  'root',
-            target: "#{lib_path}/file-with-version.so",
-          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
-        end
-
-        it do
-          is_expected.to contain_file("#{mod_dir}/dispatcher.conf").with(
-            ensure: 'file',
-            owner:  'root',
-            group:  'root',
-          ).with_content(
-            %r{.*DispatcherConfig\s+#{mod_dir}/dispatcher.farms.any},
-          ).with_content(
-            %r{.*DispatcherLog\s+#{log_root}/dispatcher.log},
-          ).with_content(
-            %r{.*DispatcherLogLevel\s+warn},
-          ).with_content(
-            %r{.*DispatcherDeclineRoot\s+On},
-          ).with_content(
-            %r{.*DispatcherUseProcessedURL\s+On},
-          ).with_content(
-            %r{.*DispatcherPassError\s+0},
-          ).without_content(
-            %r{.*DispatcherKeepAliveTimeout.*},
-          ).without_content(
-            %r{.*DispatcherNoCanonURL.*},
-          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
-        end
-
-        it do
-          is_expected.to contain_file("#{mod_dir}/dispatcher.farms.any").with(
-            ensure: 'file',
-            owner:  'root',
-            group:  'root',
-            source: 'puppet:///modules/dispatcher/dispatcher.farms.any',
-          ).that_requires('Package[httpd]').that_notifies('Class[Apache::Service]')
-        end
       end
 
       context 'selinux' do
@@ -540,6 +527,18 @@ describe 'dispatcher', type: :class do
         end
       end
 
+      context 'farms' do
+        context 'not array' do
+          let (:params) { default_params.merge(farms: 'foo') }
+          it { is_expected.to raise_error(%r{parameter 'farms' expects an Array value}) }
+
+          context 'not string array' do
+            let (:params) { default_params.merge(farms: [123, 456]) }
+            it { is_expected.to raise_error(%r{parameter 'farms' index 1 expects a String value}) }
+          end
+        end
+      end
+
       context 'keep_alive_timeout' do
         context 'positive number' do
           let(:params) { default_params.merge(keep_alive_timeout: 120) }
@@ -575,6 +574,18 @@ describe 'dispatcher', type: :class do
           let(:params) { default_params.merge(no_cannon_url: 'invalid') }
 
           it { is_expected.to raise_error(%r{parameter 'no_cannon_url' expects a value of type Undef or Boolean}) }
+        end
+      end
+
+      context 'vhosts' do
+        context 'not array' do
+          let (:params) { default_params.merge(vhosts: 'foo') }
+          it { is_expected.to raise_error(%r{parameter 'vhosts' expects an Array value}) }
+
+          context 'not string array' do
+            let (:params) { default_params.merge(vhosts: [123, 456]) }
+            it { is_expected.to raise_error(%r{parameter 'vhosts' index 1 expects a String value}) }
+          end
         end
       end
     end

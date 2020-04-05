@@ -25,7 +25,7 @@ describe 'Dispatcher::Farm::Filter' do
     [
       { allow: true, rank: 0 },
       { allow: true, rank: 10, method: { regex: true, pattern: 'GET' } },
-      { allow: true, rank: 10, url: { regex: true, pattern: '*.html' } },
+      { allow: true, rank: 10, url: { regex: true, pattern: 'html' } },
       { allow: true, rank: 10, query: { regex: true, pattern: 'param=value' } },
       { allow: true, rank: 10, protocol: { regex: true, pattern: 'http' } },
       { allow: true, rank: 10, path: { regex: true, pattern: '/content/test/en' } },

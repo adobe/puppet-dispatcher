@@ -109,6 +109,17 @@ class { 'dispatcher' :
 }
 ```
 
+#### Dispatcher Loading to VirtualHosts 
+
+To automatically load the Dispatcher module into Apache Virutal hosts, the `dispatcher` class can be passed a list of those virtual host names. This will concatenate the necessary fragment into the VirtualHost conf file to allow for the dispatcher to process requests.
+
+```puppet
+class { 'dispatcher' :
+  module_file => '/path/to/module/file.so',
+  vhosts       => ['default', 'custom'],
+}
+```
+
 ### Defining a Farm
 
 The [`dispatcher::farm`] configures a render farm definition for the Dispatcher. A minimal configuration is required for successful operation - these parameters are `renderers`, `filters`, and `cache`.
@@ -181,7 +192,7 @@ dispatcher::farm { 'publish' :
       'allow' => true,
       'rank' => 10,
       'path' => { 'regex' => false, 'pattern' => '/content/*' },
-      'extension' => { 'regex' => false, 'pattern' => '.html' },
+      'extension' => { 'regex' => false, 'pattern' => 'html' },
     },
     { 'allow' => false, 'rank' => 1, 'url' => { 'regex' => true, 'pattern' => '.*' } },
   ],
