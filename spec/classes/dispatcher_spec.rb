@@ -262,7 +262,7 @@ describe 'dispatcher', type: :class do
             is_expected.to contain_apache__vhost__fragment('default-dispatcher-fragment').with(
               vhost: 'default',
               priority: catalogue.resource('Apache::Vhost[default]').parameters[:priority],
-              content: '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
+              content: "\n  <IfModule disp_apache2.c>\n    SetHandler dispatcher-handler\n  </IfModule>\n\n",
             )
           end
         end
@@ -286,14 +286,14 @@ describe 'dispatcher', type: :class do
             is_expected.to contain_apache__vhost__fragment('default-dispatcher-fragment').with(
               vhost:    'default',
               priority: catalogue.resource('Apache::Vhost[default]').parameters[:priority],
-              content:  '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
+              content: "\n  <IfModule disp_apache2.c>\n    SetHandler dispatcher-handler\n  </IfModule>\n\n",
             )
           end
           it do
             is_expected.to contain_apache__vhost__fragment('custom-dispatcher-fragment').with(
               vhost:    'custom',
               priority: 50,
-              content:  '\t<IfModule disp_apache2.c>\n\t\tSetHandler dispatcher-handler\n\t </IfModule>',
+              content: "\n  <IfModule disp_apache2.c>\n    SetHandler dispatcher-handler\n  </IfModule>\n\n",
             )
           end
         end
