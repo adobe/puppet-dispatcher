@@ -18,5 +18,5 @@ dispatcher::farm::publish::filters:
       pattern: '/content/*'
     extension:
       regex: false
-      pattern: '.html'
+      pattern: 'html'
 ```
