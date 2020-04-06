@@ -5,7 +5,7 @@
   "summary": "Manages AEM Dispatcher configurations and farms.",
   "license": "Apache-2.0",
   "source": "https://github.com/adobe/puppet-dispatcher",
-  "project_page": "http://opensource.adobe.com/puppet-dispatcher/",
+  "project_page": "https://github.com/adobe/puppet-dispatcher",
   "issues_url": "https://github.com/adobe/puppet-dispatcher/issues",
   "dependencies": [
     {
