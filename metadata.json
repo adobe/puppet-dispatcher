@@ -1,6 +1,6 @@
 {
   "name": "adobeinc-dispatcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "adobeinc",
   "summary": "Manages AEM Dispatcher configurations and farms.",
   "license": "Apache-2.0",
