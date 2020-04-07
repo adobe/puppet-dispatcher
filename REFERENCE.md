@@ -128,6 +128,31 @@ If specified, sets the value for `DispatcherNoCanonURL`. For details see the [Di
 
 Default value: `undef`
 
+##### `vhosts`
+
+Data type: `Array[String]`
+
+A list of Apache VirthalHosts names. If specified a then the necessary fragment to load the Dispatcher will be appended to that conf file. If the virtual host is not in the catalog, an error will occur.<br/>
+
+The custom fragment that is added:
+
+```
+<IfModule disp_apache2.c>
+  SetHandler dispatcher-handler
+</IfModule>
+```
+
+For example, to load the Dispatcher module in the *default* Apache VirtualHost:
+```puppet
+class { 'dispatcher' :
+  module_file => '/path/to/module/file.so',
+  vhosts      => ['default'],
+}
+contain dispatcher
+```
+
+Default value: []
+
 ## Defined types
 
 ### dispatcher::farm
@@ -392,6 +417,7 @@ Parameters:
  - docroot:               `StdLib::Absolutepath`
  - rules:                 `Array[Dispatcher::Farm::GlobRule]`
  - allowed_clients:       `Array[Dispatcher::Farm::GlobRule]`
+ - manage_docroot         `Boolean`
  - statfile               `Stdlib::Absolutepath`
  - serve_stale_on_error:  `Boolean`
  - allow_authorized       `Boolean`
@@ -408,6 +434,7 @@ Alias of `Struct[{
     docroot                        => Stdlib::Absolutepath,
     rules                          => Array[Dispatcher::Farm::GlobRule],
     allowed_clients                => Array[Dispatcher::Farm::GlobRule],
+    Optional[manage_docroot]       => Boolean,
     Optional[statfile]             => Stdlib::Absolutepath,
     Optional[serve_stale_on_error] => Boolean,
     Optional[allow_authorized]     => Boolean,
