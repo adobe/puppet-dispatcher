@@ -38,16 +38,16 @@
     <a href="https://github.com/adobe/puppet-dispatcher/issues" title="Issues">
         <img alt="GitHub issues" src="https://img.shields.io/github/issues/adobe/puppet-dispatcher">
     </a>
-    <a href="" title="Puppet Forge">
+    <a href="https://forge.puppet.com/adobeinc/dispatcher" title="Puppet Forge">
         <img alt="Puppet Forge downloads" src="https://img.shields.io/puppetforge/dt/adobeinc/dispatcher">
     </a>
-    <a href="" title="Version">
+    <a href="https://forge.puppet.com/adobeinc/dispatcher" title="Version">
         <img alt="Puppet Forge version" src="https://img.shields.io/puppetforge/v/adobeinc/dispatcher">
     </a>
-    <a href="" title="Forge Rating">
+    <a href="https://forge.puppet.com/adobeinc/dispatcher/scores" title="Forge Rating">
         <img alt="Puppet Forge feedback score" src="https://img.shields.io/puppetforge/f/adobeinc/dispatcher">
     </a>
-    <a href="" title="PDK Version">
+    <a href="https://forge.puppet.com/adobeinc/dispatcher" title="PDK Version">
         <img alt="Puppet Forge – PDK version" src="https://img.shields.io/puppetforge/pdk-version/adobeinc/dispatcher">
     </a>
 </p>
