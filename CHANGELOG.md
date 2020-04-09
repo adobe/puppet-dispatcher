@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.0.0](https://github.com/adobe/puppet-dispatcher/tree/v1.0.0) (2020-04-08)
+
+[Full Changelog](https://github.com/adobe/puppet-dispatcher/compare/v0.2.0...v1.0.0)
+
+### Added
+
+- Readme Badges & 1.0 prep. [\#15](https://github.com/adobe/puppet-dispatcher/pull/15) ([bstopp](https://github.com/bstopp))
+
 ## [v0.2.0](https://github.com/adobe/puppet-dispatcher/tree/v0.2.0) (2020-04-06)
 
 [Full Changelog](https://github.com/adobe/puppet-dispatcher/compare/v0.1.0...v0.2.0)
@@ -11,7 +19,7 @@ All notable changes to this project will be documented in this file. The format 
 - Support SELinux on the docroot for a farm. [\#13](https://github.com/adobe/puppet-dispatcher/pull/13) ([bstopp](https://github.com/bstopp))
 - Support automatic loading of module in Virtualhosts. [\#12](https://github.com/adobe/puppet-dispatcher/pull/12) ([bstopp](https://github.com/bstopp))
 
-### UNCATEGORIZED PRS; GO LABEL THEM
+### Fixed
 
 - Fix Puppet Forge Password. [\#14](https://github.com/adobe/puppet-dispatcher/pull/14) ([bstopp](https://github.com/bstopp))
 
